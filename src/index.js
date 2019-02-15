@@ -1,22 +1,30 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 
-import styles from './styles.css'
+import Header from './UI/header/header.component';
+import Button from './UI/button/button.component';
+import Input from './UI/input/input.component';
+import Pagination from './UI/Pagination/Pagination';
+import { Comment } from './UI/commet/comment.component';
+import { PrivateRoute } from './UI/private_route/private_route.component';
+import Menu from './UI/menu/menu.component';
+import Importer from './UI/importer/importer.component';
+import UnsuporterPage from './UI/unsuporter_page/unsuporter_page.component';
+import CollapsibleResult from './UI/neoimporter/CollapsibleResult';
+import ResultCard from './UI/neoimporter/ResultCard';
+import Base from './UI/base/base.component';
+import Icon from './UI/icon/icon.component';
 
-export default class ExampleComponent extends Component {
-  static propTypes = {
-    text: PropTypes.string
-  }
-
-  render() {
-    const {
-      text
-    } = this.props
-
-    return (
-      <div className={styles.test}>
-        Example Component: {text}
-      </div>
-    )
-  }
+export {
+    Header,
+    PrivateRoute,
+    Button,
+    Input,
+    Pagination,
+    Menu,
+    Importer,
+    UnsuporterPage,
+    Comment,
+    CollapsibleResult,
+    ResultCard,
+    Base,
+    Icon
 }
