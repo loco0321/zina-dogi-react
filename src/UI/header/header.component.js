@@ -41,7 +41,7 @@ const Header = ({
       <div className="controls">
         {noty && (
           <UncontrolledDropdown setActiveFromChild>
-            <DropdownToggle tag="span" caret>
+            <DropdownToggle tag="span">
               {/* <Button className="btn-circle"> */}
               <Icon icon="bell" />
               {/* </Button> */}
@@ -58,7 +58,7 @@ const Header = ({
             </NotificationPanel>
           </UncontrolledDropdown>
         )}
-        <UncontrolledDropdown setActiveFromChild>
+        <UncontrolledDropdown setActiveFromChild className="custom-carets">
           <DropdownToggle tag="a" caret>
             <span className="user-name">{fullName}</span>
             {/* <Button className="btn-circle"><Icon icon="cog" /></Button> */}
@@ -71,10 +71,4 @@ const Header = ({
     </nav>
   );
 };
-
-Header.propTypes = {
-  logo: PropTypes.string.isRequired,
-  user: PropTypes.object.isRequired
-}
-
 export default Header;

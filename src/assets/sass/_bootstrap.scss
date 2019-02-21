@@ -30,3 +30,15 @@
 // @import '../node_modules/bootstrap/scss/carousel';
 // @import '../node_modules/bootstrap/scss/print';
 @import '../node_modules/bootstrap/scss/utilities';
+
+.dropdown-toggle {
+  &>span.caret {
+      display: none
+  }
+  &::after {
+      border: none;
+      vertical-align: middle;
+      font-family: "Font Awesome 5 Free";
+      content: "\f107"
+  }
+}

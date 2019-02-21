@@ -8,6 +8,7 @@ var React = require('react');
 var React__default = _interopDefault(React);
 var PropTypes = _interopDefault(require('prop-types'));
 var ReactDOM = _interopDefault(require('react-dom'));
+var ReactDOMServer = _interopDefault(require('react-dom/server'));
 
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
@@ -8868,6 +8869,31 @@ var propTypes$l = {
   cssModule: PropTypes.object,
   innerRef: PropTypes.oneOfType([PropTypes.object, PropTypes.string, PropTypes.func])
 };
+var defaultProps$k = {
+  tag: 'div'
+};
+
+var Card = function Card(props) {
+  var className = props.className,
+      cssModule = props.cssModule,
+      color = props.color,
+      block = props.block,
+      body = props.body,
+      inverse = props.inverse,
+      outline = props.outline,
+      Tag = props.tag,
+      innerRef = props.innerRef,
+      attributes = _objectWithoutPropertiesLoose(props, ["className", "cssModule", "color", "block", "body", "inverse", "outline", "tag", "innerRef"]);
+
+  var classes = mapToCssModules(classnames(className, 'card', inverse ? 'text-white' : false, block || body ? 'card-body' : false, color ? (outline ? 'border' : 'bg') + "-" + color : false), cssModule);
+  return React__default.createElement(Tag, _extends({}, attributes, {
+    className: classes,
+    ref: innerRef
+  }));
+};
+
+Card.propTypes = propTypes$l;
+Card.defaultProps = defaultProps$k;
 
 var propTypes$m = {
   tag: tagPropType,
@@ -8893,6 +8919,26 @@ var propTypes$p = {
   cssModule: PropTypes.object,
   innerRef: PropTypes.oneOfType([PropTypes.object, PropTypes.string, PropTypes.func])
 };
+var defaultProps$o = {
+  tag: 'div'
+};
+
+var CardBody = function CardBody(props) {
+  var className = props.className,
+      cssModule = props.cssModule,
+      innerRef = props.innerRef,
+      Tag = props.tag,
+      attributes = _objectWithoutPropertiesLoose(props, ["className", "cssModule", "innerRef", "tag"]);
+
+  var classes = mapToCssModules(classnames(className, 'card-body'), cssModule);
+  return React__default.createElement(Tag, _extends({}, attributes, {
+    className: classes,
+    ref: innerRef
+  }));
+};
+
+CardBody.propTypes = propTypes$p;
+CardBody.defaultProps = defaultProps$o;
 
 var propTypes$q = {
   tag: tagPropType,
@@ -8912,6 +8958,24 @@ var propTypes$s = {
   className: PropTypes.string,
   cssModule: PropTypes.object
 };
+var defaultProps$r = {
+  tag: 'div'
+};
+
+var CardHeader = function CardHeader(props) {
+  var className = props.className,
+      cssModule = props.cssModule,
+      Tag = props.tag,
+      attributes = _objectWithoutPropertiesLoose(props, ["className", "cssModule", "tag"]);
+
+  var classes = mapToCssModules(classnames(className, 'card-header'), cssModule);
+  return React__default.createElement(Tag, _extends({}, attributes, {
+    className: classes
+  }));
+};
+
+CardHeader.propTypes = propTypes$s;
+CardHeader.defaultProps = defaultProps$r;
 
 var propTypes$t = {
   tag: tagPropType,
@@ -11466,6 +11530,21 @@ var createClass$1 = function () {
   };
 }();
 
+var defineProperty$2 = function (obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+};
+
 var _extends$g = Object.assign || function (target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i];
@@ -11693,7 +11772,7 @@ var Header = function Header(_ref) {
         { setActiveFromChild: true },
         React__default.createElement(
           DropdownToggle,
-          { tag: 'span', caret: true },
+          { tag: 'span' },
           React__default.createElement(Icon, { icon: 'bell' })
         ),
         React__default.createElement(
@@ -11711,7 +11790,7 @@ var Header = function Header(_ref) {
       ),
       React__default.createElement(
         UncontrolledDropdown,
-        { setActiveFromChild: true },
+        { setActiveFromChild: true, className: 'custom-carets' },
         React__default.createElement(
           DropdownToggle,
           { tag: 'a', caret: true },
@@ -11735,37 +11814,34 @@ var Header = function Header(_ref) {
   );
 };
 
-Header.propTypes = {
-  logo: PropTypes.string.isRequired,
-  user: PropTypes.object.isRequired
-};
-
-// import MaterialIcon from 'material-icons-react';
 // import './button.scss';
 
-var button_component = (function (_ref) {
-    var className = _ref.className,
-        type = _ref.type,
-        onClick = _ref.onClick,
-        name = _ref.name,
-        icon = _ref.icon,
-        _ref$color = _ref.color,
-        color = _ref$color === undefined ? '#fff' : _ref$color,
-        _ref$size = _ref.size,
-        args = objectWithoutProperties(_ref, ['className', 'type', 'onClick', 'name', 'icon', 'color', 'size']);
+var ButtonX = function ButtonX(_ref) {
+    var icon = _ref.icon,
+        iconType = _ref.iconType,
+        className = _ref.className,
+        children = _ref.children,
+        args = objectWithoutProperties(_ref, ['icon', 'iconType', 'className', 'children']);
 
     var btn_op = _extends$g({
-        className: ['btn', 'zina-btn', className].join(' '),
-        type: type,
-        onClick: onClick,
-        style: { color: color }
+        className: ['btn', 'zina-btn', className].join(' ')
     }, args);
     return React__default.createElement(
-        'button',
+        Button,
         btn_op,
-        name
+        icon && [React__default.createElement(Icon, { icon: icon, type: iconType, key: 'btn-icon' }), React__default.createElement(
+            'span',
+            { className: 'btn-sparator', key: 'btn-sparator' },
+            ' '
+        )],
+        children
     );
-});
+};
+
+Button.propTypes = {
+    icon: PropTypes.string,
+    iconType: PropTypes.string
+};
 
 var input_component = (function (_ref) {
     var title = _ref.title,
@@ -17717,7 +17793,16 @@ var PrivateRoute = function PrivateRoute(_ref) {
         routerProps = objectWithoutProperties(_ref, ['component', 'extraProps']);
 
     var render = function render(props) {
-        var newProps = _extends$g({}, props, { extraProps: extraProps });
+        var op = Object.keys(extraProps).map(function (key) {
+            if (!Object.keys(props).includes(key)) {
+                return defineProperty$2({}, key, extraProps[key]);
+            }
+        }).filter(function (obj) {
+            return obj;
+        }).reduce(function (obj, item) {
+            return _extends$g({}, obj, item);
+        }, {});
+        var newProps = _extends$g({}, props, { extraProps: op });
         return localStorage.getItem('user') ? React__default.createElement(Component, newProps) : React__default.createElement(Redirect, {
             to: { pathname: '/login', state: { from: props.location } }
         });
@@ -17771,906 +17856,6 @@ Menu.propTypes = {
         name: PropTypes.string.isRequired
     }))
 };
-
-var dist = createCommonjsModule(function (module) {
-module.exports=function(t){function n(e){if(r[e])return r[e].exports;var o=r[e]={i:e,l:!1,exports:{}};return t[e].call(o.exports,o,o.exports,n),o.l=!0,o.exports}var r={};return n.m=t,n.c=r,n.d=function(t,r,e){n.o(t,r)||Object.defineProperty(t,r,{configurable:!1,enumerable:!0,get:e});},n.n=function(t){var r=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(r,"a",r),r},n.o=function(t,n){return Object.prototype.hasOwnProperty.call(t,n)},n.p="",n(n.s=13)}([function(t,n){var r=t.exports="undefined"!=typeof window&&window.Math==Math?window:"undefined"!=typeof self&&self.Math==Math?self:Function("return this")();"number"==typeof __g&&(__g=r);},function(t,n){t.exports=function(t){return "object"==typeof t?null!==t:"function"==typeof t};},function(t,n){var r=t.exports={version:"2.5.0"};"number"==typeof __e&&(__e=r);},function(t,n,r){t.exports=!r(4)(function(){return 7!=Object.defineProperty({},"a",{get:function(){return 7}}).a});},function(t,n){t.exports=function(t){try{return !!t()}catch(t){return !0}};},function(t,n){var r={}.toString;t.exports=function(t){return r.call(t).slice(8,-1)};},function(t,n,r){var e=r(32)("wks"),o=r(9),i=r(0).Symbol,u="function"==typeof i;(t.exports=function(t){return e[t]||(e[t]=u&&i[t]||(u?i:o)("Symbol."+t))}).store=e;},function(t,n,r){var e=r(0),o=r(2),i=r(8),u=r(22),c=r(10),f=function(t,n,r){var a,s,p,l,v=t&f.F,y=t&f.G,h=t&f.S,d=t&f.P,x=t&f.B,g=y?e:h?e[n]||(e[n]={}):(e[n]||{}).prototype,m=y?o:o[n]||(o[n]={}),b=m.prototype||(m.prototype={});y&&(r=n);for(a in r)s=!v&&g&&void 0!==g[a],p=(s?g:r)[a],l=x&&s?c(p,e):d&&"function"==typeof p?c(Function.call,p):p,g&&u(g,a,p,t&f.U),m[a]!=p&&i(m,a,l),d&&b[a]!=p&&(b[a]=p);};e.core=o,f.F=1,f.G=2,f.S=4,f.P=8,f.B=16,f.W=32,f.U=64,f.R=128,t.exports=f;},function(t,n,r){var e=r(16),o=r(21);t.exports=r(3)?function(t,n,r){return e.f(t,n,o(1,r))}:function(t,n,r){return t[n]=r,t};},function(t,n){var r=0,e=Math.random();t.exports=function(t){return "Symbol(".concat(void 0===t?"":t,")_",(++r+e).toString(36))};},function(t,n,r){var e=r(24);t.exports=function(t,n,r){if(e(t),void 0===n)return t;switch(r){case 1:return function(r){return t.call(n,r)};case 2:return function(r,e){return t.call(n,r,e)};case 3:return function(r,e,o){return t.call(n,r,e,o)}}return function(){return t.apply(n,arguments)}};},function(t,n){t.exports=function(t){if(void 0==t)throw TypeError("Can't call method on  "+t);return t};},function(t,n,r){var e=r(28),o=Math.min;t.exports=function(t){return t>0?o(e(t),9007199254740991):0};},function(t,n,r){n.__esModule=!0,n.default=function(t,n){if(t&&n){var r=Array.isArray(n)?n:n.split(","),e=t.name||"",o=t.type||"",i=o.replace(/\/.*$/,"");return r.some(function(t){var n=t.trim();return "."===n.charAt(0)?e.toLowerCase().endsWith(n.toLowerCase()):n.endsWith("/*")?i===n.replace(/\/.*$/,""):o===n})}return !0},r(14),r(34);},function(t,n,r){r(15),t.exports=r(2).Array.some;},function(t,n,r){var e=r(7),o=r(25)(3);e(e.P+e.F*!r(33)([].some,!0),"Array",{some:function(t){return o(this,t,arguments[1])}});},function(t,n,r){var e=r(17),o=r(18),i=r(20),u=Object.defineProperty;n.f=r(3)?Object.defineProperty:function(t,n,r){if(e(t),n=i(n,!0),e(r),o)try{return u(t,n,r)}catch(t){}if("get"in r||"set"in r)throw TypeError("Accessors not supported!");return "value"in r&&(t[n]=r.value),t};},function(t,n,r){var e=r(1);t.exports=function(t){if(!e(t))throw TypeError(t+" is not an object!");return t};},function(t,n,r){t.exports=!r(3)&&!r(4)(function(){return 7!=Object.defineProperty(r(19)("div"),"a",{get:function(){return 7}}).a});},function(t,n,r){var e=r(1),o=r(0).document,i=e(o)&&e(o.createElement);t.exports=function(t){return i?o.createElement(t):{}};},function(t,n,r){var e=r(1);t.exports=function(t,n){if(!e(t))return t;var r,o;if(n&&"function"==typeof(r=t.toString)&&!e(o=r.call(t)))return o;if("function"==typeof(r=t.valueOf)&&!e(o=r.call(t)))return o;if(!n&&"function"==typeof(r=t.toString)&&!e(o=r.call(t)))return o;throw TypeError("Can't convert object to primitive value")};},function(t,n){t.exports=function(t,n){return {enumerable:!(1&t),configurable:!(2&t),writable:!(4&t),value:n}};},function(t,n,r){var e=r(0),o=r(8),i=r(23),u=r(9)("src"),c=Function.toString,f=(""+c).split("toString");r(2).inspectSource=function(t){return c.call(t)},(t.exports=function(t,n,r,c){var a="function"==typeof r;a&&(i(r,"name")||o(r,"name",n)),t[n]!==r&&(a&&(i(r,u)||o(r,u,t[n]?""+t[n]:f.join(String(n)))),t===e?t[n]=r:c?t[n]?t[n]=r:o(t,n,r):(delete t[n],o(t,n,r)));})(Function.prototype,"toString",function(){return "function"==typeof this&&this[u]||c.call(this)});},function(t,n){var r={}.hasOwnProperty;t.exports=function(t,n){return r.call(t,n)};},function(t,n){t.exports=function(t){if("function"!=typeof t)throw TypeError(t+" is not a function!");return t};},function(t,n,r){var e=r(10),o=r(26),i=r(27),u=r(12),c=r(29);t.exports=function(t,n){var r=1==t,f=2==t,a=3==t,s=4==t,p=6==t,l=5==t||p,v=n||c;return function(n,c,y){for(var h,d,x=i(n),g=o(x),m=e(c,y,3),b=u(g.length),_=0,w=r?v(n,b):f?v(n,0):void 0;b>_;_++)if((l||_ in g)&&(h=g[_],d=m(h,_,x),t))if(r)w[_]=d;else if(d)switch(t){case 3:return !0;case 5:return h;case 6:return _;case 2:w.push(h);}else if(s)return !1;return p?-1:a||s?s:w}};},function(t,n,r){var e=r(5);t.exports=Object("z").propertyIsEnumerable(0)?Object:function(t){return "String"==e(t)?t.split(""):Object(t)};},function(t,n,r){var e=r(11);t.exports=function(t){return Object(e(t))};},function(t,n){var r=Math.ceil,e=Math.floor;t.exports=function(t){return isNaN(t=+t)?0:(t>0?e:r)(t)};},function(t,n,r){var e=r(30);t.exports=function(t,n){return new(e(t))(n)};},function(t,n,r){var e=r(1),o=r(31),i=r(6)("species");t.exports=function(t){var n;return o(t)&&(n=t.constructor,"function"!=typeof n||n!==Array&&!o(n.prototype)||(n=void 0),e(n)&&null===(n=n[i])&&(n=void 0)),void 0===n?Array:n};},function(t,n,r){var e=r(5);t.exports=Array.isArray||function(t){return "Array"==e(t)};},function(t,n,r){var e=r(0),o=e["__core-js_shared__"]||(e["__core-js_shared__"]={});t.exports=function(t){return o[t]||(o[t]={})};},function(t,n,r){var e=r(4);t.exports=function(t,n){return !!t&&e(function(){n?t.call(null,function(){},1):t.call(null);})};},function(t,n,r){r(35),t.exports=r(2).String.endsWith;},function(t,n,r){var e=r(7),o=r(12),i=r(36),u="".endsWith;e(e.P+e.F*r(38)("endsWith"),"String",{endsWith:function(t){var n=i(this,t,"endsWith"),r=arguments.length>1?arguments[1]:void 0,e=o(n.length),c=void 0===r?e:Math.min(o(r),e),f=String(t);return u?u.call(n,f,c):n.slice(c-f.length,c)===f}});},function(t,n,r){var e=r(37),o=r(11);t.exports=function(t,n,r){if(e(n))throw TypeError("String#"+r+" doesn't accept regex!");return String(o(t))};},function(t,n,r){var e=r(1),o=r(5),i=r(6)("match");t.exports=function(t){var n;return e(t)&&(void 0!==(n=t[i])?!!n:"RegExp"==o(t))};},function(t,n,r){var e=r(6)("match");t.exports=function(t){var n=/./;try{"/./"[t](n);}catch(r){try{return n[e]=!1,!"/./"[t](n)}catch(t){}}return !0};}]);
-});
-
-var accepts = unwrapExports(dist);
-
-var supportMultiple = typeof document !== 'undefined' && document && document.createElement ? 'multiple' in document.createElement('input') : true;
-
-function getDataTransferItems(event) {
-  var dataTransferItemsList = [];
-  if (event.dataTransfer) {
-    var dt = event.dataTransfer;
-
-    // NOTE: Only the 'drop' event has access to DataTransfer.files,
-    // otherwise it will always be empty
-    if (dt.files && dt.files.length) {
-      dataTransferItemsList = dt.files;
-    } else if (dt.items && dt.items.length) {
-      // During the drag even the dataTransfer.files is null
-      // but Chrome implements some drag store, which is accesible via dataTransfer.items
-      dataTransferItemsList = dt.items;
-    }
-  } else if (event.target && event.target.files) {
-    dataTransferItemsList = event.target.files;
-  }
-
-  // Convert from DataTransferItemsList to the native Array
-  return Array.prototype.slice.call(dataTransferItemsList);
-}
-
-// Firefox versions prior to 53 return a bogus MIME type for every file drag, so dragovers with
-// that MIME type will always be accepted
-function fileAccepted(file, accept) {
-  return file.type === 'application/x-moz-file' || accepts(file, accept);
-}
-
-function fileMatchSize(file, maxSize, minSize) {
-  return file.size <= maxSize && file.size >= minSize;
-}
-
-function allFilesAccepted(files, accept) {
-  return files.every(function (file) {
-    return fileAccepted(file, accept);
-  });
-}
-
-// React's synthetic events has evt.isPropagationStopped,
-// but to remain compatibility with other libs (Preact) fall back
-// to check evt.cancelBubble
-function isPropagationStopped(evt) {
-  if (typeof evt.isPropagationStopped === 'function') {
-    return evt.isPropagationStopped();
-  } else if (typeof evt.cancelBubble !== 'undefined') {
-    return evt.cancelBubble;
-  }
-  return false;
-}
-
-// React's synthetic events has evt.isDefaultPrevented,
-// but to remain compatibility with other libs (Preact) first
-// check evt.defaultPrevented
-function isDefaultPrevented(evt) {
-  if (typeof evt.defaultPrevented !== 'undefined') {
-    return evt.defaultPrevented;
-  } else if (typeof evt.isDefaultPrevented === 'function') {
-    return evt.isDefaultPrevented();
-  }
-  return false;
-}
-
-function isDragDataWithFiles(evt) {
-  if (!evt.dataTransfer) {
-    return true;
-  }
-  // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/types
-  // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Recommended_drag_types#file
-  return Array.prototype.some.call(evt.dataTransfer.types, function (type) {
-    return type === 'Files' || type === 'application/x-moz-file';
-  });
-}
-
-// allow the entire document to be a drag target
-function onDocumentDragOver(evt) {
-  evt.preventDefault();
-}
-
-function isIe(userAgent) {
-  return userAgent.indexOf('MSIE') !== -1 || userAgent.indexOf('Trident/') !== -1;
-}
-
-function isEdge(userAgent) {
-  return userAgent.indexOf('Edge/') !== -1;
-}
-
-function isIeOrEdge() {
-  var userAgent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window.navigator.userAgent;
-
-  return isIe(userAgent) || isEdge(userAgent);
-}
-
-/**
- * This is intended to be used to compose event handlers
- * They are executed in order until one of them calls `event.preventDefault()`.
- * Not sure this is the best way to do this, but it seems legit.
- * @param {Function} fns the event hanlder functions
- * @return {Function} the event handler to add to an element
- */
-function composeEventHandlers() {
-  for (var _len = arguments.length, fns = Array(_len), _key = 0; _key < _len; _key++) {
-    fns[_key] = arguments[_key];
-  }
-
-  return function (event) {
-    for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-      args[_key2 - 1] = arguments[_key2];
-    }
-
-    return fns.some(function (fn) {
-      fn && fn.apply(undefined, [event].concat(args));
-      return event.defaultPrevented;
-    });
-  };
-}
-
-var _extends$h = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass$2 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _defineProperty$1(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _objectWithoutProperties$8(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _classCallCheck$c(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn$c(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits$c(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Dropzone = function (_React$Component) {
-  _inherits$c(Dropzone, _React$Component);
-
-  function Dropzone() {
-    var _ref;
-
-    var _temp, _this, _ret;
-
-    _classCallCheck$c(this, Dropzone);
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn$c(this, (_ref = Dropzone.__proto__ || Object.getPrototypeOf(Dropzone)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-      draggedFiles: [],
-      acceptedFiles: [],
-      rejectedFiles: []
-    }, _this.isFileDialogActive = false, _this.onDocumentDrop = function (evt) {
-      if (_this.node && _this.node.contains(evt.target)) {
-        // if we intercepted an event for our instance, let it propagate down to the instance's onDrop handler
-        return;
-      }
-      evt.preventDefault();
-      _this.dragTargets = [];
-    }, _this.onDragStart = function (evt) {
-      evt.persist();
-      if (_this.props.onDragStart && isDragDataWithFiles(evt)) {
-        _this.props.onDragStart.call(_this, evt);
-      }
-    }, _this.onDragEnter = function (evt) {
-      evt.preventDefault();
-
-      // Count the dropzone and any children that are entered.
-      if (_this.dragTargets.indexOf(evt.target) === -1) {
-        _this.dragTargets.push(evt.target);
-      }
-
-      evt.persist();
-
-      if (isDragDataWithFiles(evt)) {
-        Promise.resolve(_this.props.getDataTransferItems(evt)).then(function (draggedFiles) {
-          if (isPropagationStopped(evt)) {
-            return;
-          }
-
-          _this.setState({
-            draggedFiles: draggedFiles,
-            // Do not rely on files for the drag state. It doesn't work in Safari.
-            isDragActive: true
-          });
-        });
-
-        if (_this.props.onDragEnter) {
-          _this.props.onDragEnter.call(_this, evt);
-        }
-      }
-    }, _this.onDragOver = function (evt) {
-      // eslint-disable-line class-methods-use-this
-      evt.preventDefault();
-      evt.persist();
-
-      if (evt.dataTransfer) {
-        evt.dataTransfer.dropEffect = 'copy';
-      }
-
-      if (_this.props.onDragOver && isDragDataWithFiles(evt)) {
-        _this.props.onDragOver.call(_this, evt);
-      }
-
-      return false;
-    }, _this.onDragLeave = function (evt) {
-      evt.preventDefault();
-      evt.persist();
-
-      // Only deactivate once the dropzone and all children have been left.
-      _this.dragTargets = _this.dragTargets.filter(function (el) {
-        return el !== evt.target && _this.node.contains(el);
-      });
-      if (_this.dragTargets.length > 0) {
-        return;
-      }
-
-      // Clear dragging files state
-      _this.setState({
-        isDragActive: false,
-        draggedFiles: []
-      });
-
-      if (_this.props.onDragLeave && isDragDataWithFiles(evt)) {
-        _this.props.onDragLeave.call(_this, evt);
-      }
-    }, _this.onDrop = function (evt) {
-      var _this$props = _this.props,
-          onDrop = _this$props.onDrop,
-          onDropAccepted = _this$props.onDropAccepted,
-          onDropRejected = _this$props.onDropRejected,
-          multiple = _this$props.multiple,
-          accept = _this$props.accept,
-          getDataTransferItems$$1 = _this$props.getDataTransferItems;
-
-      // Stop default browser behavior
-
-      evt.preventDefault();
-
-      // Persist event for later usage
-      evt.persist();
-
-      // Reset the counter along with the drag on a drop.
-      _this.dragTargets = [];
-      _this.isFileDialogActive = false;
-
-      // Clear files value
-      _this.draggedFiles = null;
-
-      // Reset drag state
-      _this.setState({
-        isDragActive: false,
-        draggedFiles: []
-      });
-
-      if (isDragDataWithFiles(evt)) {
-        Promise.resolve(getDataTransferItems$$1(evt)).then(function (fileList) {
-          var acceptedFiles = [];
-          var rejectedFiles = [];
-
-          if (isPropagationStopped(evt)) {
-            return;
-          }
-
-          fileList.forEach(function (file) {
-            if (fileAccepted(file, accept) && fileMatchSize(file, _this.props.maxSize, _this.props.minSize)) {
-              acceptedFiles.push(file);
-            } else {
-              rejectedFiles.push(file);
-            }
-          });
-
-          if (!multiple && acceptedFiles.length > 1) {
-            // if not in multi mode add any extra accepted files to rejected.
-            // This will allow end users to easily ignore a multi file drop in "single" mode.
-            rejectedFiles.push.apply(rejectedFiles, _toConsumableArray(acceptedFiles.splice(0)));
-          }
-
-          // Update `acceptedFiles` and `rejectedFiles` state
-          // This will make children render functions receive the appropriate
-          // values
-          _this.setState({ acceptedFiles: acceptedFiles, rejectedFiles: rejectedFiles }, function () {
-            if (onDrop) {
-              onDrop.call(_this, acceptedFiles, rejectedFiles, evt);
-            }
-
-            if (rejectedFiles.length > 0 && onDropRejected) {
-              onDropRejected.call(_this, rejectedFiles, evt);
-            }
-
-            if (acceptedFiles.length > 0 && onDropAccepted) {
-              onDropAccepted.call(_this, acceptedFiles, evt);
-            }
-          });
-        });
-      }
-    }, _this.onClick = function (evt) {
-      var _this$props2 = _this.props,
-          onClick = _this$props2.onClick,
-          disableClick = _this$props2.disableClick;
-
-      // if onClick prop is given, run it first
-
-      if (onClick) {
-        onClick.call(_this, evt);
-      }
-
-      // if disableClick is not set and the event hasn't been default prefented within
-      // the onClick listener, open the file dialog
-      if (!disableClick && !isDefaultPrevented(evt)) {
-        evt.stopPropagation();
-
-        // in IE11/Edge the file-browser dialog is blocking, ensure this is behind setTimeout
-        // this is so react can handle state changes in the onClick prop above above
-        // see: https://github.com/react-dropzone/react-dropzone/issues/450
-        if (isIeOrEdge()) {
-          setTimeout(_this.open, 0);
-        } else {
-          _this.open();
-        }
-      }
-    }, _this.onInputElementClick = function (evt) {
-      evt.stopPropagation();
-    }, _this.onFileDialogCancel = function () {
-      // timeout will not recognize context of this method
-      var onFileDialogCancel = _this.props.onFileDialogCancel;
-      // execute the timeout only if the FileDialog is opened in the browser
-
-      if (_this.isFileDialogActive) {
-        setTimeout(function () {
-          if (_this.input != null) {
-            // Returns an object as FileList
-            var files = _this.input.files;
-
-
-            if (!files.length) {
-              _this.isFileDialogActive = false;
-
-              if (typeof onFileDialogCancel === 'function') {
-                onFileDialogCancel();
-              }
-            }
-          }
-        }, 300);
-      }
-    }, _this.onFocus = function (evt) {
-      var onFocus = _this.props.onFocus;
-
-      if (onFocus) {
-        onFocus.call(_this, evt);
-      }
-      if (!isDefaultPrevented(evt)) {
-        _this.setState({ isFocused: true });
-      }
-    }, _this.onBlur = function (evt) {
-      var onBlur = _this.props.onBlur;
-
-      if (onBlur) {
-        onBlur.call(_this, evt);
-      }
-      if (!isDefaultPrevented(evt)) {
-        _this.setState({ isFocused: false });
-      }
-    }, _this.onKeyDown = function (evt) {
-      var onKeyDown = _this.props.onKeyDown;
-
-      if (!_this.node.isEqualNode(evt.target)) {
-        return;
-      }
-
-      if (onKeyDown) {
-        onKeyDown.call(_this, evt);
-      }
-
-      if (!isDefaultPrevented(evt) && (evt.keyCode === 32 || evt.keyCode === 13)) {
-        evt.preventDefault();
-        _this.open();
-      }
-    }, _this.composeHandler = function (handler) {
-      if (_this.props.disabled) {
-        return null;
-      }
-      return handler;
-    }, _this.getRootProps = function () {
-      var _extends2;
-
-      var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-      var _ref2$refKey = _ref2.refKey,
-          refKey = _ref2$refKey === undefined ? 'ref' : _ref2$refKey,
-          onKeyDown = _ref2.onKeyDown,
-          onFocus = _ref2.onFocus,
-          onBlur = _ref2.onBlur,
-          onClick = _ref2.onClick,
-          onDragStart = _ref2.onDragStart,
-          onDragEnter = _ref2.onDragEnter,
-          onDragOver = _ref2.onDragOver,
-          onDragLeave = _ref2.onDragLeave,
-          onDrop = _ref2.onDrop,
-          rest = _objectWithoutProperties$8(_ref2, ['refKey', 'onKeyDown', 'onFocus', 'onBlur', 'onClick', 'onDragStart', 'onDragEnter', 'onDragOver', 'onDragLeave', 'onDrop']);
-
-      return _extends$h((_extends2 = {
-        onKeyDown: _this.composeHandler(onKeyDown ? composeEventHandlers(onKeyDown, _this.onKeyDown) : _this.onKeyDown),
-        onFocus: _this.composeHandler(onFocus ? composeEventHandlers(onFocus, _this.onFocus) : _this.onFocus),
-        onBlur: _this.composeHandler(onBlur ? composeEventHandlers(onBlur, _this.onBlur) : _this.onBlur),
-        onClick: _this.composeHandler(onClick ? composeEventHandlers(onClick, _this.onClick) : _this.onClick),
-        onDragStart: _this.composeHandler(onDragStart ? composeEventHandlers(onDragStart, _this.onDragStart) : _this.onDragStart),
-        onDragEnter: _this.composeHandler(onDragEnter ? composeEventHandlers(onDragEnter, _this.onDragEnter) : _this.onDragEnter),
-        onDragOver: _this.composeHandler(onDragOver ? composeEventHandlers(onDragOver, _this.onDragOver) : _this.onDragOver),
-        onDragLeave: _this.composeHandler(onDragLeave ? composeEventHandlers(onDragLeave, _this.onDragLeave) : _this.onDragLeave),
-        onDrop: _this.composeHandler(onDrop ? composeEventHandlers(onDrop, _this.onDrop) : _this.onDrop)
-      }, _defineProperty$1(_extends2, refKey, _this.setNodeRef), _defineProperty$1(_extends2, 'tabIndex', _this.props.disabled ? -1 : 0), _extends2), rest);
-    }, _this.getInputProps = function () {
-      var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-      var _ref3$refKey = _ref3.refKey,
-          refKey = _ref3$refKey === undefined ? 'ref' : _ref3$refKey,
-          onChange = _ref3.onChange,
-          onClick = _ref3.onClick,
-          rest = _objectWithoutProperties$8(_ref3, ['refKey', 'onChange', 'onClick']);
-
-      var _this$props3 = _this.props,
-          accept = _this$props3.accept,
-          multiple = _this$props3.multiple,
-          name = _this$props3.name;
-
-      var inputProps = _defineProperty$1({
-        accept: accept,
-        type: 'file',
-        style: { display: 'none' },
-        multiple: supportMultiple && multiple,
-        onChange: composeEventHandlers(onChange, _this.onDrop),
-        onClick: composeEventHandlers(onClick, _this.onInputElementClick),
-        autoComplete: 'off',
-        tabIndex: -1
-      }, refKey, _this.setInputRef);
-      if (name && name.length) {
-        inputProps.name = name;
-      }
-      return _extends$h({}, inputProps, rest);
-    }, _this.setNodeRef = function (node) {
-      _this.node = node;
-    }, _this.setInputRef = function (input) {
-      _this.input = input;
-    }, _this.open = function () {
-      _this.isFileDialogActive = true;
-      if (_this.input) {
-        _this.input.value = null;
-        _this.input.click();
-      }
-    }, _temp), _possibleConstructorReturn$c(_this, _ret);
-  }
-
-  _createClass$2(Dropzone, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var preventDropOnDocument = this.props.preventDropOnDocument;
-
-      this.dragTargets = [];
-
-      if (preventDropOnDocument) {
-        document.addEventListener('dragover', onDocumentDragOver, false);
-        document.addEventListener('drop', this.onDocumentDrop, false);
-      }
-
-      window.addEventListener('focus', this.onFileDialogCancel, false);
-    }
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      var preventDropOnDocument = this.props.preventDropOnDocument;
-
-      if (preventDropOnDocument) {
-        document.removeEventListener('dragover', onDocumentDragOver);
-        document.removeEventListener('drop', this.onDocumentDrop);
-      }
-
-      window.removeEventListener('focus', this.onFileDialogCancel, false);
-    }
-
-    /**
-     * Open system file upload dialog.
-     *
-     * @public
-     */
-
-  }, {
-    key: 'render',
-    value: function render() {
-      var _props = this.props,
-          children = _props.children,
-          multiple = _props.multiple,
-          disabled = _props.disabled;
-      var _state = this.state,
-          isDragActive = _state.isDragActive,
-          isFocused = _state.isFocused,
-          draggedFiles = _state.draggedFiles,
-          acceptedFiles = _state.acceptedFiles,
-          rejectedFiles = _state.rejectedFiles;
-
-
-      var filesCount = draggedFiles.length;
-      var isMultipleAllowed = multiple || filesCount <= 1;
-      var isDragAccept = filesCount > 0 && allFilesAccepted(draggedFiles, this.props.accept);
-      var isDragReject = filesCount > 0 && (!isDragAccept || !isMultipleAllowed);
-
-      return children({
-        isDragActive: isDragActive,
-        isDragAccept: isDragAccept,
-        isDragReject: isDragReject,
-        draggedFiles: draggedFiles,
-        acceptedFiles: acceptedFiles,
-        rejectedFiles: rejectedFiles,
-        isFocused: isFocused && !disabled,
-        getRootProps: this.getRootProps,
-        getInputProps: this.getInputProps,
-        open: this.open
-      });
-    }
-  }]);
-
-  return Dropzone;
-}(React__default.Component);
-
-Dropzone.propTypes = {
-  /**
-   * Allow specific types of files. See https://github.com/okonet/attr-accept for more information.
-   * Keep in mind that mime type determination is not reliable across platforms. CSV files,
-   * for example, are reported as text/plain under macOS but as application/vnd.ms-excel under
-   * Windows. In some cases there might not be a mime type set at all.
-   * See: https://github.com/react-dropzone/react-dropzone/issues/276
-   */
-  accept: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
-
-  /**
-   * Render function that renders the actual component
-   *
-   * @param {Object} props
-   * @param {Function} props.getRootProps Returns the props you should apply to the root drop container you render
-   * @param {Function} props.getInputProps Returns the props you should apply to hidden file input you render
-   * @param {Function} props.open Open the native file selection dialog
-   * @param {Boolean} props.isFocused Dropzone area is in focus
-   * @param {Boolean} props.isDragActive Active drag is in progress
-   * @param {Boolean} props.isDragAccept Dragged files are accepted
-   * @param {Boolean} props.isDragReject Some dragged files are rejected
-   * @param {Array} props.draggedFiles Files in active drag
-   * @param {Array} props.acceptedFiles Accepted files
-   * @param {Array} props.rejectedFiles Rejected files
-   */
-  children: PropTypes.func,
-
-  /**
-   * Disallow clicking on the dropzone container to open file dialog
-   */
-  disableClick: PropTypes.bool,
-
-  /**
-   * Enable/disable the dropzone entirely
-   */
-  disabled: PropTypes.bool,
-
-  /**
-   * If false, allow dropped items to take over the current browser window
-   */
-  preventDropOnDocument: PropTypes.bool,
-
-  /**
-   * Allow dropping multiple files
-   */
-  multiple: PropTypes.bool,
-
-  /**
-   * `name` attribute for the input tag
-   */
-  name: PropTypes.string,
-
-  /**
-   * Maximum file size (in bytes)
-   */
-  maxSize: PropTypes.number,
-
-  /**
-   * Minimum file size (in bytes)
-   */
-  minSize: PropTypes.number,
-
-  /**
-   * getDataTransferItems handler
-   * @param {Event} event
-   * @returns {Array} array of File objects
-   */
-  getDataTransferItems: PropTypes.func,
-
-  /**
-   * onClick callback
-   * @param {Event} event
-   */
-  onClick: PropTypes.func,
-
-  /**
-   * onFocus callback
-   */
-  onFocus: PropTypes.func,
-
-  /**
-   * onBlur callback
-   */
-  onBlur: PropTypes.func,
-
-  /**
-   * onKeyDown callback
-   */
-  onKeyDown: PropTypes.func,
-
-  /**
-   * The `onDrop` method that accepts two arguments.
-   * The first argument represents the accepted files and the second argument the rejected files.
-   *
-   * ```javascript
-   * function onDrop(acceptedFiles, rejectedFiles) {
-   *   // do stuff with files...
-   * }
-   * ```
-   *
-   * Files are accepted or rejected based on the `accept` prop.
-   * This must be a valid [MIME type](http://www.iana.org/assignments/media-types/media-types.xhtml) according to [input element specification](https://www.w3.org/wiki/HTML/Elements/input/file) or a valid file extension.
-   *
-   * Note that the `onDrop` callback will always be called regardless if the dropped files were accepted or rejected.
-   * You can use the `onDropAccepted`/`onDropRejected` props if you'd like to react to a specific event instead of the `onDrop` prop.
-   *
-   * The `onDrop` callback will provide you with an array of [Files](https://developer.mozilla.org/en-US/docs/Web/API/File) which you can then process and send to a server.
-   * For example, with [SuperAgent](https://github.com/visionmedia/superagent) as a http/ajax library:
-   *
-   * ```javascript
-   * function onDrop(acceptedFiles) {
-   *   const req = request.post('/upload')
-   *   acceptedFiles.forEach(file => {
-   *     req.attach(file.name, file)
-   *   })
-   *   req.end(callback)
-   * }
-   * ```
-   */
-  onDrop: PropTypes.func,
-
-  /**
-   * onDropAccepted callback
-   */
-  onDropAccepted: PropTypes.func,
-
-  /**
-   * onDropRejected callback
-   */
-  onDropRejected: PropTypes.func,
-
-  /**
-   * onDragStart callback
-   */
-  onDragStart: PropTypes.func,
-
-  /**
-   * onDragEnter callback
-   */
-  onDragEnter: PropTypes.func,
-
-  /**
-   * onDragOver callback
-   */
-  onDragOver: PropTypes.func,
-
-  /**
-   * onDragLeave callback
-   */
-  onDragLeave: PropTypes.func,
-
-  /**
-   * Provide a callback on clicking the cancel button of the file dialog
-   */
-  onFileDialogCancel: PropTypes.func
-};
-
-Dropzone.defaultProps = {
-  preventDropOnDocument: true,
-  disabled: false,
-  disableClick: false,
-  multiple: true,
-  maxSize: Infinity,
-  minSize: 0,
-  getDataTransferItems: getDataTransferItems
-};
-
-var PKPLACEHOLDER = '__pk__';
-
-var Importer = function (_Component) {
-    inherits(Importer, _Component);
-
-    function Importer(props) {
-        classCallCheck$1(this, Importer);
-
-        var _this = possibleConstructorReturn(this, (Importer.__proto__ || Object.getPrototypeOf(Importer)).call(this, props));
-
-        _this.onDrop = function (files) {
-            var newFile = files[0];
-            _this.setState({ file: newFile, errorMessage: null });
-        };
-
-        _this.onCancel = function () {
-            _this.setState({ file: null, errorMessage: null });
-        };
-
-        _this.onValidate = function () {
-            neoImporter.validateFileUploaded(_this.props.validateUrl.replace(PKPLACEHOLDER, _this.props.fileId)).then(function (results) {
-                return _this.props.finished();
-            }).catch(function (err) {
-                console.log(err);
-            });
-        };
-
-        _this.onSubmit = function () {
-            neoImporter.fileUpload(_this.props.processUrl, _this.state.file, _this.props.extraParams).then(function (response) {
-                return _this.props.uploadSucessfull(response);
-            }).catch(function (err) {
-                _this.setState({
-                    errorMessage: err.response.data.uploaded_file[0].replace('None', '' + process.env.REACT_APP_API_ENDPOINT_URL + process.env.REACT_APP_API_VERSION + _this.props.template_file + '?' + _this.serialize(_this.props.extraParams))
-                });
-            });
-        };
-
-        _this.serialize = function (obj) {
-            var str = [];
-            for (var p in obj) {
-                if (obj.hasOwnProperty(p)) {
-                    str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
-                }
-            }return str.join('&');
-        };
-
-        _this.state = {
-            file: null,
-            errorMessage: null
-        };
-        return _this;
-    }
-
-    createClass$1(Importer, [{
-        key: 'render',
-        value: function render() {
-            var file = this.state.file;
-
-            var zoneStyle = {
-                width: '100%',
-                height: 150,
-                border: '2px dashed #888',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'column'
-            };
-            return React__default.createElement(
-                'div',
-                { className: 'row' },
-                this.state.errorMessage ? React__default.createElement(
-                    'div',
-                    { className: 'col-md-12' },
-                    React__default.createElement('div', {
-                        className: 'alert alert-danger',
-                        dangerouslySetInnerHTML: {
-                            __html: this.state.errorMessage
-                        }
-                    })
-                ) : null,
-                React__default.createElement(
-                    'div',
-                    { className: 'col-9' },
-                    React__default.createElement(
-                        Dropzone,
-                        {
-                            disableClick: true,
-                            accept: '.xls, .xlsx',
-                            multiple: false,
-                            style: zoneStyle,
-                            onDrop: this.onDrop,
-                            onFileDialogCancel: this.onCancel
-                        },
-                        function (_ref) {
-                            var isDragActive = _ref.isDragActive,
-                                isDragReject = _ref.isDragReject,
-                                open = _ref.open;
-
-                            console.log({ isDragActive: isDragActive, isDragReject: isDragReject, open: open });
-
-                            if (isDragActive) {
-                                return React__default.createElement(
-                                    'p',
-                                    null,
-                                    'File accepted'
-                                );
-                            }
-                            if (isDragReject) {
-                                return React__default.createElement(
-                                    'p',
-                                    null,
-                                    'Files rejected'
-                                );
-                            }
-                            return React__default.createElement(
-                                React__default.Fragment,
-                                null,
-                                React__default.createElement(
-                                    'p',
-                                    null,
-                                    'Dropping file here ... or'
-                                ),
-                                React__default.createElement(
-                                    'button',
-                                    {
-                                        className: 'btn btn-primary',
-                                        type: 'button',
-                                        onClick: function onClick() {
-                                            return open();
-                                        }
-                                    },
-                                    'Browse File'
-                                )
-                            );
-                        }
-                    ),
-                    React__default.createElement('br', null),
-                    file && React__default.createElement(
-                        Alert,
-                        null,
-                        file.name
-                    ),
-                    this.props.fileId === null ? React__default.createElement(
-                        'button',
-                        {
-                            disabled: file ? '' : 'disabled',
-                            className: 'btn btn-primary',
-                            onClick: this.onSubmit
-                        },
-                        'Import File'
-                    ) : React__default.createElement(
-                        'button',
-                        {
-                            className: 'btn btn-primary',
-                            onClick: this.onValidate
-                        },
-                        'Validate file'
-                    )
-                ),
-                React__default.createElement(
-                    'div',
-                    { className: 'col-3' },
-                    React__default.createElement(
-                        'div',
-                        { className: 'card' },
-                        React__default.createElement(
-                            'h5',
-                            { className: 'card-header bg-primary text-white' },
-                            this.props.contentType,
-                            ' template download'
-                        ),
-                        React__default.createElement(
-                            'div',
-                            { className: 'card-body' },
-                            React__default.createElement(
-                                'p',
-                                { className: 'card-text' },
-                                'Please use this importer to upload',
-                                ' ',
-                                this.props.contentType ? this.props.contentType.replace('Importer', '') : null,
-                                ' ',
-                                'in XLS file. You can download a template file',
-                                ' ',
-                                React__default.createElement(
-                                    'a',
-                                    {
-                                        target: '_blank',
-                                        href: '' + process.env.REACT_APP_API_ENDPOINT_URL + process.env.REACT_APP_API_VERSION + this.props.template_file + '?' + this.serialize(this.props.extraParams)
-                                    },
-                                    'here!'
-                                )
-                            )
-                        )
-                    )
-                )
-            );
-        }
-    }]);
-    return Importer;
-}(React.Component);
-
-Importer.propTypes = {};
 
 // import chrome_logo from '../assets/imgs/chrome.svg';
 // import firefox_logo from '../assets/imgs/firefox.svg';
@@ -20635,7 +19820,7 @@ var hub_6 = hub.hasHubOnCarrier;
 var hub_7 = hub.getHubFromCarrier;
 var hub_8 = hub.setHubOnCarrier;
 
-var dist$1 = createCommonjsModule(function (module, exports) {
+var dist = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 
 exports.addGlobalEventProcessor = scope.addGlobalEventProcessor;
@@ -20649,16 +19834,16 @@ exports.setHubOnCarrier = hub.setHubOnCarrier;
 //# sourceMappingURL=index.js.map
 });
 
-unwrapExports(dist$1);
-var dist_1 = dist$1.addGlobalEventProcessor;
-var dist_2 = dist$1.Scope;
-var dist_3 = dist$1.getCurrentHub;
-var dist_4 = dist$1.getHubFromCarrier;
-var dist_5 = dist$1.getMainCarrier;
-var dist_6 = dist$1.Hub;
-var dist_7 = dist$1.setHubOnCarrier;
+unwrapExports(dist);
+var dist_1 = dist.addGlobalEventProcessor;
+var dist_2 = dist.Scope;
+var dist_3 = dist.getCurrentHub;
+var dist_4 = dist.getHubFromCarrier;
+var dist_5 = dist.getMainCarrier;
+var dist_6 = dist.Hub;
+var dist_7 = dist.setHubOnCarrier;
 
-var dist$2 = createCommonjsModule(function (module, exports) {
+var dist$1 = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 
 
@@ -20672,7 +19857,7 @@ function callOnHub(method) {
     for (var _i = 1; _i < arguments.length; _i++) {
         args[_i - 1] = arguments[_i];
     }
-    var hub = dist$1.getCurrentHub();
+    var hub = dist.getCurrentHub();
     if (hub && hub[method]) {
         // tslint:disable-next-line:no-unsafe-any
         return hub[method].apply(hub, tslib_1.__spread(args));
@@ -20787,14 +19972,14 @@ exports._callOnClient = _callOnClient;
 //# sourceMappingURL=index.js.map
 });
 
-unwrapExports(dist$2);
-var dist_1$1 = dist$2.captureException;
-var dist_2$1 = dist$2.captureMessage;
-var dist_3$1 = dist$2.captureEvent;
-var dist_4$1 = dist$2.addBreadcrumb;
-var dist_5$1 = dist$2.configureScope;
-var dist_6$1 = dist$2.withScope;
-var dist_7$1 = dist$2._callOnClient;
+unwrapExports(dist$1);
+var dist_1$1 = dist$1.captureException;
+var dist_2$1 = dist$1.captureMessage;
+var dist_3$1 = dist$1.captureEvent;
+var dist_4$1 = dist$1.addBreadcrumb;
+var dist_5$1 = dist$1.configureScope;
+var dist_6$1 = dist$1.withScope;
+var dist_7$1 = dist$1._callOnClient;
 
 var error = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -21011,7 +20196,7 @@ exports.API = API;
 unwrapExports(api);
 var api_1 = api.API;
 
-var dist$3 = createCommonjsModule(function (module, exports) {
+var dist$2 = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 /** JSDoc */
 var Severity;
@@ -21105,9 +20290,9 @@ var Status;
 //# sourceMappingURL=index.js.map
 });
 
-unwrapExports(dist$3);
-var dist_1$2 = dist$3.Severity;
-var dist_2$2 = dist$3.Status;
+unwrapExports(dist$2);
+var dist_1$2 = dist$2.Severity;
+var dist_2$2 = dist$2.Status;
 
 var async = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -21656,7 +20841,7 @@ var BaseClient = /** @class */ (function () {
                     case 0:
                         if (!this.isEnabled()) {
                             return [2 /*return*/, {
-                                    status: dist$3.Status.Skipped,
+                                    status: dist$2.Status.Skipped,
                                 }];
                         }
                         _a = this.getOptions(), beforeSend = _a.beforeSend, sampleRate = _a.sampleRate;
@@ -21664,7 +20849,7 @@ var BaseClient = /** @class */ (function () {
                         // 0.0 === 0% events are sent
                         if (typeof sampleRate === 'number' && Math.random() > sampleRate) {
                             return [2 /*return*/, {
-                                    status: dist$3.Status.Skipped,
+                                    status: dist$2.Status.Skipped,
                                 }];
                         }
                         return [4 /*yield*/, this.prepareEvent(event, scope, hint)];
@@ -21672,7 +20857,7 @@ var BaseClient = /** @class */ (function () {
                         prepared = _b.sent();
                         if (prepared === null) {
                             return [2 /*return*/, {
-                                    status: dist$3.Status.Skipped,
+                                    status: dist$2.Status.Skipped,
                                 }];
                         }
                         finalEvent = prepared;
@@ -21699,13 +20884,13 @@ var BaseClient = /** @class */ (function () {
                         }));
                         return [2 /*return*/, {
                                 reason: 'Event processing in beforeSend method threw an exception',
-                                status: dist$3.Status.Invalid,
+                                status: dist$2.Status.Invalid,
                             }];
                     case 6:
                         if (finalEvent === null) {
                             return [2 /*return*/, {
                                     reason: 'Event dropped due to being discarded by beforeSend method',
-                                    status: dist$3.Status.Skipped,
+                                    status: dist$2.Status.Skipped,
                                 }];
                         }
                         _b.label = 7;
@@ -21715,7 +20900,7 @@ var BaseClient = /** @class */ (function () {
                     case 8:
                         response = _b.sent();
                         response.event = finalEvent;
-                        if (response.status === dist$3.Status.RateLimit) ;
+                        if (response.status === dist$2.Status.RateLimit) ;
                         return [2 /*return*/, response];
                     case 9:
                         error_1 = _b.sent();
@@ -21724,7 +20909,7 @@ var BaseClient = /** @class */ (function () {
                         logger_1.logger.error("" + error_1);
                         return [2 /*return*/, {
                                 reason: "" + error_1,
-                                status: dist$3.Status.Failed,
+                                status: dist$2.Status.Failed,
                             }];
                     case 10: return [2 /*return*/];
                 }
@@ -21802,7 +20987,7 @@ var NoopTransport = /** @class */ (function () {
             return tslib_1.__generator(this, function (_a) {
                 return [2 /*return*/, Promise.resolve({
                         reason: "NoopTransport: Event has been skipped because no Dsn is configured.",
-                        status: dist$3.Status.Skipped,
+                        status: dist$2.Status.Skipped,
                     })];
             });
         });
@@ -21952,7 +21137,7 @@ function initAndBind(clientClass, options) {
         logger_1.logger.enable();
     }
     var client = new clientClass(options);
-    dist$1.getCurrentHub().bindClient(client);
+    dist.getCurrentHub().bindClient(client);
     client.install();
 }
 exports.initAndBind = initAndBind;
@@ -21981,10 +21166,10 @@ var Dedupe = /** @class */ (function () {
      */
     Dedupe.prototype.setupOnce = function () {
         var _this = this;
-        dist$1.addGlobalEventProcessor(function (currentEvent) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+        dist.addGlobalEventProcessor(function (currentEvent) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
             var self;
             return tslib_1.__generator(this, function (_a) {
-                self = dist$1.getCurrentHub().getIntegration(Dedupe);
+                self = dist.getCurrentHub().getIntegration(Dedupe);
                 if (self) {
                     // Juuust in case something goes wrong
                     try {
@@ -22241,10 +21426,10 @@ var InboundFilters = /** @class */ (function () {
      */
     InboundFilters.prototype.setupOnce = function () {
         var _this = this;
-        dist$1.addGlobalEventProcessor(function (event) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+        dist.addGlobalEventProcessor(function (event) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
             var hub, self, client, clientOptions, options;
             return tslib_1.__generator(this, function (_a) {
-                hub = dist$1.getCurrentHub();
+                hub = dist.getCurrentHub();
                 if (!hub) {
                     return [2 /*return*/, event];
                 }
@@ -22426,10 +21611,10 @@ var ExtraErrorData = /** @class */ (function () {
      */
     ExtraErrorData.prototype.setupOnce = function () {
         var _this = this;
-        dist$1.addGlobalEventProcessor(function (event, hint) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+        dist.addGlobalEventProcessor(function (event, hint) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
             var self;
             return tslib_1.__generator(this, function (_a) {
-                self = dist$1.getCurrentHub().getIntegration(ExtraErrorData);
+                self = dist.getCurrentHub().getIntegration(ExtraErrorData);
                 if (!self) {
                     return [2 /*return*/, event];
                 }
@@ -22529,10 +21714,10 @@ var Debug = /** @class */ (function () {
      */
     Debug.prototype.setupOnce = function () {
         var _this = this;
-        dist$1.addGlobalEventProcessor(function (event, hint) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+        dist.addGlobalEventProcessor(function (event, hint) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
             var self;
             return tslib_1.__generator(this, function (_a) {
-                self = dist$1.getCurrentHub().getIntegration(Debug);
+                self = dist.getCurrentHub().getIntegration(Debug);
                 if (self) {
                     // tslint:disable:no-console
                     // tslint:disable:no-debugger
@@ -22789,10 +21974,10 @@ var RewriteFrames = /** @class */ (function () {
      */
     RewriteFrames.prototype.setupOnce = function () {
         var _this = this;
-        dist$1.addGlobalEventProcessor(function (event) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+        dist.addGlobalEventProcessor(function (event) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
             var self;
             return tslib_1.__generator(this, function (_a) {
-                self = dist$1.getCurrentHub().getIntegration(RewriteFrames);
+                self = dist.getCurrentHub().getIntegration(RewriteFrames);
                 if (self) {
                     return [2 /*return*/, self.process(event)];
                 }
@@ -22893,21 +22078,21 @@ var integrations_5 = integrations.ExtraErrorData;
 var integrations_6 = integrations.Debug;
 var integrations_7 = integrations.RewriteFrames;
 
-var dist$4 = createCommonjsModule(function (module, exports) {
+var dist$3 = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 
-exports.addBreadcrumb = dist$2.addBreadcrumb;
-exports.captureException = dist$2.captureException;
-exports.captureEvent = dist$2.captureEvent;
-exports.captureMessage = dist$2.captureMessage;
-exports.configureScope = dist$2.configureScope;
-exports.withScope = dist$2.withScope;
+exports.addBreadcrumb = dist$1.addBreadcrumb;
+exports.captureException = dist$1.captureException;
+exports.captureEvent = dist$1.captureEvent;
+exports.captureMessage = dist$1.captureMessage;
+exports.configureScope = dist$1.configureScope;
+exports.withScope = dist$1.withScope;
 
-exports.addGlobalEventProcessor = dist$1.addGlobalEventProcessor;
-exports.getCurrentHub = dist$1.getCurrentHub;
-exports.Hub = dist$1.Hub;
-exports.getHubFromCarrier = dist$1.getHubFromCarrier;
-exports.Scope = dist$1.Scope;
+exports.addGlobalEventProcessor = dist.addGlobalEventProcessor;
+exports.getCurrentHub = dist.getCurrentHub;
+exports.Hub = dist.Hub;
+exports.getHubFromCarrier = dist.getHubFromCarrier;
+exports.Scope = dist.Scope;
 
 exports.API = api.API;
 
@@ -22931,28 +22116,28 @@ exports.Integrations = integrations;
 //# sourceMappingURL=index.js.map
 });
 
-unwrapExports(dist$4);
-var dist_1$3 = dist$4.addBreadcrumb;
-var dist_2$3 = dist$4.captureException;
-var dist_3$2 = dist$4.captureEvent;
-var dist_4$2 = dist$4.captureMessage;
-var dist_5$2 = dist$4.configureScope;
-var dist_6$2 = dist$4.withScope;
-var dist_7$2 = dist$4.addGlobalEventProcessor;
-var dist_8 = dist$4.getCurrentHub;
-var dist_9 = dist$4.Hub;
-var dist_10 = dist$4.getHubFromCarrier;
-var dist_11 = dist$4.Scope;
-var dist_12 = dist$4.API;
-var dist_13 = dist$4.BaseClient;
-var dist_14 = dist$4.BaseBackend;
-var dist_15 = dist$4.Dsn;
-var dist_16 = dist$4.SentryError;
-var dist_17 = dist$4.PromiseBuffer;
-var dist_18 = dist$4.LogLevel;
-var dist_19 = dist$4.initAndBind;
-var dist_20 = dist$4.NoopTransport;
-var dist_21 = dist$4.Integrations;
+unwrapExports(dist$3);
+var dist_1$3 = dist$3.addBreadcrumb;
+var dist_2$3 = dist$3.captureException;
+var dist_3$2 = dist$3.captureEvent;
+var dist_4$2 = dist$3.captureMessage;
+var dist_5$2 = dist$3.configureScope;
+var dist_6$2 = dist$3.withScope;
+var dist_7$2 = dist$3.addGlobalEventProcessor;
+var dist_8 = dist$3.getCurrentHub;
+var dist_9 = dist$3.Hub;
+var dist_10 = dist$3.getHubFromCarrier;
+var dist_11 = dist$3.Scope;
+var dist_12 = dist$3.API;
+var dist_13 = dist$3.BaseClient;
+var dist_14 = dist$3.BaseBackend;
+var dist_15 = dist$3.Dsn;
+var dist_16 = dist$3.SentryError;
+var dist_17 = dist$3.PromiseBuffer;
+var dist_18 = dist$3.LogLevel;
+var dist_19 = dist$3.initAndBind;
+var dist_20 = dist$3.NoopTransport;
+var dist_21 = dist$3.Integrations;
 
 var dist_3$3 = createCommonjsModule(function (module, exports) {
 
@@ -25717,8 +24902,8 @@ var BaseTransport = /** @class */ (function () {
     function BaseTransport(options) {
         this.options = options;
         /** A simple buffer holding all requests. */
-        this.buffer = new dist$4.PromiseBuffer(30);
-        this.url = new dist$4.API(this.options.dsn).getStoreEndpointWithUrlEncodedAuth();
+        this.buffer = new dist$3.PromiseBuffer(30);
+        this.url = new dist$3.API(this.options.dsn).getStoreEndpointWithUrlEncodedAuth();
     }
     /**
      * @inheritDoc
@@ -25726,7 +24911,7 @@ var BaseTransport = /** @class */ (function () {
     BaseTransport.prototype.sendEvent = function (_) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
-                throw new dist$4.SentryError('Transport Class has to implement `sendEvent` method');
+                throw new dist$3.SentryError('Transport Class has to implement `sendEvent` method');
             });
         });
     };
@@ -25858,7 +25043,7 @@ var BrowserBackend = /** @class */ (function (_super) {
         // error.
         var dsn = this.options.dsn;
         if (!dsn) {
-            throw new dist$4.SentryError('Invariant exception: install() must not be called when disabled');
+            throw new dist$3.SentryError('Invariant exception: install() must not be called when disabled');
         }
         Error.stackTraceLimit = 50;
         return true;
@@ -25960,7 +25145,7 @@ var BrowserBackend = /** @class */ (function (_super) {
         });
     };
     return BrowserBackend;
-}(dist$4.BaseBackend));
+}(dist$3.BaseBackend));
 
 var SDK_NAME = 'sentry.javascript.browser';
 var SDK_VERSION = '4.6.1';
@@ -26012,18 +25197,18 @@ var BrowserClient = /** @class */ (function (_super) {
         }
         var dsn = options.dsn || this.getDsn();
         if (!options.eventId) {
-            throw new dist$4.SentryError('Missing `eventId` option in showReportDialog call');
+            throw new dist$3.SentryError('Missing `eventId` option in showReportDialog call');
         }
         if (!dsn) {
-            throw new dist$4.SentryError('Missing `Dsn` option in showReportDialog call');
+            throw new dist$3.SentryError('Missing `Dsn` option in showReportDialog call');
         }
         var script = document.createElement('script');
         script.async = true;
-        script.src = new dist$4.API(dsn).getReportDialogEndpoint(options);
+        script.src = new dist$3.API(dsn).getReportDialogEndpoint(options);
         (document.head || document.body).appendChild(script);
     };
     return BrowserClient;
-}(dist$4.BaseClient));
+}(dist$3.BaseClient));
 
 var logger_1 = createCommonjsModule$$1(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -26158,7 +25343,7 @@ function wrap(fn, options, before) {
         }
         catch (ex) {
             ignoreNextOnError();
-            dist$4.withScope(function (scope) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+            dist$3.withScope(function (scope) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
                 var _this = this;
                 return tslib_1.__generator(this, function (_a) {
                     scope.addEventProcessor(function (event) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
@@ -26173,7 +25358,7 @@ function wrap(fn, options, before) {
                             return [2 /*return*/, processedEvent];
                         });
                     }); });
-                    dist$4.captureException(ex);
+                    dist$3.captureException(ex);
                     return [2 /*return*/];
                 });
             }); });
@@ -26239,7 +25424,7 @@ function breadcrumbEventHandler(eventName) {
         catch (e) {
             target = '<unknown>';
         }
-        dist$4.getCurrentHub().addBreadcrumb({
+        dist$3.getCurrentHub().addBreadcrumb({
             category: "ui." + eventName,
             message: target,
         }, {
@@ -26317,9 +25502,9 @@ var GlobalHandlers = /** @class */ (function () {
             if (shouldIgnoreOnError()) {
                 return;
             }
-            var self = dist$4.getCurrentHub().getIntegration(GlobalHandlers);
+            var self = dist$3.getCurrentHub().getIntegration(GlobalHandlers);
             if (self) {
-                dist$4.getCurrentHub().captureEvent(self.eventFromGlobalHandler(stack), { originalException: error, data: { stack: stack } });
+                dist$3.getCurrentHub().captureEvent(self.eventFromGlobalHandler(stack), { originalException: error, data: { stack: stack } });
             }
         });
         if (this.options.onerror) {
@@ -26588,10 +25773,10 @@ var Breadcrumbs = /** @class */ (function () {
                 // If the browser successfully queues the request for delivery, the method returns "true" and returns "false" otherwise.
                 // https://developer.mozilla.org/en-US/docs/Web/API/Beacon_API/Using_the_Beacon_API
                 var result = originalBeaconFunction.apply(this, args);
-                var client = dist$4.getCurrentHub().getClient();
+                var client = dist$3.getCurrentHub().getClient();
                 var dsn = client && client.getDsn();
                 if (dsn) {
-                    var filterUrl = new dist$4.API(dsn).getStoreEndpoint();
+                    var filterUrl = new dist$3.API(dsn).getStoreEndpoint();
                     // if Sentry key appears in URL, don't capture it as a request
                     // but rather as our own 'sentry' type breadcrumb
                     if (filterUrl && string_4(url, filterUrl)) {
@@ -26700,10 +25885,10 @@ var Breadcrumbs = /** @class */ (function () {
                 if (args[1] && args[1].method) {
                     method = args[1].method;
                 }
-                var client = dist$4.getCurrentHub().getClient();
+                var client = dist$3.getCurrentHub().getClient();
                 var dsn = client && client.getDsn();
                 if (dsn) {
-                    var filterUrl = new dist$4.API(dsn).getStoreEndpoint();
+                    var filterUrl = new dist$3.API(dsn).getStoreEndpoint();
                     // if Sentry key appears in URL, don't capture it as a request
                     // but rather as our own 'sentry' type breadcrumb
                     if (filterUrl && string_4(url, filterUrl)) {
@@ -26851,10 +26036,10 @@ var Breadcrumbs = /** @class */ (function () {
                     method: args[0],
                     url: args[1],
                 };
-                var client = dist$4.getCurrentHub().getClient();
+                var client = dist$3.getCurrentHub().getClient();
                 var dsn = client && client.getDsn();
                 if (dsn) {
-                    var filterUrl = new dist$4.API(dsn).getStoreEndpoint();
+                    var filterUrl = new dist$3.API(dsn).getStoreEndpoint();
                     // if Sentry key appears in URL, don't capture it as a request
                     // but rather as our own 'sentry' type breadcrumb
                     if (is_7(url) && (filterUrl && string_4(url, filterUrl))) {
@@ -26931,8 +26116,8 @@ var Breadcrumbs = /** @class */ (function () {
      * @param hint SentryBreadcrumbHint
      */
     Breadcrumbs.addBreadcrumb = function (breadcrumb, hint) {
-        if (dist$4.getCurrentHub().getIntegration(Breadcrumbs)) {
-            dist$4.getCurrentHub().addBreadcrumb(breadcrumb, hint);
+        if (dist$3.getCurrentHub().getIntegration(Breadcrumbs)) {
+            dist$3.getCurrentHub().addBreadcrumb(breadcrumb, hint);
         }
     };
     /**
@@ -27009,10 +26194,10 @@ var LinkedErrors = /** @class */ (function () {
      */
     LinkedErrors.prototype.setupOnce = function () {
         var _this = this;
-        dist$4.addGlobalEventProcessor(function (event, hint) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+        dist$3.addGlobalEventProcessor(function (event, hint) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
             var self;
             return tslib_1.__generator(this, function (_a) {
-                self = dist$4.getCurrentHub().getIntegration(LinkedErrors);
+                self = dist$3.getCurrentHub().getIntegration(LinkedErrors);
                 if (self) {
                     return [2 /*return*/, self.handler(event, hint)];
                 }
@@ -27064,10 +26249,10 @@ var UserAgent = /** @class */ (function () {
      */
     UserAgent.prototype.setupOnce = function () {
         var _this = this;
-        dist$4.addGlobalEventProcessor(function (event) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+        dist$3.addGlobalEventProcessor(function (event) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
             var request;
             return tslib_1.__generator(this, function (_a) {
-                if (dist$4.getCurrentHub().getIntegration(UserAgent)) {
+                if (dist$3.getCurrentHub().getIntegration(UserAgent)) {
                     if (!global$4.navigator || !global$4.location) {
                         return [2 /*return*/, event];
                     }
@@ -27114,10 +26299,10 @@ var Ember = /** @class */ (function () {
         }
         var oldOnError = this.Ember.onerror;
         this.Ember.onerror = function (error) {
-            if (dist$4.getCurrentHub().getIntegration(Ember)) {
-                dist$4.withScope(function (scope) {
+            if (dist$3.getCurrentHub().getIntegration(Ember)) {
+                dist$3.withScope(function (scope) {
                     _this.addIntegrationToSdkInfo(scope);
-                    dist$4.captureException(error);
+                    dist$3.captureException(error);
                 });
             }
             if (typeof oldOnError === 'function') {
@@ -27128,17 +26313,17 @@ var Ember = /** @class */ (function () {
             }
         };
         this.Ember.RSVP.on('error', function (reason) {
-            if (dist$4.getCurrentHub().getIntegration(Ember)) {
-                dist$4.withScope(function (scope) {
+            if (dist$3.getCurrentHub().getIntegration(Ember)) {
+                dist$3.withScope(function (scope) {
                     if (reason instanceof Error) {
                         scope.setExtra('context', 'Unhandled Promise error detected');
                         _this.addIntegrationToSdkInfo(scope);
-                        dist$4.captureException(reason);
+                        dist$3.captureException(reason);
                     }
                     else {
                         scope.setExtra('reason', reason);
                         _this.addIntegrationToSdkInfo(scope);
-                        dist$4.captureMessage('Unhandled Promise error detected');
+                        dist$3.captureMessage('Unhandled Promise error detected');
                     }
                 });
             }
@@ -27214,8 +26399,8 @@ var Vue = /** @class */ (function () {
             if (!is_5(info)) {
                 metadata.lifecycleHook = info;
             }
-            if (dist$4.getCurrentHub().getIntegration(Vue)) {
-                dist$4.withScope(function (scope) {
+            if (dist$3.getCurrentHub().getIntegration(Vue)) {
+                dist$3.withScope(function (scope) {
                     Object.keys(metadata).forEach(function (key) {
                         scope.setExtra(key, metadata[key]);
                     });
@@ -27229,7 +26414,7 @@ var Vue = /** @class */ (function () {
                             return [2 /*return*/, event];
                         });
                     }); });
-                    dist$4.captureException(error);
+                    dist$3.captureException(error);
                 });
             }
             if (typeof oldOnError === 'function') {
@@ -27287,11 +26472,11 @@ var ReportingObserver = /** @class */ (function () {
      */
     ReportingObserver.prototype.handler = function (reports) {
         var e_1, _a;
-        if (!dist$4.getCurrentHub().getIntegration(ReportingObserver)) {
+        if (!dist$3.getCurrentHub().getIntegration(ReportingObserver)) {
             return;
         }
         var _loop_1 = function (report) {
-            dist$4.withScope(function (scope) {
+            dist$3.withScope(function (scope) {
                 scope.setExtra('url', report.url);
                 var label = "ReportingObserver [" + report.type + "]";
                 var details = 'No details available';
@@ -27313,7 +26498,7 @@ var ReportingObserver = /** @class */ (function () {
                         details = body.message || details;
                     }
                 }
-                dist$4.captureMessage(label + ": " + details);
+                dist$3.captureMessage(label + ": " + details);
             });
         };
         try {
@@ -27352,10 +26537,10 @@ var BrowserIntegrations = /*#__PURE__*/Object.freeze({
 
 var defaultIntegrations = [
     // Common
-    new dist$4.Integrations.Dedupe(),
-    new dist$4.Integrations.InboundFilters(),
-    new dist$4.Integrations.FunctionToString(),
-    new dist$4.Integrations.ExtraErrorData(),
+    new dist$3.Integrations.Dedupe(),
+    new dist$3.Integrations.InboundFilters(),
+    new dist$3.Integrations.FunctionToString(),
+    new dist$3.Integrations.ExtraErrorData(),
     // Native Wrappers
     new TryCatch(),
     new Breadcrumbs(),
@@ -27413,7 +26598,7 @@ function init(options) {
     if (options.defaultIntegrations === undefined) {
         options.defaultIntegrations = defaultIntegrations;
     }
-    dist$4.initAndBind(BrowserClient, options);
+    dist$3.initAndBind(BrowserClient, options);
 }
 /**
  * Present the user with a report dialog.
@@ -27423,9 +26608,9 @@ function init(options) {
 function showReportDialog(options) {
     if (options === void 0) { options = {}; }
     if (!options.eventId) {
-        options.eventId = dist$4.getCurrentHub().lastEventId();
+        options.eventId = dist$3.getCurrentHub().lastEventId();
     }
-    dist$4.getCurrentHub().getClient().showReportDialog(options);
+    dist$3.getCurrentHub().getClient().showReportDialog(options);
 }
 /**
  * This is the getter for lastEventId.
@@ -27433,7 +26618,7 @@ function showReportDialog(options) {
  * @returns The last event id of a captured event.
  */
 function lastEventId() {
-    return dist$4.getCurrentHub().lastEventId();
+    return dist$3.getCurrentHub().lastEventId();
 }
 /**
  * This function is here to be API compatible with the loader
@@ -27456,7 +26641,7 @@ function onLoad(callback) {
 function flush(timeout) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         return tslib_1.__generator(this, function (_a) {
-            return [2 /*return*/, dist$4.getCurrentHub().getClient().flush(timeout)];
+            return [2 /*return*/, dist$3.getCurrentHub().getClient().flush(timeout)];
         });
     });
 }
@@ -27469,24 +26654,24 @@ function flush(timeout) {
 function close(timeout) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         return tslib_1.__generator(this, function (_a) {
-            return [2 /*return*/, dist$4.getCurrentHub().getClient().close(timeout)];
+            return [2 /*return*/, dist$3.getCurrentHub().getClient().close(timeout)];
         });
     });
 }
 
-var INTEGRATIONS = tslib_1.__assign({}, dist$4.Integrations, BrowserIntegrations);
+var INTEGRATIONS = tslib_1.__assign({}, dist$3.Integrations, BrowserIntegrations);
 
-exports.addGlobalEventProcessor = dist$4.addGlobalEventProcessor;
-exports.addBreadcrumb = dist$4.addBreadcrumb;
-exports.captureException = dist$4.captureException;
-exports.captureEvent = dist$4.captureEvent;
-exports.captureMessage = dist$4.captureMessage;
-exports.configureScope = dist$4.configureScope;
-exports.withScope = dist$4.withScope;
-exports.getHubFromCarrier = dist$4.getHubFromCarrier;
-exports.getCurrentHub = dist$4.getCurrentHub;
-exports.Hub = dist$4.Hub;
-exports.Scope = dist$4.Scope;
+exports.addGlobalEventProcessor = dist$3.addGlobalEventProcessor;
+exports.addBreadcrumb = dist$3.addBreadcrumb;
+exports.captureException = dist$3.captureException;
+exports.captureEvent = dist$3.captureEvent;
+exports.captureMessage = dist$3.captureMessage;
+exports.configureScope = dist$3.configureScope;
+exports.withScope = dist$3.withScope;
+exports.getHubFromCarrier = dist$3.getHubFromCarrier;
+exports.getCurrentHub = dist$3.getCurrentHub;
+exports.Hub = dist$3.Hub;
+exports.Scope = dist$3.Scope;
 exports.Integrations = INTEGRATIONS;
 exports.Transports = index$1;
 exports.Severity = dist_1;
@@ -27675,7 +26860,7 @@ var createClass$2 = function () {
 
 
 
-var _extends$i = Object.assign || function (target) {
+var _extends$h = Object.assign || function (target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i];
 
@@ -27792,7 +26977,7 @@ var DrawerOverlay = function DrawerOverlay(_ref3) {
     onTouchStart: handleTouchStart,
     onTouchMove: handleTouchMove(100),
     onTouchEnd: handleTouchEnd,
-    style: _extends$i({
+    style: _extends$h({
       position: "fixed",
       zIndex: 1,
       backgroundColor: "rgba(0,0,0," + 0.6 * translation / 100 + ")",
@@ -27872,7 +27057,7 @@ var DrawerContentContainer = function DrawerContentContainer(_ref2) {
       onTouchStart: handleTouchStart,
       onTouchMove: handleTouchMove(size),
       onTouchEnd: handleTouchEnd,
-      style: _extends$i({
+      style: _extends$h({
         position: "fixed",
         zIndex: 1,
         transition: swiping ? "" : "transform .2s ease-in-out"
@@ -27908,7 +27093,7 @@ var MainContentContainer = function MainContentContainer(_ref) {
 
   return React__default.createElement(
     "div",
-    { className: "MainContentContainer", style: _extends$i({}, mainContentOpenStyle) },
+    { className: "MainContentContainer", style: _extends$h({}, mainContentOpenStyle) },
     children
   );
 };
@@ -30468,303 +29653,381 @@ var BarLoader$1 = unwrapExports(BarLoader);
 //     }
 // ];
 
+var ZinaCard = function (_Component) {
+  inherits(ZinaCard, _Component);
 
-var Base = function (_Component) {
-    inherits(Base, _Component);
+  function ZinaCard() {
+    var _ref;
 
-    function Base(props) {
-        classCallCheck$1(this, Base);
+    var _temp, _this, _ret;
 
-        var _this = possibleConstructorReturn(this, (Base.__proto__ || Object.getPrototypeOf(Base)).call(this, props));
+    classCallCheck$1(this, ZinaCard);
 
-        _this._computeChildrens = function (childrens) {
-            return childrens && childrens.filter(function (children) {
-                return !!children;
-            }).map(function (children, index) {
-                var op = {
-                    className: 'cpo_card',
-                    key: 'cpo_card_' + index
-                };
-                return React__default.createElement(
-                    'div',
-                    op,
-                    children
-                );
-            });
-        };
-
-        _this._computeSize = function () {
-            var size = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 250;
-            return size * 100 / window.innerWidth;
-        };
-
-        _this._onLogout = function (event) {
-            event.preventDefault();
-            _this.props.logout();
-        };
-
-        _this._onChangeSize = function () {
-            _this.drawerSize = _this._computeSize();
-        };
-
-        _this._computeBreadcrumb = function () {
-            if (_this.props.breadcrumbs) {
-                var items = _this.props.breadcrumbs.map(function (breadcrumb, index) {
-                    var op = {
-                        key: 'breadcrumb_' + index,
-                        className: 'breadcrumb-item'
-                    };
-                    if (breadcrumb.rel) {
-                        return React__default.createElement(
-                            'li',
-                            op,
-                            React__default.createElement(
-                                Link,
-                                { to: breadcrumb.rel },
-                                breadcrumb.icon && React__default.createElement(Icon, { icon: breadcrumb.icon }),
-                                ' ',
-                                breadcrumb.name
-                            )
-                        );
-                    } else {
-                        var op2 = _extends$g({}, op, {
-                            className: op.className + ' active',
-                            'aria-current': 'page'
-                        });
-                        return React__default.createElement(
-                            'li',
-                            op2,
-                            breadcrumb.icon && React__default.createElement(Icon, { icon: breadcrumb.icon }),
-                            breadcrumb.name
-                        );
-                    }
-                });
-                return React__default.createElement(
-                    'nav',
-                    { 'aria-label': 'breadcrumb' },
-                    React__default.createElement(
-                        'ol',
-                        { className: 'breadcrumb' },
-                        items
-                    )
-                );
-            }
-        };
-
-        _this.drawerSize = _this._computeSize();
-        return _this;
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
     }
 
-    createClass$1(Base, [{
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-            var title = this.props.title;
+    return _ret = (_temp = (_this = possibleConstructorReturn(this, (_ref = ZinaCard.__proto__ || Object.getPrototypeOf(ZinaCard)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+      header: null,
+      collapse: false
+    }, _this._toggle = function () {
+      _this.setState({ collapse: !_this.state.collapse });
+    }, _this._getElementStr = function (ele) {
+      return ReactDOMServer.renderToString(ele);
+    }, _this._setHeader = function (header) {
+      if (_this._getElementStr(_this.state.header) !== _this._getElementStr(header)) {
+        _this.setState({ header: header });
+      }
+    }, _temp), possibleConstructorReturn(_this, _ret);
+  }
 
-            document.title = 'ZINA' + (title ? ' | ' + title : '');
-            window.addEventListener('resize', this._onChangeSize);
-        }
-    }, {
-        key: 'componentDidUpdate',
-        value: function componentDidUpdate(prevProps) {
-            var title = this.props.title;
+  createClass$1(ZinaCard, [{
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          children = _props.children,
+          props = objectWithoutProperties(_props, ['children']);
 
-            if (title !== prevProps.title) {
-                document.title = 'ZINA' + (title ? ' | ' + title : '');
-            }
-        }
-    }, {
-        key: 'render',
-        value: function render() {
-            var _this2 = this;
+      var type = typeof children.type === "string";
+      return React__default.createElement(
+        Card,
+        props,
+        this.state.header && React__default.createElement(
+          CardHeader,
+          null,
+          this.state.header
+        ),
+        React__default.createElement(
+          Collapse,
+          { isOpen: !this.state.collapse },
+          React__default.createElement(
+            CardBody,
+            null,
+            !type && React__default.cloneElement(children, {
+              setheader: this._setHeader,
+              togglecollapse: this._toggle,
+              iscollapse: this.state.collapse
+            }),
+            type && children
+          )
+        )
+      );
+    }
+  }]);
+  return ZinaCard;
+}(React.Component);
 
-            var _props = this.props,
-                user = _props.user,
-                children = _props.children,
-                title = _props.title,
-                loading = _props.loading,
-                className = _props.className,
-                logo = _props.logo;
+var Base = function (_Component2) {
+  inherits(Base, _Component2);
 
-            var childrens = children ? children : null;
-            if (childrens) {
-                childrens = Array.isArray(childrens) ? childrens : [this.props.children];
-            }
-            // return (<div>{this._computeChildrens(childrens)}</div>)
+  function Base(props) {
+    classCallCheck$1(this, Base);
+
+    var _this2 = possibleConstructorReturn(this, (Base.__proto__ || Object.getPrototypeOf(Base)).call(this, props));
+
+    _this2._getExtraProps = function () {
+      var parent = _this2._reactInternalFiber._debugOwner.stateNode;
+      if (parent) {
+        return parent.props.extraProps;
+      }
+    };
+
+    _this2._velidateExtraProps = function () {
+      var _this2$_getExtraProps = _this2._getExtraProps(),
+          user = _this2$_getExtraProps.user,
+          logo = _this2$_getExtraProps.logo,
+          config = _this2$_getExtraProps.config,
+          logout = _this2$_getExtraProps.logout;
+
+      if (!(user && logo && config && logout)) {
+        var req = { user: user, logo: logo, config: config, logout: logout };
+        Object.keys(req).map(function (key) {
+          var value = req[key];
+          if (!value) {
+            console.error('Warning: Failed prop type: The prop \'' + key + '\' is marked as required in \'PrivateRoute\' extraPros , but its value is \'' + value + '\'.');
+          }
+        });
+      }
+    };
+
+    _this2._computeChildrens = function (childrens) {
+      return childrens && React__default.Children.toArray(childrens).map(function (child, index) {
+        var op = {
+          className: 'zina_card',
+          key: 'zina_card_' + index
+        };
+        return React__default.createElement(
+          ZinaCard,
+          op,
+          child
+        );
+      });
+    };
+
+    _this2._computeSize = function () {
+      var size = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 250;
+      return size * 100 / window.innerWidth;
+    };
+
+    _this2._onLogout = function (event) {
+      event.preventDefault();
+      _this2.extraProps.logout();
+    };
+
+    _this2._onChangeSize = function () {
+      _this2.drawerSize = _this2._computeSize();
+    };
+
+    _this2._computeBreadcrumb = function () {
+      if (_this2.props.breadcrumbs) {
+        var items = _this2.props.breadcrumbs.map(function (breadcrumb, index) {
+          var op = {
+            key: 'breadcrumb_' + index,
+            className: 'breadcrumb-item'
+          };
+          if (breadcrumb.rel) {
             return React__default.createElement(
-                ErrorBoundary,
-                null,
-                loading && React__default.createElement(
-                    'div',
-                    { className: 'loading' },
-                    'Loading ...',
-                    React__default.createElement(BarLoader$1, {
-                        sizeUnit: 'px',
-                        size: 200,
-                        color: '#fff',
-                        loading: true
-                    })
-                ),
-                React__default.createElement(
-                    'div',
-                    { className: ['zina', className].join(' ') },
-                    React__default.createElement(
-                        Drawer,
-                        { position: 'left', size: this.drawerSize },
-                        function (_ref) {
-                            var position = _ref.position,
-                                size = _ref.size,
-                                swiping = _ref.swiping,
-                                translation = _ref.translation,
-                                mainContentScroll = _ref.mainContentScroll,
-                                toggleDrawer = _ref.toggleDrawer,
-                                handleTouchStart = _ref.handleTouchStart,
-                                handleTouchMove = _ref.handleTouchMove,
-                                handleTouchEnd = _ref.handleTouchEnd;
-                            return React__default.createElement(
-                                'div',
-                                { style: { height: '100%' } },
-                                React__default.createElement(DrawerContainer, {
-                                    position: position,
-                                    size: size,
-                                    swiping: swiping,
-                                    translation: translation,
-                                    toggleDrawer: toggleDrawer,
-                                    handleTouchStart: handleTouchStart,
-                                    handleTouchMove: handleTouchMove,
-                                    handleTouchEnd: handleTouchEnd,
-                                    drawerContent: React__default.createElement(
-                                        'div',
-                                        { className: 'drawer' },
-                                        React__default.createElement(
-                                            'div',
-                                            { className: 'navbar navbar-dark header' },
-                                            React__default.createElement(
-                                                'div',
-                                                { className: 'navbar-brand' },
-                                                React__default.createElement(
-                                                    Link,
-                                                    { to: '/' },
-                                                    React__default.createElement('img', {
-                                                        className: 'logo',
-                                                        src: logo,
-                                                        alt: 'zina'
-                                                    })
-                                                )
-                                            ),
-                                            React__default.createElement(
-                                                'div',
-                                                { className: 'menu-btn' },
-                                                React__default.createElement(
-                                                    Button,
-                                                    {
-                                                        onClick: toggleDrawer
-                                                    },
-                                                    React__default.createElement(Icon, { icon: 'bars' })
-                                                )
-                                            )
-                                        ),
-                                        React__default.createElement(Menu, { show: true, config: _this2.props.config })
-                                    )
-                                }),
-                                React__default.createElement(
-                                    MainContentContainer,
-                                    {
-                                        translation: translation,
-                                        mainContentScroll: mainContentScroll
-                                    },
-                                    React__default.createElement(
-                                        'div',
-                                        { className: 'content' },
-                                        React__default.createElement(Header, {
-                                            toggleDrawer: toggleDrawer,
-                                            onLogout: _this2._onLogout,
-                                            user: user,
-                                            logo: logo
-                                            // notifications={nt}
-                                        }),
-                                        React__default.createElement(
-                                            'div',
-                                            { className: 'maincontent' },
-                                            React__default.createElement(
-                                                'div',
-                                                { className: 'menu' },
-                                                React__default.createElement(Menu, { config: _this2.props.config })
-                                            ),
-                                            React__default.createElement(
-                                                'div',
-                                                { className: 'sheet' },
-                                                _this2._computeBreadcrumb(),
-                                                React__default.createElement(
-                                                    'div',
-                                                    { className: 'container-fluid' },
-                                                    React__default.createElement(
-                                                        'div',
-                                                        { className: 'panel' },
-                                                        React__default.createElement(
-                                                            'h3',
-                                                            null,
-                                                            title
-                                                        ),
-                                                        React__default.createElement('hr', null),
-                                                        React__default.createElement(
-                                                            'div',
-                                                            { className: 'page-content' },
-                                                            _this2._computeChildrens(childrens)
-                                                        )
-                                                    )
-                                                )
-                                            )
-                                        ),
-                                        React__default.createElement(
-                                            'footer',
-                                            null,
-                                            React__default.createElement('span', { className: 'menu' }),
-                                            React__default.createElement(
-                                                'span',
-                                                { className: 'legend' },
-                                                'Copyright ',
-                                                React__default.createElement(
-                                                    'b',
-                                                    null,
-                                                    'NOKIA'
-                                                ),
-                                                ' 2018 | Powered by ',
-                                                React__default.createElement(
-                                                    'b',
-                                                    null,
-                                                    'ZINA'
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            );
-                        }
-                    )
-                )
+              'li',
+              op,
+              React__default.createElement(
+                Link,
+                { to: breadcrumb.rel },
+                breadcrumb.icon && React__default.createElement(Icon, { icon: breadcrumb.icon }),
+                ' ',
+                breadcrumb.name
+              )
             );
-        }
-    }]);
-    return Base;
+          } else {
+            var op2 = _extends$g({}, op, {
+              className: op.className + ' active',
+              'aria-current': 'page'
+            });
+            return React__default.createElement(
+              'li',
+              op2,
+              breadcrumb.icon && React__default.createElement(Icon, { icon: breadcrumb.icon }),
+              breadcrumb.name
+            );
+          }
+        });
+        return React__default.createElement(
+          'nav',
+          { 'aria-label': 'breadcrumb' },
+          React__default.createElement(
+            'ol',
+            { className: 'breadcrumb' },
+            items
+          )
+        );
+      }
+    };
+
+    _this2.drawerSize = _this2._computeSize();
+    _this2.extraProps = {};
+    return _this2;
+  }
+
+  createClass$1(Base, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var title = this.props.title;
+
+      document.title = 'ZINA' + (title ? ' | ' + title : '');
+      window.addEventListener('resize', this._onChangeSize);
+      this.props = _extends$g({}, this.props, { name: "hola" });
+      this._velidateExtraProps();
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps) {
+      var title = this.props.title;
+
+      if (title !== prevProps.title) {
+        document.title = 'ZINA' + (title ? ' | ' + title : '');
+      }
+      this._velidateExtraProps();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this3 = this;
+
+      var _props2 = this.props,
+          children = _props2.children,
+          title = _props2.title,
+          loading = _props2.loading,
+          className = _props2.className;
+
+      var _getExtraProps = this._getExtraProps(),
+          user = _getExtraProps.user,
+          logo = _getExtraProps.logo,
+          config = _getExtraProps.config;
+
+      var childrens = children ? children : null;
+      if (childrens) {
+        childrens = Array.isArray(childrens) ? childrens : [this.props.children];
+      }
+      return React__default.createElement(
+        ErrorBoundary,
+        null,
+        loading && React__default.createElement(
+          'div',
+          { className: 'loading' },
+          'Loading ...',
+          React__default.createElement(BarLoader$1, {
+            sizeUnit: 'px',
+            size: 200,
+            color: '#fff',
+            loading: true
+          })
+        ),
+        React__default.createElement(
+          'div',
+          { className: ['zina', className].join(' ') },
+          React__default.createElement(
+            Drawer,
+            { position: 'left', size: this.drawerSize },
+            function (_ref2) {
+              var position = _ref2.position,
+                  size = _ref2.size,
+                  swiping = _ref2.swiping,
+                  translation = _ref2.translation,
+                  mainContentScroll = _ref2.mainContentScroll,
+                  toggleDrawer = _ref2.toggleDrawer,
+                  handleTouchStart = _ref2.handleTouchStart,
+                  handleTouchMove = _ref2.handleTouchMove,
+                  handleTouchEnd = _ref2.handleTouchEnd;
+              return React__default.createElement(
+                'div',
+                { style: { height: '100%' } },
+                React__default.createElement(DrawerContainer, {
+                  position: position,
+                  size: size,
+                  swiping: swiping,
+                  translation: translation,
+                  toggleDrawer: toggleDrawer,
+                  handleTouchStart: handleTouchStart,
+                  handleTouchMove: handleTouchMove,
+                  handleTouchEnd: handleTouchEnd,
+                  drawerContent: React__default.createElement(
+                    'div',
+                    { className: 'drawer' },
+                    React__default.createElement(
+                      'div',
+                      { className: 'navbar navbar-dark header' },
+                      React__default.createElement(
+                        'div',
+                        { className: 'navbar-brand' },
+                        React__default.createElement(
+                          Link,
+                          { to: '/' },
+                          React__default.createElement('img', {
+                            className: 'logo',
+                            src: logo,
+                            alt: 'zina'
+                          })
+                        )
+                      ),
+                      React__default.createElement(
+                        'div',
+                        { className: 'menu-btn' },
+                        React__default.createElement(ButtonX, {
+                          onClick: toggleDrawer,
+                          icon: 'bars'
+                        })
+                      )
+                    ),
+                    React__default.createElement(Menu, { show: true, config: config })
+                  )
+                }),
+                React__default.createElement(
+                  MainContentContainer,
+                  {
+                    translation: translation,
+                    mainContentScroll: mainContentScroll
+                  },
+                  React__default.createElement(
+                    'div',
+                    { className: 'content' },
+                    React__default.createElement(Header, {
+                      toggleDrawer: toggleDrawer,
+                      onLogout: _this3._onLogout,
+                      user: user,
+                      logo: logo
+                      // notifications={nt}
+                    }),
+                    React__default.createElement(
+                      'div',
+                      { className: 'maincontent' },
+                      React__default.createElement(
+                        'div',
+                        { className: 'menu' },
+                        React__default.createElement(Menu, { config: config })
+                      ),
+                      React__default.createElement(
+                        'div',
+                        { className: 'sheet' },
+                        _this3._computeBreadcrumb(),
+                        React__default.createElement(
+                          'div',
+                          { className: 'container-fluid' },
+                          React__default.createElement(
+                            'div',
+                            { className: 'panel' },
+                            React__default.createElement(
+                              'div',
+                              { className: 'page-content' },
+                              _this3._computeChildrens(childrens)
+                            )
+                          )
+                        )
+                      )
+                    ),
+                    React__default.createElement(
+                      'footer',
+                      null,
+                      React__default.createElement('span', { className: 'menu' }),
+                      React__default.createElement(
+                        'span',
+                        { className: 'legend' },
+                        'Copyright ',
+                        React__default.createElement(
+                          'b',
+                          null,
+                          'NOKIA'
+                        ),
+                        ' 2018 | Powered by ',
+                        React__default.createElement(
+                          'b',
+                          null,
+                          'ZINA'
+                        )
+                      )
+                    )
+                  )
+                )
+              );
+            }
+          )
+        )
+      );
+    }
+  }]);
+  return Base;
 }(React.Component);
 
 Base.propTypes = {
-    title: PropTypes.string.isRequired,
-    loading: PropTypes.bool.isRequired,
-    user: PropTypes.object.isRequired,
-    logout: PropTypes.func.isRequired,
-    logo: PropTypes.string.isRequired,
-    config: PropTypes.array.isRequired,
-    nt: PropTypes.array
+  title: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
+  nt: PropTypes.array
 };
 
 exports.Header = Header;
 exports.PrivateRoute = PrivateRoute;
-exports.Button = button_component;
+exports.Button = ButtonX;
 exports.Input = input_component;
 exports.Pagination = paginator;
 exports.Menu = Menu;
-exports.Importer = Importer;
 exports.UnsuporterPage = unsuporter_page_component;
 exports.Comment = Comment;
 exports.CollapsibleResult = CollapsibleResult;
