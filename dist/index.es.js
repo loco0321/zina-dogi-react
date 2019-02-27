@@ -6021,7 +6021,6 @@ var Popper = function () {
 Popper.Utils = (typeof window !== 'undefined' ? window : global).PopperUtils;
 Popper.placements = placements;
 Popper.Defaults = Defaults;
-//# sourceMappingURL=popper.js.map
 
 var _extends$e = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -17805,49 +17804,169 @@ var PrivateRoute = function PrivateRoute(_ref) {
 
 // import './menu.scss';
 
-var computeMenuItem = function computeMenuItem(_ref, key, show) {
-    var link = _ref.link,
-        icon = _ref.icon,
-        name = _ref.name;
-    return React.createElement(
+var Menu = function (_Component) {
+  inherits(Menu, _Component);
+
+  function Menu(props) {
+    classCallCheck$1(this, Menu);
+
+    var _this = possibleConstructorReturn(this, (Menu.__proto__ || Object.getPrototypeOf(Menu)).call(this, props));
+
+    _this._computeMenuItem = function (_ref, key) {
+      var link = _ref.link,
+          icon = _ref.icon,
+          name = _ref.name;
+      var show = _this.props.show;
+
+      return React.createElement(
         'li',
-        { key: 'zina-primary-mey-' + key },
-        React.createElement(
-            NavLink,
-            { exact: true, activeClassName: 'active', to: link },
-            React.createElement(
-                'span',
-                { className: 'icon' },
-                React.createElement(Icon, { icon: icon })
-            ),
-            React.createElement(
-                'span',
-                { className: ['item'].concat(toConsumableArray(show ? ['show'] : [])).join(' ') },
-                name
-            )
+        { key: 'zina-primary-menu-' + key },
+        link && React.createElement(
+          NavLink,
+          { exact: true, activeClassName: 'active', className: 'menu-item', to: link },
+          React.createElement(
+            'span',
+            { className: 'icon' },
+            icon && React.createElement(Icon, { icon: icon })
+          ),
+          React.createElement(
+            'span',
+            { className: ['item'].concat(toConsumableArray(show ? ['show'] : [])).join(' ') },
+            name
+          )
         )
-    );
-};
-var Menu = function Menu(_ref2) {
-    var show = _ref2.show,
-        config = _ref2.config;
+      );
+    };
 
-    return React.createElement(
-        'ul',
-        { className: 'menu-bar list-unstyled' },
-        config && config.map(function (menu, index) {
-            return computeMenuItem(menu, index, show);
-        })
-    );
-};
+    _this._onClickSubMenu = function (e) {
+      var _this$props = _this.props,
+          toggleDrawer = _this$props.toggleDrawer,
+          show = _this$props.show;
 
+      if (!show) {
+        toggleDrawer();
+        setTimeout(function () {
+          console.log('o.o');
+          _this.setState({
+            isOpen: true
+          });
+        }, 1000);
+      } else {
+        _this._toggle();
+      }
+    };
+
+    _this._toggle = function () {
+      console.log('noc');
+
+      _this.setState({
+        isOpen: !_this.state.isOpen
+      });
+    };
+
+    _this._computeSubMenuItem = function (_ref2, key) {
+      var icon = _ref2.icon,
+          name = _ref2.name,
+          children = _ref2.children;
+      var show = _this.props.show;
+
+
+      var menuNameClassNames = ['item', 'submenu-item-name'].concat(toConsumableArray(show ? ['show'] : [])).join(' ');
+
+      return React.createElement(
+        'li',
+        { key: 'zina-primary-submenu-' + key },
+        React.createElement(
+          'div',
+          { className: 'parent_menu' },
+          React.createElement(
+            'div',
+            {
+              onClick: _this._onClickSubMenu,
+              className: 'submenu-item'
+            },
+            React.createElement(
+              'span',
+              { className: 'icon' },
+              React.createElement(Icon, { icon: icon })
+            ),
+            show && React.createElement(
+              'span',
+              { className: menuNameClassNames },
+              name,
+              React.createElement('span', { style: { flex: '1 1 auto' } }),
+              React.createElement(
+                'span',
+                { className: 'btn-icon' },
+                React.createElement(Icon, { icon: 'angle-down' })
+              )
+            )
+          ),
+          React.createElement(
+            Collapse,
+            { isOpen: _this.state.isOpen },
+            React.createElement(
+              'ul',
+              { className: 'submenu' },
+              children.map(function (menu, index) {
+                return _this._computeMenuItem(menu, index, show, false);
+              })
+            )
+          )
+        )
+      );
+    };
+
+    _this.state = {
+      isOpen: false
+    };
+    return _this;
+  }
+
+  createClass$1(Menu, [{
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      var config = this.props.config;
+
+      if (config) {
+        var resMenu = config.map(function (menu, index) {
+          if (menu.link) {
+            return _this2._computeMenuItem(menu, index);
+          }
+          if (Array.isArray(menu.children) && menu.children.length > 0) {
+            return _this2._computeSubMenuItem(menu, index);
+          }
+        });
+        return React.createElement(
+          'ul',
+          { className: 'menu-bar list-unstyled' },
+          config && resMenu
+        );
+      }
+      return React.createElement('ul', { className: 'menu-bar list-unstyled' });
+    }
+  }]);
+  return Menu;
+}(Component);
+
+Menu.defaultProps = {
+  show: false
+};
 Menu.propTypes = {
-    show: PropTypes.bool,
-    config: PropTypes.arrayOf(PropTypes.shape({
-        link: PropTypes.string.isRequired,
-        icon: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired
+  show: PropTypes.bool,
+  toggleDrawer: PropTypes.func,
+  config: PropTypes.arrayOf(PropTypes.shape({
+    link: PropTypes.string,
+    icon: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    children: PropTypes.arrayOf(PropTypes.shape({
+      link: PropTypes.string.isRequired,
+      icon: PropTypes.string,
+      name: PropTypes.string.isRequired
     }))
+  })).isRequired
 };
 
 // import chrome_logo from '../assets/imgs/chrome.svg';
@@ -18339,7 +18458,7 @@ function isNaN(wat) {
     return wat !== wat;
 }
 exports.isNaN = isNaN;
-//# sourceMappingURL=is.js.map
+
 });
 
 unwrapExports(is);
@@ -18569,7 +18688,7 @@ function consoleSandbox(callback) {
     return result;
 }
 exports.consoleSandbox = consoleSandbox;
-//# sourceMappingURL=misc.js.map
+
 });
 
 unwrapExports(misc);
@@ -18639,7 +18758,7 @@ var Memo = /** @class */ (function () {
     return Memo;
 }());
 exports.Memo = Memo;
-//# sourceMappingURL=memo.js.map
+
 });
 
 unwrapExports(memo);
@@ -18741,7 +18860,7 @@ function includes(target, search) {
     }
 }
 exports.includes = includes;
-//# sourceMappingURL=string.js.map
+
 });
 
 unwrapExports(string);
@@ -19076,7 +19195,7 @@ function safeNormalize(input) {
     }
 }
 exports.safeNormalize = safeNormalize;
-//# sourceMappingURL=object.js.map
+
 });
 
 unwrapExports(object);
@@ -19358,7 +19477,7 @@ function addGlobalEventProcessor(callback) {
     getGlobalEventProcessors().push(callback);
 }
 exports.addGlobalEventProcessor = addGlobalEventProcessor;
-//# sourceMappingURL=scope.js.map
+
 });
 
 unwrapExports(scope);
@@ -19427,7 +19546,7 @@ var Logger = /** @class */ (function () {
 }());
 var logger = new Logger();
 exports.logger = logger;
-//# sourceMappingURL=logger.js.map
+
 });
 
 unwrapExports(logger_1);
@@ -19800,7 +19919,7 @@ function setHubOnCarrier(carrier, hub) {
     return true;
 }
 exports.setHubOnCarrier = setHubOnCarrier;
-//# sourceMappingURL=hub.js.map
+
 });
 
 unwrapExports(hub);
@@ -19824,7 +19943,7 @@ exports.getHubFromCarrier = hub.getHubFromCarrier;
 exports.getMainCarrier = hub.getMainCarrier;
 exports.Hub = hub.Hub;
 exports.setHubOnCarrier = hub.setHubOnCarrier;
-//# sourceMappingURL=index.js.map
+
 });
 
 unwrapExports(dist);
@@ -19962,7 +20081,7 @@ function _callOnClient(method) {
     callOnHub.apply(void 0, tslib_1.__spread(['invokeClient', method], args));
 }
 exports._callOnClient = _callOnClient;
-//# sourceMappingURL=index.js.map
+
 });
 
 unwrapExports(dist$1);
@@ -19992,7 +20111,7 @@ var SentryError = /** @class */ (function (_super) {
     return SentryError;
 }(Error));
 exports.SentryError = SentryError;
-//# sourceMappingURL=error.js.map
+
 });
 
 unwrapExports(error);
@@ -20088,7 +20207,7 @@ var Dsn = /** @class */ (function () {
     return Dsn;
 }());
 exports.Dsn = Dsn;
-//# sourceMappingURL=dsn.js.map
+
 });
 
 unwrapExports(dsn);
@@ -20183,7 +20302,7 @@ var API = /** @class */ (function () {
     return API;
 }());
 exports.API = API;
-//# sourceMappingURL=api.js.map
+
 });
 
 unwrapExports(api);
@@ -20280,7 +20399,7 @@ var Status;
     }
     Status.fromHttpCode = fromHttpCode;
 })(Status = exports.Status || (exports.Status = {}));
-//# sourceMappingURL=index.js.map
+
 });
 
 unwrapExports(dist$2);
@@ -20323,7 +20442,7 @@ function filterAsync(array, predicate, thisArg) {
     });
 }
 exports.filterAsync = filterAsync;
-//# sourceMappingURL=async.js.map
+
 });
 
 unwrapExports(async);
@@ -20438,7 +20557,7 @@ function getIntegrationName(integration) {
     // tslint:disable-next-line:no-unsafe-any
     return integration.constructor.id || integration.name;
 }
-//# sourceMappingURL=integration.js.map
+
 });
 
 unwrapExports(integration);
@@ -20548,7 +20667,7 @@ var PromiseBuffer = /** @class */ (function () {
     return PromiseBuffer;
 }());
 exports.PromiseBuffer = PromiseBuffer;
-//# sourceMappingURL=promisebuffer.js.map
+
 });
 
 unwrapExports(promisebuffer);
@@ -20958,7 +21077,7 @@ var BaseClient = /** @class */ (function () {
     return BaseClient;
 }());
 exports.BaseClient = BaseClient;
-//# sourceMappingURL=baseclient.js.map
+
 });
 
 unwrapExports(baseclient);
@@ -20998,7 +21117,7 @@ var NoopTransport = /** @class */ (function () {
     return NoopTransport;
 }());
 exports.NoopTransport = NoopTransport;
-//# sourceMappingURL=noop.js.map
+
 });
 
 unwrapExports(noop$2);
@@ -21087,7 +21206,7 @@ var BaseBackend = /** @class */ (function () {
     return BaseBackend;
 }());
 exports.BaseBackend = BaseBackend;
-//# sourceMappingURL=basebackend.js.map
+
 });
 
 unwrapExports(basebackend);
@@ -21107,7 +21226,7 @@ var LogLevel;
     /** All SDK actions will be logged. */
     LogLevel[LogLevel["Verbose"] = 3] = "Verbose";
 })(LogLevel = exports.LogLevel || (exports.LogLevel = {}));
-//# sourceMappingURL=interfaces.js.map
+
 });
 
 unwrapExports(interfaces);
@@ -21134,7 +21253,7 @@ function initAndBind(clientClass, options) {
     client.install();
 }
 exports.initAndBind = initAndBind;
-//# sourceMappingURL=sdk.js.map
+
 });
 
 unwrapExports(sdk);
@@ -21318,7 +21437,7 @@ var Dedupe = /** @class */ (function () {
     return Dedupe;
 }());
 exports.Dedupe = Dedupe;
-//# sourceMappingURL=dedupe.js.map
+
 });
 
 unwrapExports(dedupe);
@@ -21357,7 +21476,7 @@ var FunctionToString = /** @class */ (function () {
     return FunctionToString;
 }());
 exports.FunctionToString = FunctionToString;
-//# sourceMappingURL=functiontostring.js.map
+
 });
 
 unwrapExports(functiontostring);
@@ -21387,7 +21506,7 @@ var SDKInformation = /** @class */ (function () {
     return SDKInformation;
 }());
 exports.SDKInformation = SDKInformation;
-//# sourceMappingURL=sdkinformation.js.map
+
 });
 
 unwrapExports(sdkinformation);
@@ -21578,7 +21697,7 @@ var InboundFilters = /** @class */ (function () {
     return InboundFilters;
 }());
 exports.InboundFilters = InboundFilters;
-//# sourceMappingURL=inboundfilters.js.map
+
 });
 
 unwrapExports(inboundfilters);
@@ -21680,7 +21799,7 @@ var ExtraErrorData = /** @class */ (function () {
     return ExtraErrorData;
 }());
 exports.ExtraErrorData = ExtraErrorData;
-//# sourceMappingURL=extraerrordata.js.map
+
 });
 
 unwrapExports(extraerrordata);
@@ -21741,7 +21860,7 @@ var Debug = /** @class */ (function () {
     return Debug;
 }());
 exports.Debug = Debug;
-//# sourceMappingURL=debug.js.map
+
 });
 
 unwrapExports(debug);
@@ -21913,7 +22032,7 @@ function basename(path, ext) {
     return f;
 }
 exports.basename = basename;
-//# sourceMappingURL=path.js.map
+
 });
 
 unwrapExports(path);
@@ -22037,7 +22156,7 @@ var RewriteFrames = /** @class */ (function () {
     return RewriteFrames;
 }());
 exports.RewriteFrames = RewriteFrames;
-//# sourceMappingURL=rewriteframes.js.map
+
 });
 
 unwrapExports(rewriteframes);
@@ -22059,7 +22178,7 @@ exports.ExtraErrorData = extraerrordata.ExtraErrorData;
 exports.Debug = debug.Debug;
 
 exports.RewriteFrames = rewriteframes.RewriteFrames;
-//# sourceMappingURL=index.js.map
+
 });
 
 unwrapExports(integrations);
@@ -22106,7 +22225,7 @@ exports.initAndBind = sdk.initAndBind;
 exports.NoopTransport = noop$2.NoopTransport;
 
 exports.Integrations = integrations;
-//# sourceMappingURL=index.js.map
+
 });
 
 unwrapExports(dist$3);
@@ -26681,7 +26800,7 @@ exports.flush = flush;
 exports.close = close;
 exports.SDK_NAME = SDK_NAME;
 exports.SDK_VERSION = SDK_VERSION;
-//# sourceMappingURL=index.js.map
+
 });
 
 unwrapExports(dist_3$3);
@@ -29628,24 +29747,6 @@ var BarLoader = createCommonjsModule(function (module, exports) {
 
 var BarLoader$1 = unwrapExports(BarLoader);
 
-// const nt = [
-//     {
-//         title: 'Notification 1',
-//         message:
-//             'Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio.'
-//     },
-//     {
-//         message:
-//             'Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio.'
-//     },
-//     {
-//         img: 'https://uinames.com/api/photos/male/12.jpg',
-//         title: 'Notification 1',
-//         message:
-//             'Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio.'
-//     }
-// ];
-
 var ZinaCard = function (_Component) {
   inherits(ZinaCard, _Component);
 
@@ -29764,7 +29865,7 @@ var Base = function (_Component2) {
 
     _this2._onLogout = function (event) {
       event.preventDefault();
-      _this2.extraProps.logout();
+      _this2._getExtraProps().logout();
     };
 
     _this2._onChangeSize = function () {
@@ -29816,7 +29917,6 @@ var Base = function (_Component2) {
     };
 
     _this2.drawerSize = _this2._computeSize();
-    _this2.extraProps = {};
     return _this2;
   }
 
@@ -29827,7 +29927,6 @@ var Base = function (_Component2) {
 
       document.title = 'ZINA' + (title ? ' | ' + title : '');
       window.addEventListener('resize', this._onChangeSize);
-      this.props = _extends$g({}, this.props, { name: "hola" });
       this._velidateExtraProps();
     }
   }, {
@@ -29880,16 +29979,17 @@ var Base = function (_Component2) {
           React.createElement(
             Drawer,
             { position: 'left', size: this.drawerSize },
-            function (_ref2) {
-              var position = _ref2.position,
-                  size = _ref2.size,
-                  swiping = _ref2.swiping,
-                  translation = _ref2.translation,
-                  mainContentScroll = _ref2.mainContentScroll,
-                  toggleDrawer = _ref2.toggleDrawer,
-                  handleTouchStart = _ref2.handleTouchStart,
-                  handleTouchMove = _ref2.handleTouchMove,
-                  handleTouchEnd = _ref2.handleTouchEnd;
+            function (args) {
+              var position = args.position,
+                  size = args.size,
+                  swiping = args.swiping,
+                  translation = args.translation,
+                  mainContentScroll = args.mainContentScroll,
+                  toggleDrawer = args.toggleDrawer,
+                  handleTouchStart = args.handleTouchStart,
+                  handleTouchMove = args.handleTouchMove,
+                  handleTouchEnd = args.handleTouchEnd;
+
               return React.createElement(
                 'div',
                 { style: { height: '100%' } },
@@ -29930,7 +30030,7 @@ var Base = function (_Component2) {
                         })
                       )
                     ),
-                    React.createElement(Menu, { show: true, config: config })
+                    React.createElement(Menu, { show: true, config: config, toggleDrawer: toggleDrawer })
                   )
                 }),
                 React.createElement(
@@ -29947,7 +30047,6 @@ var Base = function (_Component2) {
                       onLogout: _this3._onLogout,
                       user: user,
                       logo: logo
-                      // notifications={nt}
                     }),
                     React.createElement(
                       'div',
@@ -29955,7 +30054,7 @@ var Base = function (_Component2) {
                       React.createElement(
                         'div',
                         { className: 'menu' },
-                        React.createElement(Menu, { config: config })
+                        React.createElement(Menu, { config: config, toggleDrawer: toggleDrawer })
                       ),
                       React.createElement(
                         'div',
@@ -29967,6 +30066,11 @@ var Base = function (_Component2) {
                           React.createElement(
                             'div',
                             { className: 'panel' },
+                            title && React.createElement(
+                              'h3',
+                              null,
+                              title
+                            ),
                             React.createElement(
                               'div',
                               { className: 'page-content' },
@@ -30010,8 +30114,8 @@ var Base = function (_Component2) {
 }(Component);
 
 Base.propTypes = {
-  title: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
+  title: PropTypes.string,
   nt: PropTypes.array
 };
 

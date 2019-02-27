@@ -26,7 +26,6 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-
 .react-datepicker-wrapper,
 .react-datepicker__input-container {
     width: 100%;
@@ -44,12 +43,12 @@ code {
         flex: 1 1 auto;
     }
 }
+
 .table,
-.handsontable
-{
-  tr:nth-child(2n+1) {
-    background: white;
-  }
+.handsontable {
+    tr:nth-child(2n+1) {
+        background: white;
+    }
 }
 
 .handsontable {
@@ -96,25 +95,27 @@ code {
 .zina {
     height: 100%;
     .breadcrumb {
-        background-color: var(--india-4, #f3f3f4);
+        background-color: var(--zina-light, #f3f3f4);
+        border-bottom: 1px solid var(--zina-divider, #999);
         font-weight: var(--font-regular, 400);
-        color: var(--india-divider, #999);
+        color: var(--zina-divider, #999);
         border-radius: 0;
         font-size: 12pt;
         margin: 0;
         .breadcrumb-item+.breadcrumb-item::before {
-            color: var(--india-divider, #999);
+            color: var(--zina-divider, #999);
         }
     }
     .container-fluid {
-        background-color: var(--india-4, #f3f3f4);
-        min-height: calc(100vh - 128px);
+        background-color: var(--zina-4, #f3f3f4);
+        height: calc(100vh - 128px);
+        overflow: auto;
         padding: 10px;
         .page-content {
             padding: 10px;
         }
         h3 {
-            color: var(--india-2, black);
+            color: var(--zina-2, black);
             font-weight: 400;
             font-weight: var(--font-regular, 400);
             font-size: 20pt;
@@ -123,7 +124,7 @@ code {
             margin: 0;
         }
         .panel {
-            background-color: rgba(#000, 0.05);
+            // background-color: rgba(#000, 0.05);
         }
         hr {
             margin: 10px 0;
@@ -131,8 +132,7 @@ code {
         .zina_card {
             // box-shadow: $base-card-shadow;
             // background-color: $base_card;
-            margin-bottom: 16px;
-            // border-radius: 3px;
+            margin-bottom: 16px; // border-radius: 3px;
             // pad/*  */ding: 16px;
             .navbar {
                 padding: 0;
@@ -147,7 +147,7 @@ code {
         min-height: calc(100% - 46px); // background-color: $base_bg;
     }
     .drawer {
-        background-color: var(--india-2, #071534);
+        background-color: var(--zina-2, #071534);
         height: 100%;
         overflow-y: auto;
     }
@@ -155,7 +155,7 @@ code {
         display: flex;
         >.menu {
             width: 50px;
-            background-color: var(--india-2, #071534);
+            background-color: var(--zina-2, #071534);
         }
     }
 }
@@ -168,7 +168,6 @@ code {
             height: calc(100% - 80px);
             .sheet {
                 height: 100%;
-                overflow: auto;
             }
         }
     }
@@ -197,7 +196,7 @@ footer {
         margin-right: 16px;
         display: inline-block;
         position: absolute;
-        background-color: var(--india-2, #071534);
+        background-color: var(--zina-2, #071534);
     }
     .legend {
         font-size: 10pt;
@@ -287,47 +286,36 @@ footer {
     margin: 0;
     padding: 0;
     li {
-        a {
+        >* {
             text-decoration: none;
             color: white;
             font-size: 12pt;
-            padding: 8px 0;
             display: inline-block;
             width: 100%;
             transition: 450ms all;
-            border-left: 2px solid var(--india-2, #071534);
+            border-left: 2px solid var(--zina-2, #071534);
+            .submenu-item-name {
+                display: inline-flex !important;
+            }
+            .collapsing>ul,
+            .collapse>ul {
+                list-style: none;
+                background-color: var(--zina-1, #0c1224);
+                margin: 0;
+                padding: 0;
+            }
             &.active {
-                background-color: var(--india-3, #0c2254);
-                border-left: 2px solid var(--india-6, #c3d941);
+                background-color: var(--zina-3, #0c2254);
+                border-left: 2px solid var(--zina-6, #c3d941);
                 &:hover {
-                    background-color: var(--india-3, #0c2254);
+                    background-color: var(--zina-3, #0c2254);
                 }
             }
-            &:hover {
-                background-color: var(--india-1, #0c1224);
+            &:not(.parent_menu):hover {
+                background-color: var(--zina-1, #0c1224);
                 color: white;
                 transition: 450ms all;
-                border-left: 2px solid var(--india-6, #c3d941); // span.item {
-                //     &:not(.show) {
-                //         position: absolute;
-                //         display: inherit;
-                //         background: var(--india-7, lightgreen);
-                //         z-index: 1000;
-                //         margin-top: -24px;
-                //         margin-left: 40px;
-                //         padding: 4px;
-                //         padding-left: 16px;
-                //         &::after {
-                //             contain: '';
-                //             display: block;
-                //             width: 0;
-                //             height: 0;
-                //             border-left: 100px solid #f0ad4e;
-                //             border-top: 50px solid transparent;
-                //             border-bottom: 50px solid transparent;
-                //         }
-                //     }
-                // }
+                border-left: 2px solid var(--zina-6, #c3d941);
             }
             span {
                 &.icon {
@@ -344,10 +332,22 @@ footer {
                     vertical-align: middle;
                 }
                 &.item:not(.show) {
-                    display: none;
+                    display: none !important;
                 }
             }
         }
+        .submenu-item,
+        .menu-item {
+            border-bottom: 1px solid #444;
+            padding: 12px 0;
+        } // .parent_menu {
+        //     background-color: var(--zina-1, #0c1224);
+        //     &:hover {
+        //         color: white;
+        //         transition: 450ms all;
+        //         border-left: none
+        //     } // background-color: var(--zina-1, #0c1224);
+        // }
     }
 }
 
@@ -395,20 +395,19 @@ footer {
     }
 }
 
-.badge-notify{
-  background:red;
-  position:relative;
-  top: -20px;
-  left: -35px;
+.badge-notify {
+    background: red;
+    position: relative;
+    top: -20px;
+    left: -35px;
 }
 
 span.btn-icon {
-  padding: 1px 9px;
-  border-radius: 20px;
-  transition: all 0.3s;
-  &:hover{
-    background: rgba(0, 0, 0, 0.05);
-    transition: all 0.3s
-  }
+    padding: 1px 9px;
+    border-radius: 20px;
+    transition: all 0.3s;
+    &:hover {
+        background: rgba(0, 0, 0, 0.05);
+        transition: all 0.3s
+    }
 }
-

@@ -14,24 +14,6 @@ import Button from '../button/button.component';
 import { Card, CardBody, CardHeader, Collapse } from 'reactstrap';
 import BarLoader from 'react-spinners/BarLoader';
 
-// const nt = [
-//     {
-//         title: 'Notification 1',
-//         message:
-//             'Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio.'
-//     },
-//     {
-//         message:
-//             'Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio.'
-//     },
-//     {
-//         img: 'https://uinames.com/api/photos/male/12.jpg',
-//         title: 'Notification 1',
-//         message:
-//             'Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio.'
-//     }
-// ];
-
 class ZinaCard extends Component {
   state = {
     header: null,
@@ -75,22 +57,20 @@ class ZinaCard extends Component {
 
 class Base extends Component {
   static propTypes = {
-    title: PropTypes.string.isRequired,
     loading: PropTypes.bool.isRequired,
+    title: PropTypes.string,
     nt: PropTypes.array,
   };
 
   constructor(props) {
     super(props);
     this.drawerSize = this._computeSize();
-    this.extraProps = {}
   }
 
   componentDidMount() {
     const { title } = this.props;
     document.title = `ZINA${title ? ` | ${title}` : ''}`;
     window.addEventListener('resize', this._onChangeSize);
-    this.props = { ...this.props, name: "hola" }
     this._velidateExtraProps();
   }
 
@@ -146,17 +126,19 @@ class Base extends Component {
         )}
         <div className={['zina', className].join(' ')}>
           <Drawer position="left" size={this.drawerSize}>
-            {({
-              position,
-              size,
-              swiping,
-              translation,
-              mainContentScroll,
-              toggleDrawer,
-              handleTouchStart,
-              handleTouchMove,
-              handleTouchEnd
-            }) => (
+            {(args) => {
+              const {
+                position,
+                size,
+                swiping,
+                translation,
+                mainContentScroll,
+                toggleDrawer,
+                handleTouchStart,
+                handleTouchMove,
+                handleTouchEnd
+              } = args
+              return (
                 <div style={{ height: '100%' }}>
                   <DrawerContainer
                     position={position}
@@ -186,7 +168,7 @@ class Base extends Component {
                             ></Button>
                           </div>
                         </div>
-                        <Menu show config={config} />
+                        <Menu show config={config} toggleDrawer={toggleDrawer} />
                       </div>
                     }
                   />
@@ -201,18 +183,16 @@ class Base extends Component {
                         onLogout={this._onLogout}
                         user={user}
                         logo={logo}
-                      // notifications={nt}
                       />
                       <div className="maincontent">
                         <div className="menu">
-                          <Menu config={config} />
+                          <Menu config={config} toggleDrawer={toggleDrawer} />
                         </div>
                         <div className="sheet">
                           {this._computeBreadcrumb()}
                           <div className="container-fluid">
                             <div className="panel">
-                              {/* <h3>{title}</h3>
-                              <hr /> */}
+                              {title && <h3>{title}</h3>}
                               <div className="page-content">
                                 {this._computeChildrens(
                                   childrens
@@ -231,7 +211,8 @@ class Base extends Component {
                     </div>
                   </MainContentContainer>
                 </div>
-              )}
+              )
+            }}
           </Drawer>
         </div>
       </ErrorBoundary>
@@ -253,7 +234,7 @@ class Base extends Component {
 
   _onLogout = event => {
     event.preventDefault();
-    this.extraProps.logout();
+    this._getExtraProps().logout();
   };
 
   _onChangeSize = () => {
