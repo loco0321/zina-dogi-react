@@ -1,0 +1,43 @@
+.dropdown-toggle::after {
+    display: none;
+}
+.notification {
+    width: 350px;
+    padding: 0 !important;
+    .card {
+        border: 0px;
+        .card-header {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        .card-body {
+            padding: 8px;
+            overflow: auto;
+            max-height: 200px;
+            .list-unstyled {
+                margin: 0;
+            }
+            li.media {
+                padding: 8px 0;
+                &:not(:last-child) {
+                    border-bottom: 1px dotted lightgrey;
+                }
+                img {
+                    border-radius: 50%;
+                    width: 50px;
+                }
+                .media-body {
+                    h5 {
+                        font-size: 15px;
+                        font-weight: 400;
+                    }
+                    font-size: 12px;
+                    font-weight: 300;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+    }
+}

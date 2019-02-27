@@ -1,0 +1,16 @@
+@import '../node_modules/bootstrap/scss/mixins';
+
+@mixin font-face($name, $file_name, $path, $weight, $style: null) {
+    @font-face {
+        font-family: $name;
+        src: url('#{$path}/#{$file_name}.eot');
+        src: url('#{$path}/#{$file_name}.eot?#iefix')
+                format('embedded-opentype'),
+            url('#{$path}/#{$file_name}.woff2') format('woff2'),
+            url('#{$path}/#{$file_name}.woff') format('woff'),
+            url('#{$path}/#{$file_name}.ttf') format('truetype'),
+            url('#{$path}/#{$file_name}.svg##{$file_name}') format('svg');
+        font-weight: $weight;
+        font-style: $style;
+    }
+}
