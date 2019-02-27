@@ -1,0 +1,114 @@
+@import '../../assets/sass/vars';
+
+.zina {
+    height: 100%;
+    .breadcrumb {
+        background-color: var(--india-4, #f3f3f4);
+        font-weight: var(--font-regular, 400);
+        color: var(--india-divider, #999);
+        border-radius: 0;
+        font-size: 12pt;
+        margin: 0;
+        .breadcrumb-item + .breadcrumb-item::before {
+            color: var(--india-divider, #999);
+            content: '>';
+        }
+    }
+    .container-fluid {
+        background-color: var(--india-4, #f3f3f4);
+        min-height: calc(100vh - 128px);
+        padding: 10px;
+        .page-content {
+            padding: 10px;
+        }
+        h3 {
+            color: var(--india-2, black);
+            font-weight: 400;
+            font-weight: var(--font-regular, 400);
+            font-size: 20pt;
+            padding-left: 10px;
+            padding-top: 10px;
+            margin: 0;
+        }
+        .panel {
+            background-color: rgba(#000, 0.05);
+        }
+        hr {
+            margin: 10px 0;
+        }
+        .cpo_card {
+            box-shadow: $base-card-shadow;
+            background-color: $base_card;
+            margin-bottom: 16px;
+            border-radius: 3px;
+            padding: 16px;
+            .navbar {
+                padding: 0;
+                .navbar-brand.h4 {
+                    color: $base_subtitle;
+                }
+            }
+        }
+    }
+    .sheet {
+        width: 100%;
+        min-height: calc(100% - 46px);
+        background-color: $base_bg;
+    }
+    .drawer {
+        background-color: var(--india-2, #071534);
+        height: 100%;
+        overflow-y: auto;
+    }
+    .maincontent {
+        display: flex;
+        > .menu {
+            width: 50px;
+            background-color: var(--india-2, #071534);
+        }
+    }
+}
+
+.MainContentContainer {
+    height: 100%;
+    .content {
+        height: 100%;
+        .maincontent {
+            height: calc(100% - 80px);
+            .sheet {
+                height: 100%;
+                overflow: auto;
+            }
+        }
+    }
+}
+.loading {
+    position: fixed;
+    display: flex;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 10000;
+    color: white;
+    background-color: rgba(#000, 0.7);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+footer {
+    height: 20px;
+    > .menu {
+        width: 50px;
+        height: 20px;
+        margin-right: 16px;
+        display: inline-block;
+        position: absolute;
+        background-color: var(--india-2, #071534);
+    }
+    .legend {
+        font-size: 10pt;
+        margin-left: 66px;
+        line-height: 2px;
+    }
+}

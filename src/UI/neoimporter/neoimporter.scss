@@ -1,0 +1,37 @@
+.callout {
+    .card-header {
+        border-left-width: 10px;
+        border: 1px solid #eee;
+    }
+
+    &.callout-danger > .card-header {
+        border-left-color: #a92c2c;
+        * {
+            color: #a92c2c !important;
+        }
+    }
+    &.callout-secondary > .card-header {
+        border-left-color: #4675cd;
+        * {
+            color: #4675cd !important;
+        }
+    }
+    &.callout-success > .card-header {
+        border-left-color: #5ea557;
+        * {
+            color: #5ea557 !important;
+        }
+    }
+    &.callout-warning > .card-header {
+        border-left-color: #e9a828;
+        * {
+            color: #e9a828 !important;
+        }
+    }
+}
+
+.card-body {
+    &.error {
+        border-top: 2px solid #a92c2c;
+    }
+}

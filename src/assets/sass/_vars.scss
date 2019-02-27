@@ -1,0 +1,30 @@
+@import './config';
+// size
+$full: 100%;
+$font_size: 16px;
+$fondo: url(../../assets/imgs/fondo.png);
+$logo_zina: url(../../../assets/imgs/zina-official-applogo.svg);
+$logo_zina2: url(../../assets/imgs/zina-official-applogo.svg);
+
+$zina-bg: var(--zina-bg, #cfd1d0);
+$zina-1: var(--zina-1, #0c1224);
+$zina-2: var(--zina-2, #071534);
+$zina-3: var(--zina-3, #0c2254);
+$zina-4: var(--zina-4, #f3f3f4);
+$zina-5: var(--zina-5, #bdc7d2);
+$zina-6: var(--zina-6, #c3d941);
+$zina-7: var(--zina-7, #26b34b);
+$zina-8: var(--zina-8, #4088d5);
+$zina-divider: var(--zina-divider, #999);
+$zina-dark: var(--zina-dark, #000);
+$base_card: var(--white, #fff); //tomado de boostrap
+$base_title: $zina-3;
+$base_card_shadow: 0px 0px 5px 0px rgba(92, 92, 92, 0.2);
+
+// Btn
+$btn-border-radius:           2px;
+$btn-border-radius-lg:        2px;
+$btn-border-radius-sm:        2px;
+$btn-font-weight:             500;
+$badge-border-radius:         16px;
+// $breadcrumb-divider: quote(">");

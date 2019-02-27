@@ -1,0 +1,44 @@
+$nokia_pure_headline: 'Nokia Pure Headline';
+$path: '../node_modules/zina-dogi-react/src/assets/fonts/NokiaPureHeadline-Webfont';
+$fa-font-path: '../node_modules/zina-dogi-react/src/assets/fonts/webfonts';
+@include font-face(
+    $nokia_pure_headline,
+    'NokiaPureHeadline-UltraLight',
+    $path,
+    200,
+    normal
+);
+
+@include font-face(
+    $nokia_pure_headline,
+    'NokiaPureHeadline-Light',
+    $path,
+    300,
+    normal
+);
+
+@include font-face(
+    $nokia_pure_headline,
+    'NokiaPureHeadline-Regular',
+    $path,
+    normal,
+    normal
+);
+
+@include font-face(
+    $nokia_pure_headline,
+    'NokiaPureHeadline-Bold',
+    $path,
+    bold,
+    normal
+);
+
+@include font-face(
+    $nokia_pure_headline,
+    'NokiaPureHeadline-ExtraBold',
+    $path,
+    800,
+    normal
+);
+@import './FaIcons/fontawesome';
+@import "./FaIcons/solid";
