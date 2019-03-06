@@ -29800,7 +29800,11 @@ var Base = function (_Component2) {
     var _this2 = possibleConstructorReturn(this, (Base.__proto__ || Object.getPrototypeOf(Base)).call(this, props));
 
     _this2._getExtraProps = function () {
-      var parent = _this2._reactInternalFiber._debugOwner.stateNode;
+      try {
+        var _parent = _this2._reactInternalFiber._debugOwner.stateNode;
+      } catch (error) {
+        return {};
+      }
       if (parent) {
         return parent.props.extraProps;
       }
