@@ -60,6 +60,12 @@ class Base extends Component {
     loading: PropTypes.bool.isRequired,
     title: PropTypes.string,
     nt: PropTypes.array,
+    extraProps: PropTypes.shape({
+      user: PropTypes.object.isRequired,
+      logo: PropTypes.string.isRequired,
+      config: PropTypes.object.isRequired,
+      logout: PropTypes.func.isRequired,
+    }).isRequired
   };
 
   constructor(props) {
@@ -71,32 +77,6 @@ class Base extends Component {
     const { title } = this.props;
     document.title = `ZINA${title ? ` | ${title}` : ''}`;
     window.addEventListener('resize', this._onChangeSize);
-    this._velidateExtraProps();
-  }
-
-  _getExtraProps = () => {
-    try {
-      console.log(this._reactInternalFiber);
-      const parent = this._reactInternalFiber._debugOwner.stateNode;
-      if (parent) {
-        return parent.props.extraProps;
-      }
-    } catch (error) {
-      return {}
-    }
-  }
-
-  _velidateExtraProps = () => {
-    const { user, logo, config, logout } = this._getExtraProps();
-    if (!(user && logo && config && logout)) {
-      const req = { user, logo, config, logout };
-      Object.keys(req).map(key => {
-        const value = req[key];
-        if (!value) {
-          console.error(`Warning: Failed prop type: The prop '${key}' is marked as required in 'PrivateRoute' extraPros , but its value is '${value}'.`)
-        }
-      })
-    }
   }
 
   componentDidUpdate(prevProps) {
@@ -104,13 +84,10 @@ class Base extends Component {
     if (title !== prevProps.title) {
       document.title = `ZINA${title ? ` | ${title}` : ''}`;
     }
-    this._velidateExtraProps();
-
   }
 
   render() {
-    const { children, title, loading, className } = this.props;
-    const { user, logo, config } = this._getExtraProps();
+    const { children, title, loading, className, extraProps: { user, logo, config }} = this.props;
     let childrens = children ? children : null;
     if (childrens) {
       childrens = Array.isArray(childrens)
@@ -240,7 +217,7 @@ class Base extends Component {
 
   _onLogout = event => {
     event.preventDefault();
-    this._getExtraProps().logout();
+    this.props.extraProps.logout();
   };
 
   _onChangeSize = () => {
