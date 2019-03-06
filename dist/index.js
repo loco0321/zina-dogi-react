@@ -18711,6 +18711,7 @@ var misc_9 = misc.consoleSandbox;
 
 var memo = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
+
 // tslint:disable:no-unsafe-any
 /**
  * Memo class used for decycle json objects. Uses WeakSet if available otherwise array.
@@ -18726,6 +18727,7 @@ var Memo = /** @class */ (function () {
      * @param obj Object to remember
      */
     Memo.prototype.memoize = function (obj) {
+        var e_1, _a;
         if (this.hasWeakSet) {
             if (this.inner.has(obj)) {
                 return true;
@@ -18734,12 +18736,20 @@ var Memo = /** @class */ (function () {
             return false;
         }
         else {
-            // tslint:disable-next-line:prefer-for-of
-            for (var i = 0; i < this.inner.length; i++) {
-                var value = this.inner[i];
-                if (value === obj) {
-                    return true;
+            try {
+                for (var _b = tslib_1.__values(this.inner), _c = _b.next(); !_c.done; _c = _b.next()) {
+                    var value = _c.value;
+                    if (value === obj) {
+                        return true;
+                    }
                 }
+            }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                }
+                finally { if (e_1) throw e_1.error; }
             }
             this.inner.push(obj);
             return false;
@@ -18838,7 +18848,7 @@ function safeJoin(input, delimiter) {
         return '';
     }
     var output = [];
-    // tslint:disable-next-line:prefer-for-of
+    // tslint:disable-next-line
     for (var i = 0; i < input.length; i++) {
         var value = input[i];
         try {
@@ -18878,6 +18888,7 @@ var string_4 = string.includes;
 
 var object = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
+
 
 
 
@@ -19065,7 +19076,7 @@ function assign(target) {
         throw new TypeError('Cannot convert undefined or null to object');
     }
     var to = Object(target);
-    // tslint:disable-next-line:prefer-for-of
+    // tslint:disable-next-line
     for (var i = 0; i < args.length; i++) {
         var source = args[i];
         if (source !== null) {
@@ -19157,7 +19168,7 @@ function normalizeValue(value, key) {
 function decycle(obj, memo$$1) {
     if (memo$$1 === void 0) { memo$$1 = new memo.Memo(); }
     // tslint:disable-next-line:no-unsafe-any
-    var copy = is.isArray(obj) ? obj.slice() : is.isPlainObject(obj) ? assign({}, obj) : obj;
+    var copy = is.isArray(obj) ? tslib_1.__spread(obj) : is.isPlainObject(obj) ? tslib_1.__assign({}, obj) : obj;
     if (!is.isPrimitive(obj)) {
         if (memo$$1.memoize(obj)) {
             return '[Circular ~]';
@@ -19320,7 +19331,7 @@ var Scope = /** @class */ (function () {
     };
     /**
      * Updates user context information for future events.
-     * @param user User context object to be set in the current context.
+     * @param user User context object to merge into current context.
      */
     Scope.prototype.setUser = function (user) {
         this.user = object.safeNormalize(user);
@@ -21038,7 +21049,7 @@ var BaseClient = /** @class */ (function () {
     /**
      * @inheritDoc
      */
-    BaseClient.prototype.flush = function (timeout) {
+    BaseClient.prototype.close = function (timeout) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
@@ -21050,16 +21061,6 @@ var BaseClient = /** @class */ (function () {
                         ])];
                     case 1: return [2 /*return*/, (_a.sent()).reduce(function (prev, current) { return prev && current; })];
                 }
-            });
-        });
-    };
-    /**
-     * @inheritDoc
-     */
-    BaseClient.prototype.close = function (timeout) {
-        return tslib_1.__awaiter(this, void 0, void 0, function () {
-            return tslib_1.__generator(this, function (_a) {
-                return [2 /*return*/, this.flush(timeout)];
             });
         });
     };
@@ -21254,6 +21255,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 function initAndBind(clientClass, options) {
     if (options.debug === true) {
         logger_1.logger.enable();
+    }
+    if (dist.getCurrentHub().getClient()) {
+        return;
     }
     var client = new clientClass(options);
     dist.getCurrentHub().bindClient(client);
@@ -21679,14 +21683,12 @@ var InboundFilters = /** @class */ (function () {
     InboundFilters.prototype.getEventFilterUrl = function (event) {
         try {
             if (event.stacktrace) {
-                // tslint:disable:no-unsafe-any
-                var frames_1 = event.stacktrace.frames;
-                return frames_1[frames_1.length - 1].filename;
+                // tslint:disable-next-line:no-unsafe-any
+                return event.stacktrace.frames[0].filename;
             }
             else if (event.exception) {
-                // tslint:disable:no-unsafe-any
-                var frames_2 = event.exception.values[0].stacktrace.frames;
-                return frames_2[frames_2.length - 1].filename;
+                // tslint:disable-next-line:no-unsafe-any
+                return event.exception.values[0].stacktrace.frames[0].filename;
             }
             else {
                 return null;
@@ -22939,6 +22941,7 @@ var supports_9 = supports.supportsHistory;
 
 var memo = createCommonjsModule$$1(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
+
 // tslint:disable:no-unsafe-any
 /**
  * Memo class used for decycle json objects. Uses WeakSet if available otherwise array.
@@ -22954,6 +22957,7 @@ var Memo = /** @class */ (function () {
      * @param obj Object to remember
      */
     Memo.prototype.memoize = function (obj) {
+        var e_1, _a;
         if (this.hasWeakSet) {
             if (this.inner.has(obj)) {
                 return true;
@@ -22962,12 +22966,20 @@ var Memo = /** @class */ (function () {
             return false;
         }
         else {
-            // tslint:disable-next-line:prefer-for-of
-            for (var i = 0; i < this.inner.length; i++) {
-                var value = this.inner[i];
-                if (value === obj) {
-                    return true;
+            try {
+                for (var _b = tslib_1__default.__values(this.inner), _c = _b.next(); !_c.done; _c = _b.next()) {
+                    var value = _c.value;
+                    if (value === obj) {
+                        return true;
+                    }
                 }
+            }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
+            finally {
+                try {
+                    if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                }
+                finally { if (e_1) throw e_1.error; }
             }
             this.inner.push(obj);
             return false;
@@ -23066,7 +23078,7 @@ function safeJoin(input, delimiter) {
         return '';
     }
     var output = [];
-    // tslint:disable-next-line:prefer-for-of
+    // tslint:disable-next-line
     for (var i = 0; i < input.length; i++) {
         var value = input[i];
         try {
@@ -23106,6 +23118,7 @@ var string_4 = string.includes;
 
 var object = createCommonjsModule$$1(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
+
 
 
 
@@ -23293,7 +23306,7 @@ function assign(target) {
         throw new TypeError('Cannot convert undefined or null to object');
     }
     var to = Object(target);
-    // tslint:disable-next-line:prefer-for-of
+    // tslint:disable-next-line
     for (var i = 0; i < args.length; i++) {
         var source = args[i];
         if (source !== null) {
@@ -23385,7 +23398,7 @@ function normalizeValue(value, key) {
 function decycle(obj, memo$$1) {
     if (memo$$1 === void 0) { memo$$1 = new memo.Memo(); }
     // tslint:disable-next-line:no-unsafe-any
-    var copy = is.isArray(obj) ? obj.slice() : is.isPlainObject(obj) ? assign({}, obj) : obj;
+    var copy = is.isArray(obj) ? tslib_1__default.__spread(obj) : is.isPlainObject(obj) ? tslib_1__default.__assign({}, obj) : obj;
     if (!is.isPrimitive(obj)) {
         if (memo$$1.memoize(obj)) {
             return '[Circular ~]';
@@ -25267,7 +25280,7 @@ var BrowserBackend = /** @class */ (function (_super) {
 }(dist$3.BaseBackend));
 
 var SDK_NAME = 'sentry.javascript.browser';
-var SDK_VERSION = '4.6.1';
+var SDK_VERSION = '4.5.4';
 
 /**
  * The Sentry Browser SDK Client.
@@ -26486,7 +26499,6 @@ var Vue = /** @class */ (function () {
         this.Vue =
             options.Vue ||
                 misc_3().Vue;
-        this.attachProps = options.attachProps || true;
     }
     /** JSDoc */
     Vue.prototype.formatComponentName = function (vm) {
@@ -26511,9 +26523,7 @@ var Vue = /** @class */ (function () {
             var metadata = {};
             if (is_10(vm)) {
                 metadata.componentName = _this.formatComponentName(vm);
-                if (_this.attachProps) {
-                    metadata.propsData = vm.$options.propsData;
-                }
+                metadata.propsData = vm.$options.propsData;
             }
             if (!is_5(info)) {
                 metadata.lifecycleHook = info;
@@ -26751,32 +26761,6 @@ function forceLoad() {
 function onLoad(callback) {
     callback();
 }
-/**
- * A promise that resolves when all current events have been sent.
- * If you provide a timeout and the queue takes longer to drain the promise returns false.
- *
- * @param timeout Maximum time in ms the client should wait.
- */
-function flush(timeout) {
-    return tslib_1.__awaiter(this, void 0, void 0, function () {
-        return tslib_1.__generator(this, function (_a) {
-            return [2 /*return*/, dist$3.getCurrentHub().getClient().flush(timeout)];
-        });
-    });
-}
-/**
- * A promise that resolves when all current events have been sent.
- * If you provide a timeout and the queue takes longer to drain the promise returns false.
- *
- * @param timeout Maximum time in ms the client should wait.
- */
-function close(timeout) {
-    return tslib_1.__awaiter(this, void 0, void 0, function () {
-        return tslib_1.__generator(this, function (_a) {
-            return [2 /*return*/, dist$3.getCurrentHub().getClient().close(timeout)];
-        });
-    });
-}
 
 var INTEGRATIONS = tslib_1.__assign({}, dist$3.Integrations, BrowserIntegrations);
 
@@ -26803,8 +26787,6 @@ exports.init = init;
 exports.lastEventId = lastEventId;
 exports.onLoad = onLoad;
 exports.showReportDialog = showReportDialog;
-exports.flush = flush;
-exports.close = close;
 exports.SDK_NAME = SDK_NAME;
 exports.SDK_VERSION = SDK_VERSION;
 
@@ -26834,10 +26816,8 @@ var dist_23 = dist_3$3.init;
 var dist_24 = dist_3$3.lastEventId;
 var dist_25 = dist_3$3.onLoad;
 var dist_26 = dist_3$3.showReportDialog;
-var dist_27 = dist_3$3.flush;
-var dist_28 = dist_3$3.close;
-var dist_29 = dist_3$3.SDK_NAME;
-var dist_30 = dist_3$3.SDK_VERSION;
+var dist_27 = dist_3$3.SDK_NAME;
+var dist_28 = dist_3$3.SDK_VERSION;
 
 var ErrorBoundary = function (_Component) {
     inherits(ErrorBoundary, _Component);
