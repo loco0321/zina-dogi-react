@@ -75,7 +75,11 @@ class Base extends Component {
   }
 
   _getExtraProps = () => {
-    const parent = this._reactInternalFiber._debugOwner.stateNode;
+    try {
+      const parent = this._reactInternalFiber._debugOwner.stateNode;
+    } catch (error) {
+      return {}
+    }
     if (parent) {
       return parent.props.extraProps;
     }
