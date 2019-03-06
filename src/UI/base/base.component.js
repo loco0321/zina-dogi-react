@@ -79,6 +79,7 @@ class Base extends Component {
     if (parent) {
       return parent.props.extraProps;
     }
+    return {}
   }
 
   _velidateExtraProps = () => {
@@ -100,6 +101,7 @@ class Base extends Component {
       document.title = `ZINA${title ? ` | ${title}` : ''}`;
     }
     this._velidateExtraProps();
+
   }
 
   render() {

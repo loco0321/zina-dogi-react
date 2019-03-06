@@ -29831,6 +29831,7 @@ var Base = function (_Component2) {
       if (parent) {
         return parent.props.extraProps;
       }
+      return {};
     };
 
     _this2._velidateExtraProps = function () {
