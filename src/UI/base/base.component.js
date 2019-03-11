@@ -63,7 +63,20 @@ class Base extends Component {
     extraProps: PropTypes.shape({
       user: PropTypes.object.isRequired,
       logo: PropTypes.string.isRequired,
-      config: PropTypes.object.isRequired,
+      config: PropTypes.arrayOf(
+        PropTypes.shape({
+          link: PropTypes.string,
+          icon: PropTypes.string.isRequired,
+          name: PropTypes.string.isRequired,
+          children: PropTypes.arrayOf(
+            PropTypes.shape({
+              link: PropTypes.string.isRequired,
+              icon: PropTypes.string,
+              name: PropTypes.string.isRequired,
+            })
+          )
+        })
+      ).isRequired,
       logout: PropTypes.func.isRequired,
     }).isRequired
   };
