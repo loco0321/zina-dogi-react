@@ -3,7 +3,6 @@
 @import './assets/sass/mixin';
 @import './assets/sass/bootstrap';
 @import './assets/sass/fonts';
-
 html,
 body,
 #root {
@@ -35,56 +34,24 @@ code {
 .controls {
     display: flex;
     flex-direction: row;
-    padding: 0 15px;
+    justify-content: flex-end;
+    margin: 0;
+    padding: 0;
+      margin-bottom: 8px;
     >* {
-        display: inline-block;
-        margin-left: 8px;
-    }
-    .flex {
-        flex: 1 1 auto;
-    }
-}
-
-.table,
-.handsontable {
-    tr:nth-child(2n+1) {
-        background: white;
-    }
-}
-
-.handsontable {
-    // height: inherit !important;
-    td {
-        &.menu {
-            overflow: inherit !important;
+        margin-right: 8px;
+        &:last-child {
+            margin-right: 0;
+        }
+        &:first-child {
+            margin-left: 0;
         }
     }
-    .ht_clone_top,
-    .ht_clone_top_left_corner {
-        th {
-            background-color: $zina-1;
-            color: $zina-4; // border-color: $zina-1;
-        }
-    } // .wtHolder{
-    //     height: inherit !important;
-    // }
 }
 
-.ht_clone_top {
-    z-index: 0;
-}
-
-.ht_clone_left {
-    z-index: 0;
-}
-
-.ht_clone_top_left_corner,
-.ht_clone_bottom_left_corner {
-    z-index: 0;
-}
-
-.ht_clone_debug {
-    z-index: 0;
+.handsontable thead {
+  @extend .thead-dark;
+  text-transform: capitalize;
 }
 
 .dropdown-item:hover,
@@ -124,28 +91,20 @@ code {
             padding-top: 10px;
             margin: 0;
         }
-        .panel {
-            // background-color: rgba(#000, 0.05);
-        }
         hr {
             margin: 10px 0;
         }
         .zina_card {
-            // box-shadow: $base-card-shadow;
-            // background-color: $base_card;
-            margin-bottom: 16px; // border-radius: 3px;
-            // pad/*  */ding: 16px;
+            margin-bottom: 16px;
             .navbar {
                 padding: 0;
-                .navbar-brand.h4 {
-                    // color: $base_subtitle;
-                }
+                .navbar-brand.h4 {}
             }
         }
     }
     .sheet {
         width: 100%;
-        min-height: calc(100% - 46px); // background-color: $base_bg;
+        min-height: calc(100% - 46px);
     }
     .drawer {
         background-color: var(--zina-2, #071534);
@@ -255,8 +214,8 @@ footer {
         padding: 10px 0;
         input.form-control {
             width: 4em;
-            margin-left: -6px; // join the input with the previous button
-            line-height: 3em; // Do not why but this align the form control
+            margin-left: -6px;
+            line-height: 3em;
             border-radius: 0;
             margin-right: 10px;
         }
@@ -341,14 +300,7 @@ footer {
         .menu-item {
             border-bottom: 1px solid #444;
             padding: 12px 0;
-        } // .parent_menu {
-        //     background-color: var(--zina-1, #0c1224);
-        //     &:hover {
-        //         color: white;
-        //         transition: 450ms all;
-        //         border-left: none
-        //     } // background-color: var(--zina-1, #0c1224);
-        // }
+        }
     }
 }
 

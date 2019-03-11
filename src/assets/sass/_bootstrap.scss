@@ -31,6 +31,13 @@
 @import '~bootstrap/scss/print';
 @import '~bootstrap/scss/utilities';
 
+.table:not(.table-striped) {
+  th[scope=col] {
+    background-color: rgba(0, 0, 0, 0.05);
+    text-transform: capitalize;
+  }
+}
+
 .dropdown-toggle {
   &>span.caret {
       display: none
