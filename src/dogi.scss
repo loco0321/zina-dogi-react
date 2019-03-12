@@ -364,3 +364,20 @@ span.btn-icon {
         transition: all 0.3s
     }
 }
+
+.nav-tabs {
+  > .nav-item {
+      text-align: center;
+      .nav-link {
+          color: var(--dark, black);
+          &.active {
+              background-color: var(--primary, blue);
+              color: var(--light, white);
+          }
+      }
+  }
+  .nav-link {
+      margin-top: 8px;
+      border-color: #e9ecef #e9ecef #dee2e6 !important;
+  }
+}
