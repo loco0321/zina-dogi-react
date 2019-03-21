@@ -12,7 +12,7 @@ export const Comment = ({ type, message, date, username, ...others }) => {
             <div className="info">
                 <a>{username}</a>
                 <span>
-                    {moment.tz(date, 'Asia/Colombo').format('DD/MM/YYYY')}
+                    {date}
                 </span>
             </div>
             <p>{message}</p>

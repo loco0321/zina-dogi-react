@@ -11,6 +11,10 @@ import CollapsibleResult from './UI/neoimporter/CollapsibleResult';
 import ResultCard from './UI/neoimporter/ResultCard';
 import Base from './UI/base/base.component';
 import Icon from './UI/icon/icon.component';
+import Login from './UI/login/login.component';
+
+const pk = require('../package.json');
+document.zina_dogi_react =  pk
 
 export {
     Header,
@@ -24,5 +28,6 @@ export {
     CollapsibleResult,
     ResultCard,
     Base,
-    Icon
+    Icon,
+    Login
 }
