@@ -100,7 +100,7 @@ class Base extends Component {
   }
 
   render() {
-    const { children, title, loading, className, extraProps: { user, logo, config }} = this.props;
+    const { children, title, loading, className, extraProps: { user, logo, config, extraMenu }} = this.props;
     let childrens = children ? children : null;
     if (childrens) {
       childrens = Array.isArray(childrens)
@@ -179,6 +179,7 @@ class Base extends Component {
                         onLogout={this._onLogout}
                         user={user}
                         logo={logo}
+                        extraMenu={extraMenu}
                       />
                       <div className="maincontent">
                         <div className="menu">

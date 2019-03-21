@@ -1,16 +1,27 @@
 import React from 'react';
 import Icon from '../icon/icon.component';
-import { Field } from 'formik'
+// import { Field } from 'formik'
 
 class paginator extends React.Component {
+
   constructor(props) {
     super(props);
     this.inputRef = React.createRef();
   }
-  render() {
+
+  componentDidMount () {
     if(this.inputRef.current){
       this.inputRef.current.value = this.props.actualPage;
     }
+  }
+
+  componentDidUpdate() {
+    if(this.inputRef.current){
+      this.inputRef.current.value = this.props.actualPage;
+    }
+  }
+
+  render() {
     return (
       <ul className="pagination">
         <li

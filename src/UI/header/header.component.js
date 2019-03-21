@@ -20,6 +20,7 @@ const Header = ({
   user,
   logo,
   toggleDrawer,
+  extraMenu,
   notifications = [],
   noty = true,
   ...props
@@ -39,6 +40,7 @@ const Header = ({
         </div>
       </div>
       <div className="controls">
+        {extraMenu}
         {noty && (
           <UncontrolledDropdown setActiveFromChild>
             <DropdownToggle tag="span">

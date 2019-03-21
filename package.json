@@ -1,10 +1,8 @@
 {
   "name": "zina-dogi-react",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "Zina Dogi React Theme",
-  "author": "",
-  "license": "",
-  "repository": "",
+  "author": "Zina Team",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
@@ -68,6 +66,7 @@
     "prop-types": "^15.7.2",
     "react-dropzone": "7",
     "react-router-dom": "^4.3.1",
+    "react-select": "^2.4.2",
     "react-spinners": "^0.5.1",
     "react-swipeable-drawer": "^3.1.0",
     "reactstrap": "^7.1.0"
