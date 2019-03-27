@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Collapse } from 'reactstrap'
+import { UncontrolledCollapse as Collapse} from 'reactstrap'
 import { NavLink } from 'react-router-dom';
 import Icon from '../icon/icon.component'
 // import './menu.scss';
@@ -22,7 +22,12 @@ export default class Menu extends Component {
         children: PropTypes.arrayOf(
           PropTypes.shape({
             link: PropTypes.string.isRequired,
-            icon: PropTypes.string,
+            icon: PropTypes.oneOfType([
+                PropTypes.string,
+                PropTypes.shape([
+                    
+                ])
+            ]),
             name: PropTypes.string.isRequired,
           })
         )
@@ -75,20 +80,10 @@ export default class Menu extends Component {
     const { toggleDrawer, show } = this.props;
     if (!show){
       toggleDrawer();
-      setTimeout(() => {
-        console.log('o.o');
-        this.setState({
-          isOpen: true
-        });
-      }, 1000)
-    }else{
-      this._toggle();
     }
   }
 
   _toggle = () => {
-    console.log('noc');
-
     this.setState({
       isOpen: !this.state.isOpen
     })
@@ -108,24 +103,25 @@ export default class Menu extends Component {
         <div className="parent_menu" >
           <div
             onClick={this._onClickSubMenu}
+            id={`toggler-${key}`}
             className="submenu-item"
           >
             <span className="icon">
               <Icon icon={icon} />
             </span>
-            {show && <span className={menuNameClassNames}>
+            <span className={menuNameClassNames}>
               {name}
               <span style={{ flex: '1 1 auto' }} />
-              <span className="btn-icon">
+              {show && <span className="btn-icon">
                 <Icon icon="angle-down" />
-              </span>
-            </span>}
+              </span>}
+            </span>
           </div>
-          <Collapse isOpen={this.state.isOpen}>
+          {show && <Collapse toggler={`toggler-${key}`}>
             <ul className="submenu">
               {children.map((menu, index) => this._computeMenuItem(menu, index, show, false))}
             </ul>
-          </Collapse>
+          </Collapse>}
         </div>
       </li>
     )

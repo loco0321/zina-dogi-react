@@ -228,6 +228,20 @@ code {
     margin: 0;
     padding: 0;
     li {
+        &:hover {
+            .menu-item,
+            .submenu-item {
+                span.item:not(.show) {
+                    display: block !important;
+                    position: absolute;
+                    padding: 8px;
+                    background: black;
+                    z-index: 1000;
+                    margin-top: -31px;
+                    left: 55px;
+                }
+            }
+        }
         >* {
             text-decoration: none;
             color: white;
@@ -366,7 +380,6 @@ span.btn-icon {
 
 .login-sheet {
     width: 100%;
-    
     background-repeat: no-repeat;
     background-size: cover;
     padding: 0 !important;
@@ -493,8 +506,7 @@ footer {
     background: $zina-2;
     color: white;
     height: 36px !important;
-    font-size: 13px;
-    // padding: 10px;
+    font-size: 13px; // padding: 10px;
     >.menu {
         width: 50px;
         height: 20px;
@@ -513,9 +525,9 @@ footer {
         color: black;
         border-top: 1px solid #999;
         &.login {
-          background-color: transparent;
-          border: none;
-          color: white;
+            background-color: transparent;
+            border: none;
+            color: white;
         }
     }
 }
