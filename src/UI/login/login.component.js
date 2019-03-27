@@ -104,8 +104,6 @@ class Login extends Component {
     }
 
     render() {
-        console.log(this.props);
-        
         return (
             <div 
                 className="row container-fluid h-100 flex-column login-sheet" 
@@ -129,6 +127,8 @@ class Login extends Component {
                             {this.state.showLogin && <LoginForm
                                 showAccess={this.props.access}
                                 onGoAccess={this.showAccessFn}
+                                top={this.props.LoginTop}
+                                bottom={this.props.LoginBottom}
                                 onSubmit={this.props.onSubmitLogin}
                             />} 
                             {(!this.state.showLogin && this.props.access) && <AccessForm
@@ -156,6 +156,8 @@ class Login extends Component {
 }
 
 Login.propTypes = {
+    LoginTop: PropTypes.element,
+    LoginBottom: PropTypes.element,
     access: PropTypes.bool,
     items: PropTypes.arrayOf(
         PropTypes.shape({
@@ -185,16 +187,6 @@ Login.propTypes = {
         })
     ) 
 };
-
-export default Login;
-
-
-// const handleChange = (key, value, cpm) => {
-//     console.log({key, value, cpm});
-
-//     const { setFieldValue } = cpm;
-//     setFieldValue(key, value, false);
-// };
 
 class LoginForm extends Component {
     initialValues = {
@@ -227,12 +219,7 @@ class LoginForm extends Component {
                         <div className="titles">
                             <b>Sign in</b>
                             <br />
-                            <sub>
-                                Please log in to{' '}
-                                <a href="#a">
-                                    {`project management tool`.toUpperCase()}
-                                </a>
-                            </sub>
+                            {this.props.top && this.props.top}
                         </div>
                         <div className="fields">
                             <div className="form-group">
@@ -252,11 +239,7 @@ class LoginForm extends Component {
                                 />
                             </div>
                             <div className="links">
-                                <sub>
-                                    <a href="#b">
-                                        Click here to learn more about the MELIUS
-                                    </a>
-                                </sub>
+                                {this.props.bottom && this.props.bottom}
                             </div>
                         </div>
                         <div className="controls">
@@ -289,7 +272,6 @@ class AccessForm extends Component {
         project: null        
     };
     render() {
-        console.log(this.props);
         const { onGoLogin } = this.props;
         return (
             <Formik 
@@ -417,3 +399,5 @@ class AccessForm extends Component {
         setFieldValue(key, value.value, false);
     };
 }
+
+export default Login;
