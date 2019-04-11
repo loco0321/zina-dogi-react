@@ -25,12 +25,9 @@ class ZinaCard extends Component {
         const isDomTag = typeof children.type === "string";
         let header = this._updateHeader();
         const upgradeable = !header || !isDomTag;
-        console.log({name: children.type.name,  upgradeable});
         if (!header){
             header = this.state.header
         }
-        console.log(header);
-        
         return (
             <Card {...props}>
                 {header && <CardHeader>
