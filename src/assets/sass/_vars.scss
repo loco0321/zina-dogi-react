@@ -2,9 +2,6 @@
 // size
 $full: 100%;
 $font_size: 16px;
-$fondo: url(../../assets/imgs/fondo.png);
-$logo_zina: url(../../../assets/imgs/zina-official-applogo.svg);
-$logo_zina2: url(../../assets/imgs/zina-official-applogo.svg);
 
 $zina-bg: var(--zina-bg, #cfd1d0);
 $zina-1: var(--zina-1, #0c1224);
@@ -26,6 +23,7 @@ $base_card_shadow: 0px 0px 5px 0px rgba(92, 92, 92, 0.2);
 $btn-border-radius:           2px;
 $btn-border-radius-lg:        2px;
 $btn-border-radius-sm:        2px;
+$alert-border-radius:         2px;
 $btn-font-weight:             500;
 $badge-border-radius:         16px;
 // $breadcrumb-divider: quote(">");
