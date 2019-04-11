@@ -6,6 +6,7 @@
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
+  "license": "MIT",
   "engines": {
     "node": ">=8",
     "npm": ">=5"
@@ -62,7 +63,9 @@
     "@sentry/browser": "^4.5.4",
     "bootstrap": "^4.3.1",
     "formik": "^1.5.1",
+    "jquery": "^3.3.1",
     "moment-timezone": "^0.5.23",
+    "popper.js": "^1.15.0",
     "prop-types": "^15.7.2",
     "react-dropzone": "7",
     "react-router-dom": "^4.3.1",
