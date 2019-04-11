@@ -4,7 +4,13 @@ import { UncontrolledCollapse as Collapse} from 'reactstrap'
 import { NavLink } from 'react-router-dom';
 import Icon from '../icon/icon.component'
 // import './menu.scss';
-
+const icon_type = PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({
+        type: PropTypes.oneOf(['solid', 'brands', 'svg']),
+        icon: PropTypes.string.isRequired
+    })
+]);
 export default class Menu extends Component {
 
   static defaultProps = {
@@ -17,17 +23,12 @@ export default class Menu extends Component {
     config: PropTypes.arrayOf(
       PropTypes.shape({
         link: PropTypes.string,
-        icon: PropTypes.string.isRequired,
+        icon: icon_type,
         name: PropTypes.string.isRequired,
         children: PropTypes.arrayOf(
           PropTypes.shape({
             link: PropTypes.string.isRequired,
-            icon: PropTypes.oneOfType([
-                PropTypes.string,
-                PropTypes.shape([
-                    
-                ])
-            ]),
+            icon: icon_type,
             name: PropTypes.string.isRequired,
           })
         )

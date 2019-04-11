@@ -1,14 +1,14 @@
 import React from 'react'
-// import chrome_logo from '../assets/imgs/chrome.svg';
-// import firefox_logo from '../assets/imgs/firefox.svg';
-// import edge_logo from '../assets/imgs/edge.svg';
+import chrome_logo from '../../assets/imgs/chrome.svg';
+import firefox_logo from '../../assets/imgs/firefox.svg';
+import edge_logo from '../../assets/imgs/edge.svg';
 
 export default ({browser}) => {
     return (
         <div className="container h-100">
             <div className="row h-100 justify-content-center align-items-center">
                 <div>
-                    {/* {`You are seeing this page because you are using unsupported browser ${
+                    {`You are seeing this page because you are using unsupported browser ${
                         browser.name
                         } ${browser.version}.`}
                     <br />
@@ -44,7 +44,7 @@ export default ({browser}) => {
                             />{' '}
                             Microsoft Edge
                                     </li>
-                    </ul> */}
+                    </ul>
                 </div>
             </div>
         </div>

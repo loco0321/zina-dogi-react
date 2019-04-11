@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import { Formik, Form, Field } from 'formik';
 import Select from 'react-select';
-import { Carousel, CarouselItem, CarouselIndicators } from 'reactstrap';
+import { Carousel, CarouselItem, CarouselIndicators, Alert } from 'reactstrap';
 
 class LoginCarousel extends Component {
     constructor(props) {
@@ -105,13 +105,19 @@ class Login extends Component {
 
     render() {
         return (
-            <div 
-                className="row container-fluid h-100 flex-column login-sheet" 
-                style={{backgroundImage: `url(${this.props.fondo
-                    ? this.props.fondo
-                    :'https://i.ytimg.com/vi/m_Rt5MobcUE/maxresdefault.jpg' 
-                })`}}
+            <div
+                className="row container-fluid h-100 flex-column login-sheet"
+                style={{
+                    backgroundImage: `url(${this.props.fondo
+                        ? this.props.fondo
+                        : 'https://i.ytimg.com/vi/m_Rt5MobcUE/maxresdefault.jpg'
+                        })`
+                }}
             >
+                {this.props.error &&
+                    <Alert color="danger">
+                        {this.props.error}
+                    </Alert>}
                 <div className="row flex-fill justify-content-center align-items-center zina-login">
                     <div className="row zina-login lcard">
                         <div className="col-6 lcard-left">
@@ -120,7 +126,7 @@ class Login extends Component {
                         <div className="col-6 lcard-right">
                             <div className="logo-nokia">
                                 {this.props.nokiaLogo
-                                    ? <img src={this.props.nokiaLogo} alt="Nokia"/>
+                                    ? <img src={this.props.nokiaLogo} alt="Nokia" />
                                     : <b>NOKIA</b>
                                 }
                             </div>
@@ -130,7 +136,7 @@ class Login extends Component {
                                 top={this.props.LoginTop}
                                 bottom={this.props.LoginBottom}
                                 onSubmit={this.props.onSubmitLogin}
-                            />} 
+                            />}
                             {(!this.state.showLogin && this.props.access) && <AccessForm
                                 onGoLogin={this.showLoginFn}
                                 onSubmit={this.props.onSubmitAccess}
@@ -185,7 +191,7 @@ Login.propTypes = {
             ]).isRequired,
             label: PropTypes.string.isRequired
         })
-    ) 
+    )
 };
 
 class LoginForm extends Component {
@@ -208,7 +214,7 @@ class LoginForm extends Component {
                 className="loginForm"
                 enableReinitialize={true}
                 initialValues={this.initialValues}
-                onSubmit={(values, cmp) =>{
+                onSubmit={(values, cmp) => {
                     this.props.onSubmit(values, cmp);
                     cmp.resetForm();
                     cmp.setSubmitting(false);
@@ -262,6 +268,7 @@ class LoginForm extends Component {
 };
 class AccessForm extends Component {
     initialValues = {
+        username: '',
         email: '',
         first_name: '',
         last_name: '',
@@ -269,16 +276,16 @@ class AccessForm extends Component {
         password: '',
         re_password: '',
         custom_team: null,
-        project: null        
+        project: null
     };
     render() {
         const { onGoLogin } = this.props;
         return (
-            <Formik 
+            <Formik
                 className="accessForm"
                 enableReinitialize={true}
                 initialValues={this.initialValues}
-                onSubmit={(values, cmp) =>{
+                onSubmit={(values, cmp) => {
                     this.props.onSubmit(values, cmp);
                     this.props.onGoLogin()
                     cmp.resetForm();
@@ -295,6 +302,14 @@ class AccessForm extends Component {
                             </sub>
                         </div>
                         <div className="fields">
+                            <div className="form-group">
+                                <Field
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Username"
+                                    name="username"
+                                />
+                            </div>
                             <div className="form-group">
                                 <Field
                                     type="text"
