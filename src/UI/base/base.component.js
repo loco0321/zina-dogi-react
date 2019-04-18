@@ -24,9 +24,15 @@ class ZinaCard extends Component {
         const { children, ...props } = this.props;
         const isDomTag = typeof children.type === "string";
         let header = this._updateHeader();
-        const upgradeable = !header || !isDomTag;
+        let clone = React.cloneElement(children, {
+            setheader: this._setHeader,
+            togglecollapse: this._toggle,
+            iscollapse: this.state.collapse
+        })
         if (!header){
-            header = this.state.header
+            header = this.state.header;
+        } else {
+            clone = children
         }
         return (
             <Card {...props}>
@@ -35,12 +41,8 @@ class ZinaCard extends Component {
                 </CardHeader>}
                 <Collapse isOpen={!this.state.collapse}>
                     <CardBody>
-                        {!upgradeable && children}
-                        {upgradeable && React.cloneElement(children, {
-                            setheader: this._setHeader,
-                            togglecollapse: this._toggle,
-                            iscollapse: this.state.collapse
-                        })}
+                        {isDomTag && children}
+                        {!isDomTag && clone}
                     </CardBody>
                 </Collapse>
             </Card>
@@ -70,7 +72,7 @@ class ZinaCard extends Component {
                         return header({
                             togglecollapse: this._toggle,
                             iscollapse: this.state.collapse
-                        });
+                        }, children.props);
                     case 'object': 
                         return header;
                     default:
