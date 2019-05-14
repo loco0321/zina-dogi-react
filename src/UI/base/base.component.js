@@ -29,7 +29,7 @@ class ZinaCard extends Component {
             togglecollapse: this._toggle,
             iscollapse: this.state.collapse
         })
-        if (!header){
+        if (!header) {
             header = this.state.header;
         } else {
             clone = children
@@ -39,12 +39,12 @@ class ZinaCard extends Component {
                 {header && <CardHeader>
                     {header}
                 </CardHeader>}
-                <Collapse isOpen={!this.state.collapse}>
-                    <CardBody>
+                <CardBody>
+                    <Collapse isOpen={!this.state.collapse}>
                         {isDomTag && children}
                         {!isDomTag && clone}
-                    </CardBody>
-                </Collapse>
+                    </Collapse>
+                </CardBody>
             </Card>
         )
     }
@@ -66,21 +66,21 @@ class ZinaCard extends Component {
         const isDomTag = typeof children.type === "string";
         if (!isDomTag) {
             const { header } = children.type;
-            if(header){
+            if (header) {
                 switch (typeof header) {
                     case 'function':
                         return header({
                             togglecollapse: this._toggle,
                             iscollapse: this.state.collapse
                         }, children.props);
-                    case 'object': 
+                    case 'object':
                         return header;
                     default:
                         return false;
-                } 
+                }
             }
         }
-        
+
     }
 }
 

@@ -12,11 +12,21 @@ import ResultCard from './UI/neoimporter/ResultCard';
 import Base from './UI/base/base.component';
 import Icon from './UI/icon/icon.component';
 import Login from './UI/login/login.component';
+// import NeoImporter from './NeoImporter';
 
 const pk = require('../package.json');
-document.zina_dogi_react =  pk
+document.__zina_dogi_react =  {
+    name: pk.name,
+    version: pk.version,
+    config: {
+        neoimporter: {
+            __project__http__: null
+        }
+    }
+}
 
 export {
+    // NeoImporter,
     Header,
     PrivateRoute,
     Button,
