@@ -39,12 +39,12 @@ class ZinaCard extends Component {
                 {header && <CardHeader>
                     {header}
                 </CardHeader>}
-                <CardBody>
-                    <Collapse isOpen={!this.state.collapse}>
+                <Collapse isOpen={!this.state.collapse}>
+                    <CardBody>
                         {isDomTag && children}
                         {!isDomTag && clone}
-                    </Collapse>
-                </CardBody>
+                    </CardBody>
+                </Collapse>
             </Card>
         )
     }
