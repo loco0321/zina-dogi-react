@@ -24,13 +24,16 @@ class ZinaCard extends Component {
         const { children, ...props } = this.props;
         const isDomTag = typeof children.type === "string";
         let header = this._updateHeader();
-        const upgradeable = !header || !isDomTag;
-        console.log({name: children.type.name,  upgradeable});
-        if (!header){
-            header = this.state.header
+        let clone = React.cloneElement(children, {
+            setheader: this._setHeader,
+            togglecollapse: this._toggle,
+            iscollapse: this.state.collapse
+        })
+        if (!header) {
+            header = this.state.header;
+        } else {
+            clone = children
         }
-        console.log(header);
-        
         return (
             <Card {...props}>
                 {header && <CardHeader>
@@ -38,12 +41,8 @@ class ZinaCard extends Component {
                 </CardHeader>}
                 <Collapse isOpen={!this.state.collapse}>
                     <CardBody>
-                        {!upgradeable && children}
-                        {upgradeable && React.cloneElement(children, {
-                            setheader: this._setHeader,
-                            togglecollapse: this._toggle,
-                            iscollapse: this.state.collapse
-                        })}
+                        {isDomTag && children}
+                        {!isDomTag && clone}
                     </CardBody>
                 </Collapse>
             </Card>
@@ -67,21 +66,21 @@ class ZinaCard extends Component {
         const isDomTag = typeof children.type === "string";
         if (!isDomTag) {
             const { header } = children.type;
-            if(header){
+            if (header) {
                 switch (typeof header) {
                     case 'function':
                         return header({
                             togglecollapse: this._toggle,
                             iscollapse: this.state.collapse
-                        });
-                    case 'object': 
+                        }, children.props);
+                    case 'object':
                         return header;
                     default:
                         return false;
-                } 
+                }
             }
         }
-        
+
     }
 }
 

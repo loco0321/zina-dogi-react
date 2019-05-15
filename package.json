@@ -1,6 +1,6 @@
 {
   "name": "zina-dogi-react",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "Zina Dogi React Theme",
   "author": "Zina Team",
   "main": "dist/index.js",
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@svgr/rollup": "^2.4.1",
+    "@types/lodash": "^4.14.123",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.5",
     "babel-plugin-external-helpers": "^6.22.0",
@@ -64,13 +65,14 @@
     "bootstrap": "^4.3.1",
     "formik": "^1.5.1",
     "jquery": "^3.3.1",
+    "lodash": "^4.17.11",
     "moment-timezone": "^0.5.23",
     "popper.js": "^1.15.0",
     "prop-types": "^15.7.2",
     "react-dropzone": "7",
     "react-router-dom": "^4.3.1",
     "react-select": "^2.4.2",
-    "react-spinners": "^0.5.1",
+    "react-spinners": "^0.5.4",
     "react-swipeable-drawer": "^3.1.0",
     "reactstrap": "^7.1.0"
   }
