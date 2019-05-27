@@ -11,7 +11,7 @@ import Header from '../header/header.component'
 import Menu from '../menu/menu.component';
 import Icon from '../icon/icon.component'
 import Button from '../button/button.component';
-import { Card, CardBody, CardHeader, Collapse } from 'reactstrap';
+import { Card, CardBody, CardHeader, Collapse, Row, Col } from 'reactstrap';
 import BarLoader from 'react-spinners/BarLoader';
 
 class ZinaCard extends Component {
@@ -35,17 +35,21 @@ class ZinaCard extends Component {
             clone = children
         }
         return (
-            <Card {...props}>
-                {header && <CardHeader>
-                    {header}
-                </CardHeader>}
-                <Collapse isOpen={!this.state.collapse}>
-                    <CardBody>
-                        {isDomTag && children}
-                        {!isDomTag && clone}
-                    </CardBody>
-                </Collapse>
-            </Card>
+            <Row>
+                <Col sm={12}>
+                    <Card {...props}>
+                        {header && <CardHeader>
+                            {header}
+                        </CardHeader>}
+                        <Collapse isOpen={!this.state.collapse}>
+                            <CardBody>
+                                {isDomTag && children}
+                                {!isDomTag && clone}
+                            </CardBody>
+                        </Collapse>
+                    </Card>
+                </Col>
+            </Row>
         )
     }
 
@@ -175,7 +179,7 @@ class Base extends Component {
                                         handleTouchMove={handleTouchMove}
                                         handleTouchEnd={handleTouchEnd}
                                         drawerContent={
-                                            <div className="drawer">
+                                            <div className="drawer container">
                                                 <div className="navbar navbar-dark header">
                                                     <div className="navbar-brand">
                                                         <Link to="/">
