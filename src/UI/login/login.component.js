@@ -345,7 +345,7 @@ class AccessForm extends Component {
                             {this.props.projectOptions && <div className="form-group">
                                 <Field
                                     component={Select}
-                                    name="project"
+                                    name="sub_project"
                                     placeholder="Select Project"
                                     classNamePrefix="zinaSelect"
                                     options={this.props.projectOptions}
