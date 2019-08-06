@@ -116,7 +116,9 @@ class Base extends Component {
 
     constructor(props) {
         super(props);
-        this.drawerSize = this._computeSize();
+        this.state = {
+            drawerSize: this._computeSize()
+        }
     }
 
     componentDidMount() {
@@ -130,6 +132,10 @@ class Base extends Component {
         if (title !== prevProps.title) {
             document.title = `ZINA${title ? ` | ${title}` : ''}`;
         }
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this._onChangeSize);
     }
 
     render() {
@@ -147,14 +153,14 @@ class Base extends Component {
                         Loading ...
                         <BarLoader
                             sizeUnit={'px'}
-                            size={200}
+                            size={250}
                             color={'#fff'}
                             loading={true}
                         />
                     </div>
                 )}
                 <div className={['zina', className].join(' ')}>
-                    <Drawer position="left" size={this.drawerSize}>
+                    <Drawer position="left" size={this.state.drawerSize}>
                         {(args) => {
                             const {
                                 position,
@@ -179,7 +185,7 @@ class Base extends Component {
                                         handleTouchMove={handleTouchMove}
                                         handleTouchEnd={handleTouchEnd}
                                         drawerContent={
-                                            <div className="drawer container">
+                                            <div className="drawer">
                                                 <div className="navbar navbar-dark header">
                                                     <div className="navbar-brand">
                                                         <Link to="/">
@@ -268,7 +274,10 @@ class Base extends Component {
     };
 
     _onChangeSize = () => {
-        this.drawerSize = this._computeSize();
+        const drawerSize = this._computeSize();
+        if(this.state.drawerSize !== drawerSize){
+            this.setState({drawerSize})
+        }
     };
 
     _computeBreadcrumb = () => {

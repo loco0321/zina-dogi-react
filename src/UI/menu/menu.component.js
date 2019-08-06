@@ -25,6 +25,7 @@ export default class Menu extends Component {
         link: PropTypes.string,
         icon: icon_type,
         name: PropTypes.string.isRequired,
+        onClick: PropTypes.func,
         children: PropTypes.arrayOf(
           PropTypes.shape({
             link: PropTypes.string.isRequired,
@@ -61,11 +62,11 @@ export default class Menu extends Component {
     return (<ul className="menu-bar list-unstyled" />);
   }
 
-  _computeMenuItem = ({ link, icon, name }, key) => {
+  _computeMenuItem = ({ link, icon, name, onClick }, key) => {
     const { show } = this.props;
     return (
       <li key={`zina-primary-menu-${key}`}>
-        {link && <NavLink exact={true} activeClassName="active" className="menu-item" to={link}>
+        {link && link !== '#' && <NavLink exact={true} activeClassName="active" className="menu-item" to={link}>
           <span className="icon">
             {icon && <Icon icon={icon} />}
           </span>
@@ -73,6 +74,14 @@ export default class Menu extends Component {
             {name}
           </span>
         </NavLink>}
+        {link && link === '#' && <div className="menu-item" onClick={onClick}>
+            <span className="icon">
+            {icon && <Icon icon={icon} />}
+          </span>
+          <span className={['item', ...(show ? ['show'] : [])].join(' ')}>
+            {name}
+          </span>
+        </div>}
       </li>
     )
   };

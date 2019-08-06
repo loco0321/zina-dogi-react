@@ -2,7 +2,7 @@ import React from 'react';
 import Icon from '../icon/icon.component';
 // import { Field } from 'formik'
 
-class paginator extends React.Component {
+class Paginator extends React.Component {
 
   constructor(props) {
     super(props);
@@ -87,4 +87,4 @@ const btnClass = value => {
   return classes.join(' ');
 };
 
-export default paginator;
+export default Paginator;
