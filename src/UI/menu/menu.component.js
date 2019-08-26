@@ -62,13 +62,22 @@ export default class Menu extends Component {
     return (<ul className="menu-bar list-unstyled" />);
   }
 
+  
+  _getIcon = (icon) => {
+    if(typeof icon === 'string'){
+      return <Icon icon={icon} />
+    }else if(typeof icon === 'object'){
+      return  <Icon {...icon} />
+    }
+  }
+
   _computeMenuItem = ({ link, icon, name, onClick }, key) => {
     const { show } = this.props;
     return (
       <li key={`zina-primary-menu-${key}`}>
         {link && link !== '#' && <NavLink exact={true} activeClassName="active" className="menu-item" to={link}>
           <span className="icon">
-            {icon && <Icon icon={icon} />}
+            {icon && this._getIcon(icon)}
           </span>
           <span className={['item', ...(show ? ['show'] : [])].join(' ')}>
             {name}
@@ -76,7 +85,7 @@ export default class Menu extends Component {
         </NavLink>}
         {link && link === '#' && <div className="menu-item" onClick={onClick}>
             <span className="icon">
-            {icon && <Icon icon={icon} />}
+            {icon && this._getIcon(icon)}
           </span>
           <span className={['item', ...(show ? ['show'] : [])].join(' ')}>
             {name}
@@ -117,7 +126,7 @@ export default class Menu extends Component {
             className="submenu-item"
           >
             <span className="icon">
-              <Icon icon={icon} />
+              {this._getIcon(icon)}
             </span>
             <span className={menuNameClassNames}>
               {name}
