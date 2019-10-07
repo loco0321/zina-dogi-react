@@ -1,92 +1,14 @@
-import React, { Component } from 'react';
-import ReactDOMServer from "react-dom/server";
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import ErrorBoundary from '../bonduary/ErrorBonduary';
-import Drawer, {
-    DrawerContainer,
-    MainContentContainer
-} from 'react-swipeable-drawer';
+import Drawer, {DrawerContainer, MainContentContainer} from 'react-swipeable-drawer';
 import Header from '../header/header.component'
 import Menu from '../menu/menu.component';
 import Icon from '../icon/icon.component'
 import Button from '../button/button.component';
-import { Card, CardBody, CardHeader, Collapse, Row, Col } from 'reactstrap';
 import BarLoader from 'react-spinners/BarLoader';
-
-class ZinaCard extends Component {
-    state = {
-        header: null,
-        collapse: false
-    }
-
-    render() {
-        const { children, ...props } = this.props;
-        const isDomTag = typeof children.type === "string";
-        let header = this._updateHeader();
-        let clone = React.cloneElement(children, {
-            setheader: this._setHeader,
-            togglecollapse: this._toggle,
-            iscollapse: this.state.collapse
-        })
-        if (!header) {
-            header = this.state.header;
-        } else {
-            clone = children
-        }
-        return (
-            <Row>
-                <Col sm={12}>
-                    <Card {...props}>
-                        {header && <CardHeader>
-                            {header}
-                        </CardHeader>}
-                        <Collapse isOpen={!this.state.collapse}>
-                            <CardBody>
-                                {isDomTag && children}
-                                {!isDomTag && clone}
-                            </CardBody>
-                        </Collapse>
-                    </Card>
-                </Col>
-            </Row>
-        )
-    }
-
-    _toggle = () => {
-        this.setState({ collapse: !this.state.collapse });
-    }
-
-    _getElementStr = ele => ReactDOMServer.renderToString(ele);
-
-    _setHeader = header => {
-        if (this._getElementStr(this.state.header) !== this._getElementStr(header)) {
-            this.setState({ header })
-        }
-    }
-
-    _updateHeader = () => {
-        const { children } = this.props;
-        const isDomTag = typeof children.type === "string";
-        if (!isDomTag) {
-            const { header } = children.type;
-            if (header) {
-                switch (typeof header) {
-                    case 'function':
-                        return header({
-                            togglecollapse: this._toggle,
-                            iscollapse: this.state.collapse
-                        }, children.props);
-                    case 'object':
-                        return header;
-                    default:
-                        return false;
-                }
-            }
-        }
-
-    }
-}
+import {ZinaCard} from "./zinaCard.component";
 
 class Base extends Component {
     static propTypes = {
@@ -212,8 +134,9 @@ class Base extends Component {
                                         mainContentScroll={mainContentScroll}
                                     >
                                         <div className="content">
-
                                             <Header
+                                                notifiable
+                                                showUserMenu
                                                 toggleDrawer={toggleDrawer}
                                                 onLogout={this._onLogout}
                                                 user={user}

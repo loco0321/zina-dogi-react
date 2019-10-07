@@ -82,20 +82,7 @@
         }
     }
 }
-.loading {
-    position: fixed;
-    display: flex;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    z-index: 10000;
-    color: white;
-    background-color: rgba(#000, 0.7);
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
+
 footer {
     height: 20px;
     > .menu {

@@ -2,98 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import { Formik, Form, Field } from 'formik';
 import Select from 'react-select';
-import { Carousel, CarouselItem, CarouselIndicators, Alert } from 'reactstrap';
+import DogiCard from "./dogiCard.component";
+import {  Alert } from 'reactstrap';
 
-class LoginCarousel extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { activeIndex: 0 };
-        this.next = this.next.bind(this);
-        this.previous = this.previous.bind(this);
-        this.goToIndex = this.goToIndex.bind(this);
-        this.onExiting = this.onExiting.bind(this);
-        this.onExited = this.onExited.bind(this);
-    }
-
-    onExiting() {
-        this.animating = true;
-    }
-
-    onExited() {
-        this.animating = false;
-    }
-
-    next() {
-        if (this.animating) return;
-        const nextIndex =
-            this.state.activeIndex === this.porps.items.length - 1
-                ? 0
-                : this.state.activeIndex + 1;
-        this.setState({ activeIndex: nextIndex });
-    }
-
-    previous() {
-        if (this.animating) return;
-        const nextIndex =
-            this.state.activeIndex === 0
-                ? this.props.items.length - 1
-                : this.state.activeIndex - 1;
-        this.setState({ activeIndex: nextIndex });
-    }
-
-    goToIndex(newIndex) {
-        if (this.animating) return;
-        this.setState({ activeIndex: newIndex });
-    }
-
-    render() {
-        const { activeIndex } = this.state;
-        let slides = [];
-        if (this.props.items) {
-            slides = this.props.items.map(item => {
-                return (
-                    <CarouselItem
-                        tag="div"
-                        key={item.id}
-                        onExiting={this.onExiting}
-                        onExited={this.onExited}
-                        interval={false}
-                    >
-                        <div className="zina-slide">
-                            {item.src && (
-                                <img
-                                    src={item.src}
-                                    alt={item.altText}
-                                    width="100%"
-                                />
-                            )}
-                            {item.cmp && (
-                                <div className="text-slide">{item.cmp}</div>
-                            )}
-                        </div>
-                    </CarouselItem>
-                );
-            });
-        }
-
-
-        return (
-            <Carousel
-                interval={false}
-                activeIndex={activeIndex}
-                next={this.next}
-                previous={this.previous}
-            >
-                {slides}
-                {slides.length > 1 && <CarouselIndicators
-                    items={this.props.items ? this.props.items : []}
-                    activeIndex={activeIndex}
-                    onClickHandler={this.goToIndex}
-                />}
-            </Carousel>
-        );
-    }
-}
 
 class Login extends Component {
     constructor(props) {
@@ -104,55 +15,26 @@ class Login extends Component {
     }
 
     render() {
-        return (
-            <div
-                className="row container-fluid h-100 flex-column login-sheet"
-                style={{
-                    backgroundImage: `url(${this.props.fondo
-                        ? this.props.fondo
-                        : 'https://i.ytimg.com/vi/m_Rt5MobcUE/maxresdefault.jpg'
-                        })`
-                }}
-            >
-                {this.props.error &&
-                    <Alert color="danger">
-                        {this.props.error}
-                    </Alert>}
-                <div className="row flex-fill justify-content-center align-items-center zina-login">
-                    <div className="row zina-login lcard">
-                        <div className="col-6 lcard-left">
-                            <LoginCarousel items={this.props.items} />
-                        </div>
-                        <div className="col-6 lcard-right">
-                            <div className="logo-nokia">
-                                {this.props.nokiaLogo
-                                    ? <img src={this.props.nokiaLogo} alt="Nokia" />
-                                    : <b>NOKIA</b>
-                                }
-                            </div>
-                            {this.state.showLogin && <LoginForm
-                                showAccess={this.props.access}
-                                onGoAccess={this.showAccessFn}
-                                top={this.props.LoginTop}
-                                bottom={this.props.LoginBottom}
-                                onSubmit={this.props.onSubmitLogin}
-                            />}
-                            {(!this.state.showLogin && this.props.access) && <AccessForm
-                                onGoLogin={this.showLoginFn}
-                                onSubmit={this.props.onSubmitAccess}
-                                projectOptions={this.props.projectOptions}
-                                customTeamOptions={this.props.customTeamOptions}
-                            />}
-                        </div>
-                    </div>
-                </div>
-                <footer>
-                    <span />
-                    <span className="legend login" >
-                        Copyright <b>NOKIA</b> © 2018 | Powered by <b>ZINA</b>
-                    </span>
-                </footer>
-            </div>
+        const {error, nokiaLogo, fondo, items} = this.props
+        const dogi_card_props = {
+            error, logo: nokiaLogo, fondo, items
+        }
+        return ( 
+            <DogiCard {...dogi_card_props}>
+                {this.state.showLogin && <LoginForm
+                    showAccess={this.props.access}
+                    onGoAccess={this.showAccessFn}
+                    top={this.props.LoginTop}
+                    bottom={this.props.LoginBottom}
+                    onSubmit={this.props.onSubmitLogin}
+                />}
+                {(!this.state.showLogin && this.props.access) && <AccessForm
+                    onGoLogin={this.showLoginFn}
+                    onSubmit={this.props.onSubmitAccess}
+                    projectOptions={this.props.projectOptions}
+                    customTeamOptions={this.props.customTeamOptions}
+                />}
+            </DogiCard>
         );
     }
 

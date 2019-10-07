@@ -1,11 +1,10 @@
 import React from 'react';
+import PropTypes from "prop-types";
 
-const Notification = ({ img, title, message, ...props }) => {
-    props.className = ['media', 'align-items-center', props.className].join(
-        ' '
-    );
+const Notification = ({ img, title, message, className }) => {
+    className = ['media', 'align-items-center', className].join(' ');
     return (
-        <li {...props}>
+        <li className={className}>
             {img && <img className="mr-3" src={img} alt="notification" />}
             <div className="media-body">
                 {title && <h5 className="mt-0 mb-1">{title}</h5>}
@@ -14,5 +13,12 @@ const Notification = ({ img, title, message, ...props }) => {
         </li>
     );
 };
+
+Notification.propTypes= {
+    img: PropTypes.string,
+    title: PropTypes.string,
+    message: PropTypes.string,
+    className: PropTypes.string
+}
 
 export default Notification;

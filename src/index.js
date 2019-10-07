@@ -12,6 +12,7 @@ import ResultCard from './UI/neoimporter/ResultCard';
 import Base from './UI/base/base.component';
 import Icon from './UI/icon/icon.component';
 import Login from './UI/login/login.component';
+import DogiCard from './UI/login/dogiCard.component';
 // import NeoImporter from './NeoImporter';
 
 const pk = require('../package.json');
@@ -39,5 +40,6 @@ export {
     ResultCard,
     Base,
     Icon,
-    Login
+    Login,
+    DogiCard
 }

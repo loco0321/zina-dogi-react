@@ -13,7 +13,6 @@ import Notification from '../notification/notification.component';
 import NotificationPanel from '../notification/notification_panel.component';
 // styles
 import './header.scss';
-// import logo from '../../../assets/imgs/zina-india-logo.png';
 
 const Header = ({
     onLogout,
@@ -21,11 +20,13 @@ const Header = ({
     logo,
     toggleDrawer,
     extraMenu,
-    notifications = [],
-    noty = true,
-    ...props
+    notifications, 
+    notifiable, 
+    showUserMenu, 
+    userMenuItems,
+    className
 }) => {
-    let fullName = 'Zina'
+    let fullName = 'Zina User';
     if(user){ 
         if(user.first_name && user.last_name){
             fullName = `${user.first_name} ${user.last_name}`;
@@ -33,9 +34,9 @@ const Header = ({
             fullName = user.username;
         }
     }
-    props.className = ['navbar navbar-dark header', props.className].join(' ');
+    className = ['navbar', 'navbar-dark', 'header', className].join(' ');
     return (
-        <nav {...props}>
+        <nav className={className}>
             <div className="navbar-brand">
                 <Link to="/">
                     <img className="logo" src={logo} alt="zina" />
@@ -48,7 +49,7 @@ const Header = ({
             </div>
             <div className="controls">
                 {extraMenu}
-                {noty && (
+                {notifiable && (
                     <UncontrolledDropdown setActiveFromChild>
                         <DropdownToggle tag="span">
                             <Icon icon="bell" />
@@ -65,16 +66,38 @@ const Header = ({
                         </NotificationPanel>
                     </UncontrolledDropdown>
                 )}
-                <UncontrolledDropdown setActiveFromChild className="custom-carets">
-                    <DropdownToggle tag="a" caret>
-                        <span className="user-name">{fullName}</span>
-                    </DropdownToggle>
-                    <DropdownMenu right>
-                        <DropdownItem onClick={onLogout}>Logout</DropdownItem>
-                    </DropdownMenu>
-                </UncontrolledDropdown>
+                { showUserMenu && (
+                    <UncontrolledDropdown setActiveFromChild className="custom-carets">
+                        <DropdownToggle tag="a" caret>
+                            <span className="user-name">{fullName}</span>
+                        </DropdownToggle>
+                        <DropdownMenu right>
+                            {!userMenuItems && (<DropdownItem onClick={onLogout}>Logout</DropdownItem>)}
+                            {userMenuItems && userMenuItems(onLogout)}
+                        </DropdownMenu>
+                    </UncontrolledDropdown>    
+                )}
             </div>
         </nav>
     );
 };
+
+
+Header.propTypes= {
+    notifiable: PropTypes.bool,
+    showUserMenu: PropTypes.bool,
+    className: PropTypes.string,
+    logo: PropTypes.string,
+    user: PropTypes.object,
+    notifications: PropTypes.array,
+    extraMenu: PropTypes.oneOf([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
+    onLogout: PropTypes.func,
+    toggleDrawer: PropTypes.func,
+    userMenuItems: PropTypes.func, 
+}
+Header.defaultProps = {
+    notifiable: false,
+    showUserMenu: false,
+    notifications: [],
+}
 export default Header;

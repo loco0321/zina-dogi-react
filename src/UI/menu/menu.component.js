@@ -51,7 +51,7 @@ export default class Menu extends Component {
         if (menu.link) {
           return this._computeMenuItem(menu, index);
         }
-        if (Array.isArray(menu.children) && menu.children.length > 0) {
+        if (Array.isArray(menu.children) && menu.children.length) {
           return this._computeSubMenuItem(menu, index)
         }
       })
