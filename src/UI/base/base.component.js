@@ -1,40 +1,40 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ErrorBoundary from '../bonduary/ErrorBonduary';
-import Drawer, {DrawerContainer, MainContentContainer} from 'react-swipeable-drawer';
+import Drawer, { DrawerContainer, MainContentContainer } from 'react-swipeable-drawer';
 import Header from '../header/header.component'
-import Menu from '../menu/menu.component';
+import Menu, { config_propType } from '../menu/menu.component';
 import Icon from '../icon/icon.component'
 import Button from '../button/button.component';
 import BarLoader from 'react-spinners/BarLoader';
-import {ZinaCard} from "./zinaCard.component";
+import { ZinaCard } from "./zinaCard.component";
+
 
 class Base extends Component {
     static propTypes = {
         loading: PropTypes.bool.isRequired,
         title: PropTypes.string,
-        nt: PropTypes.array,
+        showUserMenu: PropTypes.bool,
+        notifiable: PropTypes.bool,
+
         extraProps: PropTypes.shape({
             user: PropTypes.object.isRequired,
             logo: PropTypes.string.isRequired,
-            config: PropTypes.arrayOf(
-                PropTypes.shape({
-                    link: PropTypes.string,
-                    icon: PropTypes.string.isRequired,
-                    name: PropTypes.string.isRequired,
-                    children: PropTypes.arrayOf(
-                        PropTypes.shape({
-                            link: PropTypes.string.isRequired,
-                            icon: PropTypes.string,
-                            name: PropTypes.string.isRequired,
-                        })
-                    )
-                })
-            ).isRequired,
+            config: config_propType,
+            notification: PropTypes.shape({
+                page: PropTypes.string,
+                component: PropTypes.element,
+                list: PropTypes.array.isRequired
+            }),
             logout: PropTypes.func.isRequired,
         }).isRequired
     };
+
+    static defaultProps = {
+        showUserMenu: true,
+        notifiable: true,
+    }
 
     constructor(props) {
         super(props);
@@ -61,7 +61,7 @@ class Base extends Component {
     }
 
     render() {
-        const { children, title, loading, className, extraProps: { user, logo, config, extraMenu } } = this.props;
+        const { children, title, loading, className, extraProps: { user, logo, config, extraMenu, notification } } = this.props;
         let childrens = children ? children : null;
         if (childrens) {
             childrens = Array.isArray(childrens)
@@ -94,7 +94,7 @@ class Base extends Component {
                                 handleTouchStart,
                                 handleTouchMove,
                                 handleTouchEnd
-                            } = args
+                            } = args;
                             return (
                                 <div style={{ height: '100%' }}>
                                     <DrawerContainer
@@ -133,41 +133,7 @@ class Base extends Component {
                                         translation={translation}
                                         mainContentScroll={mainContentScroll}
                                     >
-                                        <div className="content">
-                                            <Header
-                                                notifiable
-                                                showUserMenu
-                                                toggleDrawer={toggleDrawer}
-                                                onLogout={this._onLogout}
-                                                user={user}
-                                                logo={logo}
-                                                extraMenu={extraMenu}
-                                            />
-                                            <div className="maincontent">
-                                                <div className="menu">
-                                                    <Menu config={config} toggleDrawer={toggleDrawer} />
-                                                </div>
-                                                <div className="sheet">
-                                                    {this._computeBreadcrumb()}
-                                                    <div className="container-fluid">
-                                                        <div className="panel">
-                                                            {title && <h3>{title}</h3>}
-                                                            <div className="page-content">
-                                                                {this._computeChildrens(
-                                                                    childrens
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <footer>
-                                                <span className="menu" />
-                                                <span className="legend">
-                                                    Copyright <b>NOKIA</b> 2018 | Powered by <b>ZINA</b>
-                                                </span>
-                                            </footer>
-                                        </div>
+                                        {this.renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens)}
                                     </MainContentContainer>
                                 </div>
                             )
@@ -178,17 +144,19 @@ class Base extends Component {
         );
     }
 
-    _computeChildrens = childrens =>
-        childrens &&
-        React.Children.toArray(childrens)
-            .map((child, index) => {
-                const op = {
-                    className: 'zina_card',
-                    key: `zina_card_${index}`
-                };
-                return (<ZinaCard {...op}>{child}</ZinaCard>);
-            });
-
+    _computeChildrens = childrens => {
+        if (childrens) {
+            return React.Children.toArray(childrens)
+                .map((child, index) => {
+                    const op = {
+                        className: 'zina_card',
+                        key: `zina_card_${index}`
+                    };
+                    return (<ZinaCard {...op}>{child}</ZinaCard>);
+                });
+        }
+        return null
+    };
     _computeSize = (size = 250) => (size * 100) / window.innerWidth;
 
     _onLogout = event => {
@@ -198,8 +166,8 @@ class Base extends Component {
 
     _onChangeSize = () => {
         const drawerSize = this._computeSize();
-        if(this.state.drawerSize !== drawerSize){
-            this.setState({drawerSize})
+        if (this.state.drawerSize !== drawerSize) {
+            this.setState({ drawerSize })
         }
     };
 
@@ -244,6 +212,46 @@ class Base extends Component {
             );
         }
     };
+
+    renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens) {
+        return <div className="content">
+            <Header 
+                notifiable={this.props.notifiable}
+                showUserMenu={this.props.showUserMenu}
+                toggleDrawer={toggleDrawer}
+                onLogout={this._onLogout}
+                user={user}
+                logo={logo}
+                extraMenu={extraMenu}
+                page={notification && notification.page}
+                NotificationItem={notification && notification.component}
+                notifications={notification && notification.list}
+                generalClick={notification && notification.onClick}
+            />
+            <div className="maincontent">
+                <div className="menu">
+                    <Menu config={config} toggleDrawer={toggleDrawer} />
+                </div>
+                <div className="sheet">
+                    {this._computeBreadcrumb()}
+                    <div className="container-fluid">
+                        <div className="panel">
+                            {title && <h3>{title}</h3>}
+                            <div className="page-content">
+                                {this._computeChildrens(childrens)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer>
+                <span className="menu" />
+                <span className="legend">
+                    Copyright <b>NOKIA</b> 2018 | Powered by <b>ZINA</b>
+                </span>
+            </footer>
+        </div>;
+    }
 }
 
 export default Base;

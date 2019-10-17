@@ -20,17 +20,20 @@ const Header = ({
     logo,
     toggleDrawer,
     extraMenu,
-    notifications, 
-    notifiable, 
-    showUserMenu, 
+    notifications,
+    notifiable,
+    showUserMenu,
     userMenuItems,
-    className
+    className,
+    page,
+    generalClick,
+    NotificationItem
 }) => {
     let fullName = 'Zina User';
-    if(user){ 
-        if(user.first_name && user.last_name){
+    if (user) {
+        if (user.first_name && user.last_name) {
             fullName = `${user.first_name} ${user.last_name}`;
-        }else if (user.username){
+        } else if (user.username) {
             fullName = user.username;
         }
     }
@@ -54,19 +57,20 @@ const Header = ({
                         <DropdownToggle tag="span">
                             <Icon icon="bell" />
                         </DropdownToggle>
-                        <NotificationPanel>
-                            {notifications.map((notification, i) => (
-                                <Notification
-                                    key={`notification_${i}`}
-                                    img={notification.img}
-                                    title={notification.title}
-                                    message={notification.message}
-                                />
-                            ))}
+                        <NotificationPanel page={page} size={notifications.length}>
+                            {notifications.slice(0, 10).map((notification, index) =>(
+                                    <NotificationItem
+                                        key={`notification_${index}`}
+                                        {...notification}
+                                        generalClick={generalClick}
+                                        index={index}
+                                    />
+                                )
+                            )}
                         </NotificationPanel>
                     </UncontrolledDropdown>
                 )}
-                { showUserMenu && (
+                {showUserMenu && (
                     <UncontrolledDropdown setActiveFromChild className="custom-carets">
                         <DropdownToggle tag="a" caret>
                             <span className="user-name">{fullName}</span>
@@ -75,7 +79,7 @@ const Header = ({
                             {!userMenuItems && (<DropdownItem onClick={onLogout}>Logout</DropdownItem>)}
                             {userMenuItems && userMenuItems(onLogout)}
                         </DropdownMenu>
-                    </UncontrolledDropdown>    
+                    </UncontrolledDropdown>
                 )}
             </div>
         </nav>
@@ -83,7 +87,7 @@ const Header = ({
 };
 
 
-Header.propTypes= {
+Header.propTypes = {
     notifiable: PropTypes.bool,
     showUserMenu: PropTypes.bool,
     className: PropTypes.string,
@@ -93,11 +97,14 @@ Header.propTypes= {
     extraMenu: PropTypes.oneOf([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
     onLogout: PropTypes.func,
     toggleDrawer: PropTypes.func,
-    userMenuItems: PropTypes.func, 
-}
+    userMenuItems: PropTypes.func,
+    page: PropTypes.string,
+    NotificationItem: PropTypes.element
+};
 Header.defaultProps = {
     notifiable: false,
     showUserMenu: false,
     notifications: [],
-}
+    NotificationItem: Notification
+};
 export default Header;

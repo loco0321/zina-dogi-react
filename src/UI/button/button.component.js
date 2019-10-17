@@ -15,7 +15,6 @@ const ButtonX = ({
         className: ['btn', 'zina-btn', className].join(' '),
         ...args
     };
-    const icon_op = { icon, iconType };
     return (
         <Button {...btn_op}>
             {icon && [
@@ -31,6 +30,6 @@ const ButtonX = ({
 Button.propTypes = {
   icon: PropTypes.string,
   iconType: PropTypes.string
-}
+};
 
 export default ButtonX;

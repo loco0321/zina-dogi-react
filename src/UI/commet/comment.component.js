@@ -1,5 +1,4 @@
 import React from 'react';
-import moment from 'moment-timezone/builds/moment-timezone-with-data';
 // style
 // import './comment.scss';
 
@@ -10,7 +9,7 @@ export const Comment = ({ type, message, date, username, ...others }) => {
     return (
         <li {...others}>
             <div className="info">
-                <a>{username}</a>
+                <a href="#s">{username}</a>
                 <span>
                     {date}
                 </span>

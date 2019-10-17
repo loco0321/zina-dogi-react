@@ -194,6 +194,61 @@ code {
         font-size: 12px;
         line-height: 1.42857;
     }
+    .notification {
+        width: 350px;
+        padding: 0 !important;
+        margin: 0 !important;
+        border-radius: 8px;
+        box-shadow: 0 14px 28px rgba(black, 0.25), 0 10px 10px rgba(black, 0.22);
+        .card {
+            border: 0;
+            .card-header {
+                padding-left: 8px;
+                padding-right: 8px;
+                background: var(--zina-3);
+                color: white;
+                text-align: center;
+            }
+            .card-body {
+                padding: 8px;
+                overflow: auto;
+                max-height: 340px;
+                .list-unstyled {
+                    margin: 0;
+                }
+                li.media {
+                    // background: red;
+                    padding: 8px 0;
+                    transition: 350ms;
+                    &:hover{
+                        background-color: #ccc;
+                    }
+                    &:not(:last-child) {
+                        border-bottom: 1px dotted lightgrey;
+                    }
+                    img {
+                        border-radius: 50%;
+                        width: 50px;
+                    }
+                    .media-body {
+                        h5 {
+                            font-size: 15px;
+                            font-weight: 400;
+                        }
+                        font-size: 12px;
+                        font-weight: 300;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                }
+            }
+        }
+    }
+
+    .link-page {
+        color: #e9a828;
+    }
 }
 
 .pagination {

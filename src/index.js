@@ -24,7 +24,7 @@ document.__zina_dogi_react =  {
             __project__http__: null
         }
     }
-}
+};
 
 export {
     // NeoImporter,

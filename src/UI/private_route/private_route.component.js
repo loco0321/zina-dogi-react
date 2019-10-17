@@ -8,13 +8,14 @@ export const PrivateRoute = (props) => {
             if (!Object.keys(props).includes(key)) {
                 return { [key]: extraProps[key] }
             }
+            return null;
         })
             .filter(obj => obj)
-            .reduce((obj, item) => ({ ...obj, ...item }), {})
+            .reduce((obj, item) => ({ ...obj, ...item }), {});
         const newProps = {
             ...props,
             ...{ extraProps: op },
-        }
+        };
         return localStorage.getItem('user') ? (
             <Component {...newProps} />
         ) : (

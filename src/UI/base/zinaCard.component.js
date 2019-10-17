@@ -6,7 +6,7 @@ export class ZinaCard extends Component {
     state = {
         header: null,
         collapse: false
-    }
+    };
 
     render() {
         const {children, ...props} = this.props;
@@ -16,7 +16,7 @@ export class ZinaCard extends Component {
             setheader: this._setHeader,
             togglecollapse: this._toggle,
             iscollapse: this.state.collapse
-        })
+        });
         if (!header) {
             header = this.state.header;
         } else {
@@ -43,7 +43,7 @@ export class ZinaCard extends Component {
 
     _toggle = () => {
         this.setState({collapse: !this.state.collapse});
-    }
+    };
 
     _getElementStr = ele => ReactDOMServer.renderToString(ele);
 
@@ -51,7 +51,7 @@ export class ZinaCard extends Component {
         if (this._getElementStr(this.state.header) !== this._getElementStr(header)) {
             this.setState({header})
         }
-    }
+    };
 
     _updateHeader = () => {
         const {children} = this.props;

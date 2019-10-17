@@ -9,6 +9,8 @@
         .card-header {
             padding-left: 8px;
             padding-right: 8px;
+            background: var(--zina-3);
+            color: white;
         }
         .card-body {
             padding: 8px;
@@ -18,6 +20,7 @@
                 margin: 0;
             }
             li.media {
+                background: red;
                 padding: 8px 0;
                 &:not(:last-child) {
                     border-bottom: 1px dotted lightgrey;
