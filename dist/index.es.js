@@ -11817,7 +11817,9 @@ Notification.propTypes = {
     img: PropTypes.string,
     title: PropTypes.string,
     message: PropTypes.string,
-    className: PropTypes.string
+    className: PropTypes.string,
+    index: PropTypes.number,
+    generalClick: PropTypes.func
 };
 
 // import './notification_panel.scss';
