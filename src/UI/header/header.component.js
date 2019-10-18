@@ -13,20 +13,17 @@ import Notification from '../notification/notification.component';
 import NotificationPanel from '../notification/notification_panel.component';
 // styles
 import './header.scss';
-
 const Header = ({
     onLogout,
     user,
     logo,
     toggleDrawer,
     extraMenu,
-    notifications,
+    notification,
     notifiable,
     showUserMenu,
     userMenuItems,
     className,
-    page,
-    generalClick,
     NotificationItem
 }) => {
     let fullName = 'Zina User';
@@ -52,21 +49,32 @@ const Header = ({
             </div>
             <div className="controls">
                 {extraMenu}
-                {notifiable && (
+                {notifiable && notification && (
                     <UncontrolledDropdown setActiveFromChild>
                         <DropdownToggle tag="span">
                             <Icon icon="bell" />
                         </DropdownToggle>
-                        <NotificationPanel page={page} size={notifications.length}>
-                            {notifications.slice(0, 10).map((notification, index) =>(
-                                    <NotificationItem
-                                        key={`notification_${index}`}
-                                        {...notification}
-                                        generalClick={generalClick}
-                                        index={index}
-                                    />
-                                )
-                            )}
+                        <NotificationPanel 
+                            page={notification.page}
+                            size={notification.list? notification.list.length: 0}
+                        >
+                            {notification.list && notification.list.slice(0, 10).map((notification_item, index) =>{
+                                const ops = {
+                                    key:`notification_${index}`,
+                                    ...notification_item,
+                                    generalClick: notification.onClick,
+                                    index
+                                }
+                                console.log(notification);
+                                
+                                if(notification.component){
+                                    const NotificationItem = notification.component;
+                                    return <NotificationItem {...ops} />    
+                                }else{
+                                    return <Notification {...ops} />
+                                }
+                                
+                            })}
                         </NotificationPanel>
                     </UncontrolledDropdown>
                 )}
@@ -105,6 +113,6 @@ Header.defaultProps = {
     notifiable: false,
     showUserMenu: false,
     notifications: [],
-    NotificationItem: Notification
+
 };
 export default Header;

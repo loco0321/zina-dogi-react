@@ -11932,13 +11932,11 @@ var Header = function Header(_ref) {
         logo = _ref.logo,
         toggleDrawer = _ref.toggleDrawer,
         extraMenu = _ref.extraMenu,
-        notifications = _ref.notifications,
+        notification = _ref.notification,
         notifiable = _ref.notifiable,
         showUserMenu = _ref.showUserMenu,
         userMenuItems = _ref.userMenuItems,
         className = _ref.className,
-        page = _ref.page,
-        generalClick = _ref.generalClick,
         NotificationItem = _ref.NotificationItem;
 
     var fullName = 'Zina User';
@@ -11975,7 +11973,7 @@ var Header = function Header(_ref) {
             'div',
             { className: 'controls' },
             extraMenu,
-            notifiable && React__default.createElement(
+            notifiable && notification && React__default.createElement(
                 UncontrolledDropdown,
                 { setActiveFromChild: true },
                 React__default.createElement(
@@ -11985,14 +11983,25 @@ var Header = function Header(_ref) {
                 ),
                 React__default.createElement(
                     NotificationPanel,
-                    { page: page, size: notifications.length },
-                    notifications.slice(0, 10).map(function (notification, index) {
-                        return React__default.createElement(NotificationItem, _extends$c({
+                    {
+                        page: notification.page,
+                        size: notification.list ? notification.list.length : 0
+                    },
+                    notification.list && notification.list.slice(0, 10).map(function (notification_item, index) {
+                        var ops = _extends$c({
                             key: 'notification_' + index
-                        }, notification, {
-                            generalClick: generalClick,
+                        }, notification_item, {
+                            generalClick: notification.onClick,
                             index: index
-                        }));
+                        });
+                        console.log(notification);
+
+                        if (notification.component) {
+                            var _NotificationItem = notification.component;
+                            return React__default.createElement(_NotificationItem, ops);
+                        } else {
+                            return React__default.createElement(Notification, ops);
+                        }
                     })
                 )
             ),
@@ -12040,8 +12049,8 @@ Header.propTypes = {
 Header.defaultProps = {
     notifiable: false,
     showUserMenu: false,
-    notifications: [],
-    NotificationItem: Notification
+    notifications: []
+
 };
 
 // import './button.scss';
@@ -25039,10 +25048,7 @@ var Base = function (_Component) {
                     user: user,
                     logo: logo,
                     extraMenu: extraMenu,
-                    page: notification && notification.page,
-                    NotificationItem: notification && notification.component,
-                    notifications: notification && notification.list,
-                    generalClick: notification && notification.onClick
+                    notification: notification
                 }),
                 React__default.createElement(
                     'div',

@@ -223,10 +223,8 @@ class Base extends Component {
                 user={user}
                 logo={logo}
                 extraMenu={extraMenu}
-                page={notification && notification.page}
-                NotificationItem={notification && notification.component}
-                notifications={notification && notification.list}
-                generalClick={notification && notification.onClick}
+                notification={notification}
+                NotificationItem
             />
             <div className="maincontent">
                 <div className="menu">
