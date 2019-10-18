@@ -11986,8 +11986,6 @@ var Header = function Header(_ref) {
                             generalClick: notification.onClick,
                             index: index
                         });
-                        console.log(notification);
-
                         if (notification.component) {
                             var _NotificationItem = notification.component;
                             return React.createElement(_NotificationItem, ops);
@@ -25040,7 +25038,8 @@ var Base = function (_Component) {
                     user: user,
                     logo: logo,
                     extraMenu: extraMenu,
-                    notification: notification
+                    notification: notification,
+                    NotificationItem: true
                 }),
                 React.createElement(
                     'div',

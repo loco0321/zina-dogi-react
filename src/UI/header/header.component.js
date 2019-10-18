@@ -65,8 +65,6 @@ const Header = ({
                                     generalClick: notification.onClick,
                                     index
                                 }
-                                console.log(notification);
-                                
                                 if(notification.component){
                                     const NotificationItem = notification.component;
                                     return <NotificationItem {...ops} />    
