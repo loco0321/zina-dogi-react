@@ -99,18 +99,13 @@ Header.propTypes = {
     className: PropTypes.string,
     logo: PropTypes.string,
     user: PropTypes.object,
-    notifications: PropTypes.array,
     extraMenu: PropTypes.oneOf([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
     onLogout: PropTypes.func,
     toggleDrawer: PropTypes.func,
-    userMenuItems: PropTypes.func,
-    page: PropTypes.string,
-    NotificationItem: PropTypes.element
 };
+
 Header.defaultProps = {
     notifiable: false,
     showUserMenu: false,
-    notifications: [],
-
 };
 export default Header;

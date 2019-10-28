@@ -12036,19 +12036,14 @@ Header.propTypes = {
     className: PropTypes.string,
     logo: PropTypes.string,
     user: PropTypes.object,
-    notifications: PropTypes.array,
     extraMenu: PropTypes.oneOf([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
     onLogout: PropTypes.func,
-    toggleDrawer: PropTypes.func,
-    userMenuItems: PropTypes.func,
-    page: PropTypes.string,
-    NotificationItem: PropTypes.element
+    toggleDrawer: PropTypes.func
 };
+
 Header.defaultProps = {
     notifiable: false,
-    showUserMenu: false,
-    notifications: []
-
+    showUserMenu: false
 };
 
 // import './button.scss';
@@ -24728,6 +24723,10 @@ var ZinaCard = function (_Component) {
             collapse: false
         }, _this._toggle = function () {
             _this.setState({ collapse: !_this.state.collapse });
+        }, _this._open = function () {
+            _this.setState({ collapse: false });
+        }, _this._close = function () {
+            _this.setState({ collapse: true });
         }, _this._getElementStr = function (ele) {
             return ReactDOMServer.renderToString(ele);
         }, _this._setHeader = function (header) {
@@ -24746,7 +24745,9 @@ var ZinaCard = function (_Component) {
                         case 'function':
                             return header({
                                 togglecollapse: _this._toggle,
-                                iscollapse: _this.state.collapse
+                                iscollapse: _this.state.collapse,
+                                open: _this._open,
+                                close: _this._close
                             }, children.props);
                         case 'object':
                             return header;
@@ -24759,6 +24760,15 @@ var ZinaCard = function (_Component) {
     }
 
     createClass$1(ZinaCard, [{
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            if (this.props.children.props.collapse) {
+                this._close();
+            } else {
+                this._open();
+            }
+        }
+    }, {
         key: "render",
         value: function render() {
             var _props = this.props,
