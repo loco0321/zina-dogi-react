@@ -19,6 +19,7 @@ class Base extends Component {
         notifiable: PropTypes.bool,
 
         extraProps: PropTypes.shape({
+            extraMenu: PropTypes.element,
             user: PropTypes.object.isRequired,
             logo: PropTypes.string.isRequired,
             config: config_propType,

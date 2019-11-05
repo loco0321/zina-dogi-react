@@ -12036,7 +12036,7 @@ Header.propTypes = {
     className: PropTypes.string,
     logo: PropTypes.string,
     user: PropTypes.object,
-    extraMenu: PropTypes.oneOf([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
+    extraMenu: PropTypes.element,
     onLogout: PropTypes.func,
     toggleDrawer: PropTypes.func
 };
@@ -25125,6 +25125,7 @@ Base.propTypes = {
     notifiable: PropTypes.bool,
 
     extraProps: PropTypes.shape({
+        extraMenu: PropTypes.element,
         user: PropTypes.object.isRequired,
         logo: PropTypes.string.isRequired,
         config: config_propType,
