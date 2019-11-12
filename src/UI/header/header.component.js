@@ -23,8 +23,7 @@ const Header = ({
     notifiable,
     showUserMenu,
     userMenuItems,
-    className,
-    NotificationItem
+    className
 }) => {
     let fullName = 'Zina User';
     if (user) {

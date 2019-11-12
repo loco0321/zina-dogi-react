@@ -19,13 +19,13 @@ class Base extends Component {
         notifiable: PropTypes.bool,
 
         extraProps: PropTypes.shape({
-            extraMenu: PropTypes.element,
+            extraMenu: PropTypes.func,
             user: PropTypes.object.isRequired,
             logo: PropTypes.string.isRequired,
             config: config_propType,
             notification: PropTypes.shape({
                 page: PropTypes.string,
-                component: PropTypes.element,
+                component: PropTypes.func,
                 list: PropTypes.array.isRequired
             }),
             logout: PropTypes.func.isRequired,
@@ -225,7 +225,6 @@ class Base extends Component {
                 logo={logo}
                 extraMenu={extraMenu}
                 notification={notification}
-                NotificationItem
             />
             <div className="maincontent">
                 <div className="menu">

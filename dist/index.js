@@ -6063,6 +6063,7 @@ var Popper = function () {
 Popper.Utils = (typeof window !== 'undefined' ? window : global).PopperUtils;
 Popper.placements = placements;
 Popper.Defaults = Defaults;
+//# sourceMappingURL=popper.js.map
 
 var _extends$a = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -11936,8 +11937,7 @@ var Header = function Header(_ref) {
         notifiable = _ref.notifiable,
         showUserMenu = _ref.showUserMenu,
         userMenuItems = _ref.userMenuItems,
-        className = _ref.className,
-        NotificationItem = _ref.NotificationItem;
+        className = _ref.className;
 
     var fullName = 'Zina User';
     if (user) {
@@ -11995,8 +11995,8 @@ var Header = function Header(_ref) {
                             index: index
                         });
                         if (notification.component) {
-                            var _NotificationItem = notification.component;
-                            return React__default.createElement(_NotificationItem, ops);
+                            var NotificationItem = notification.component;
+                            return React__default.createElement(NotificationItem, ops);
                         } else {
                             return React__default.createElement(Notification, ops);
                         }
@@ -13194,7 +13194,7 @@ function isSyntheticEvent(wat) {
     return isPlainObject(wat) && 'nativeEvent' in wat && 'preventDefault' in wat && 'stopPropagation' in wat;
 }
 exports.isSyntheticEvent = isSyntheticEvent;
-
+//# sourceMappingURL=is.js.map
 });
 
 unwrapExports(is);
@@ -13432,7 +13432,7 @@ function consoleSandbox(callback) {
     return result;
 }
 exports.consoleSandbox = consoleSandbox;
-
+//# sourceMappingURL=misc.js.map
 });
 
 unwrapExports(misc);
@@ -13502,7 +13502,7 @@ var Memo = /** @class */ (function () {
     return Memo;
 }());
 exports.Memo = Memo;
-
+//# sourceMappingURL=memo.js.map
 });
 
 unwrapExports(memo);
@@ -13604,7 +13604,7 @@ function includes(target, search) {
     }
 }
 exports.includes = includes;
-
+//# sourceMappingURL=string.js.map
 });
 
 unwrapExports(string);
@@ -13945,7 +13945,7 @@ function safeNormalize(input, depth) {
     }
 }
 exports.safeNormalize = safeNormalize;
-
+//# sourceMappingURL=object.js.map
 });
 
 unwrapExports(object);
@@ -14227,7 +14227,7 @@ function addGlobalEventProcessor(callback) {
     getGlobalEventProcessors().push(callback);
 }
 exports.addGlobalEventProcessor = addGlobalEventProcessor;
-
+//# sourceMappingURL=scope.js.map
 });
 
 unwrapExports(scope);
@@ -14296,7 +14296,7 @@ var Logger = /** @class */ (function () {
 }());
 var logger = new Logger();
 exports.logger = logger;
-
+//# sourceMappingURL=logger.js.map
 });
 
 unwrapExports(logger_1);
@@ -14669,7 +14669,7 @@ function setHubOnCarrier(carrier, hub) {
     return true;
 }
 exports.setHubOnCarrier = setHubOnCarrier;
-
+//# sourceMappingURL=hub.js.map
 });
 
 unwrapExports(hub);
@@ -14693,7 +14693,7 @@ exports.getHubFromCarrier = hub.getHubFromCarrier;
 exports.getMainCarrier = hub.getMainCarrier;
 exports.Hub = hub.Hub;
 exports.setHubOnCarrier = hub.setHubOnCarrier;
-
+//# sourceMappingURL=index.js.map
 });
 
 unwrapExports(dist);
@@ -14831,7 +14831,7 @@ function _callOnClient(method) {
     callOnHub.apply(void 0, tslib_1.__spread(['invokeClient', method], args));
 }
 exports._callOnClient = _callOnClient;
-
+//# sourceMappingURL=index.js.map
 });
 
 unwrapExports(dist$1);
@@ -14861,7 +14861,7 @@ var SentryError = /** @class */ (function (_super) {
     return SentryError;
 }(Error));
 exports.SentryError = SentryError;
-
+//# sourceMappingURL=error.js.map
 });
 
 unwrapExports(error);
@@ -14957,7 +14957,7 @@ var Dsn = /** @class */ (function () {
     return Dsn;
 }());
 exports.Dsn = Dsn;
-
+//# sourceMappingURL=dsn.js.map
 });
 
 unwrapExports(dsn);
@@ -15052,7 +15052,7 @@ var API = /** @class */ (function () {
     return API;
 }());
 exports.API = API;
-
+//# sourceMappingURL=api.js.map
 });
 
 unwrapExports(api);
@@ -15149,7 +15149,7 @@ var Status;
     }
     Status.fromHttpCode = fromHttpCode;
 })(Status = exports.Status || (exports.Status = {}));
-
+//# sourceMappingURL=index.js.map
 });
 
 unwrapExports(dist$2);
@@ -15192,7 +15192,7 @@ function filterAsync(array, predicate, thisArg) {
     });
 }
 exports.filterAsync = filterAsync;
-
+//# sourceMappingURL=async.js.map
 });
 
 unwrapExports(async);
@@ -15307,7 +15307,7 @@ function getIntegrationName(integration) {
     // tslint:disable-next-line:no-unsafe-any
     return integration.constructor.id || integration.name;
 }
-
+//# sourceMappingURL=integration.js.map
 });
 
 unwrapExports(integration);
@@ -15417,7 +15417,7 @@ var PromiseBuffer = /** @class */ (function () {
     return PromiseBuffer;
 }());
 exports.PromiseBuffer = PromiseBuffer;
-
+//# sourceMappingURL=promisebuffer.js.map
 });
 
 unwrapExports(promisebuffer);
@@ -15838,7 +15838,7 @@ var BaseClient = /** @class */ (function () {
     return BaseClient;
 }());
 exports.BaseClient = BaseClient;
-
+//# sourceMappingURL=baseclient.js.map
 });
 
 unwrapExports(baseclient);
@@ -15878,7 +15878,7 @@ var NoopTransport = /** @class */ (function () {
     return NoopTransport;
 }());
 exports.NoopTransport = NoopTransport;
-
+//# sourceMappingURL=noop.js.map
 });
 
 unwrapExports(noop$2);
@@ -15967,7 +15967,7 @@ var BaseBackend = /** @class */ (function () {
     return BaseBackend;
 }());
 exports.BaseBackend = BaseBackend;
-
+//# sourceMappingURL=basebackend.js.map
 });
 
 unwrapExports(basebackend);
@@ -15987,7 +15987,7 @@ var LogLevel;
     /** All SDK actions will be logged. */
     LogLevel[LogLevel["Verbose"] = 3] = "Verbose";
 })(LogLevel = exports.LogLevel || (exports.LogLevel = {}));
-
+//# sourceMappingURL=interfaces.js.map
 });
 
 unwrapExports(interfaces);
@@ -16014,7 +16014,7 @@ function initAndBind(clientClass, options) {
     client.install();
 }
 exports.initAndBind = initAndBind;
-
+//# sourceMappingURL=sdk.js.map
 });
 
 unwrapExports(sdk);
@@ -16198,7 +16198,7 @@ var Dedupe = /** @class */ (function () {
     return Dedupe;
 }());
 exports.Dedupe = Dedupe;
-
+//# sourceMappingURL=dedupe.js.map
 });
 
 unwrapExports(dedupe);
@@ -16237,7 +16237,7 @@ var FunctionToString = /** @class */ (function () {
     return FunctionToString;
 }());
 exports.FunctionToString = FunctionToString;
-
+//# sourceMappingURL=functiontostring.js.map
 });
 
 unwrapExports(functiontostring);
@@ -16267,7 +16267,7 @@ var SDKInformation = /** @class */ (function () {
     return SDKInformation;
 }());
 exports.SDKInformation = SDKInformation;
-
+//# sourceMappingURL=sdkinformation.js.map
 });
 
 unwrapExports(sdkinformation);
@@ -16458,7 +16458,7 @@ var InboundFilters = /** @class */ (function () {
     return InboundFilters;
 }());
 exports.InboundFilters = InboundFilters;
-
+//# sourceMappingURL=inboundfilters.js.map
 });
 
 unwrapExports(inboundfilters);
@@ -16565,7 +16565,7 @@ var ExtraErrorData = /** @class */ (function () {
     return ExtraErrorData;
 }());
 exports.ExtraErrorData = ExtraErrorData;
-
+//# sourceMappingURL=extraerrordata.js.map
 });
 
 unwrapExports(extraerrordata);
@@ -16626,7 +16626,7 @@ var Debug = /** @class */ (function () {
     return Debug;
 }());
 exports.Debug = Debug;
-
+//# sourceMappingURL=debug.js.map
 });
 
 unwrapExports(debug);
@@ -16798,7 +16798,7 @@ function basename(path, ext) {
     return f;
 }
 exports.basename = basename;
-
+//# sourceMappingURL=path.js.map
 });
 
 unwrapExports(path);
@@ -16922,7 +16922,7 @@ var RewriteFrames = /** @class */ (function () {
     return RewriteFrames;
 }());
 exports.RewriteFrames = RewriteFrames;
-
+//# sourceMappingURL=rewriteframes.js.map
 });
 
 unwrapExports(rewriteframes);
@@ -16944,7 +16944,7 @@ exports.ExtraErrorData = extraerrordata.ExtraErrorData;
 exports.Debug = debug.Debug;
 
 exports.RewriteFrames = rewriteframes.RewriteFrames;
-
+//# sourceMappingURL=index.js.map
 });
 
 unwrapExports(integrations);
@@ -16991,7 +16991,7 @@ exports.initAndBind = sdk.initAndBind;
 exports.NoopTransport = noop$2.NoopTransport;
 
 exports.Integrations = integrations;
-
+//# sourceMappingURL=index.js.map
 });
 
 unwrapExports(dist$3);
@@ -21520,7 +21520,7 @@ exports.flush = flush;
 exports.close = close;
 exports.SDK_NAME = SDK_NAME;
 exports.SDK_VERSION = SDK_VERSION;
-
+//# sourceMappingURL=index.js.map
 });
 
 unwrapExports(dist_3$3);
@@ -25056,8 +25056,7 @@ var Base = function (_Component) {
                     user: user,
                     logo: logo,
                     extraMenu: extraMenu,
-                    notification: notification,
-                    NotificationItem: true
+                    notification: notification
                 }),
                 React__default.createElement(
                     'div',
@@ -25125,13 +25124,13 @@ Base.propTypes = {
     notifiable: PropTypes.bool,
 
     extraProps: PropTypes.shape({
-        extraMenu: PropTypes.element,
+        extraMenu: PropTypes.func,
         user: PropTypes.object.isRequired,
         logo: PropTypes.string.isRequired,
         config: config_propType,
         notification: PropTypes.shape({
             page: PropTypes.string,
-            component: PropTypes.element,
+            component: PropTypes.func,
             list: PropTypes.array.isRequired
         }),
         logout: PropTypes.func.isRequired
@@ -30069,6 +30068,7 @@ function (_super) {
 var ErrorMessage =
 /*#__PURE__*/
 connect(ErrorMessageImpl);
+//# sourceMappingURL=formik.esm.js.map
 
 var LoginForm = function (_Component) {
     inherits(LoginForm, _Component);
@@ -31541,7 +31541,7 @@ var performanceNow = createCommonjsModule(function (module) {
 
 }).call(commonjsGlobal);
 
-
+//# sourceMappingURL=performance-now.js.map
 });
 
 var root$2 = typeof window === 'undefined' ? commonjsGlobal : window
