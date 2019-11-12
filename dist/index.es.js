@@ -24740,7 +24740,7 @@ var ZinaCard = function (_Component) {
                                 iscollapse: _this.state.collapse,
                                 open: _this._open,
                                 close: _this._close
-                            }, children.props);
+                            }, children.props, children);
                         case 'object':
                             return header;
                         default:

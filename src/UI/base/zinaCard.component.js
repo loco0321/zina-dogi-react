@@ -72,7 +72,7 @@ export class ZinaCard extends Component {
         const {children} = this.props;
         const isDomTag = typeof children.type === "string";
         if (!isDomTag) {
-            const {header} = children.type;
+            const  { header } = children.type;
             if (header) {
                 switch (typeof header) {
                     case 'function':
@@ -81,7 +81,7 @@ export class ZinaCard extends Component {
                             iscollapse: this.state.collapse,
                             open: this._open,
                             close: this._close
-                        }, children.props);
+                        }, children.props, children);
                     case 'object':
                         return header;
                     default:
