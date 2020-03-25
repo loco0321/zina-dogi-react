@@ -37,14 +37,15 @@ const Header = ({
     return (
         <nav className={className}>
             <div className="navbar-brand">
-                <Link to="/">
-                    <img className="logo" src={logo} alt="zina" />
-                </Link>
                 <div className="menu-btn">
                     <Button onClick={toggleDrawer}>
                         <Icon icon="bars" />
                     </Button>
                 </div>
+                <Link to="/">
+                    <img className="logo" src={logo} alt="zina" />
+                </Link>
+                
             </div>
             <div className="controls">
                 {extraMenu}

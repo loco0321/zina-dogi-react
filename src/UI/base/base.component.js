@@ -110,6 +110,12 @@ class Base extends Component {
                                         drawerContent={
                                             <div className="drawer">
                                                 <div className="navbar navbar-dark header">
+                                                    <div className="menu-btn">
+                                                        <Button
+                                                            onClick={toggleDrawer}
+                                                            icon="bars"
+                                                        ></Button>
+                                                    </div>
                                                     <div className="navbar-brand">
                                                         <Link to="/">
                                                             <img
@@ -118,12 +124,6 @@ class Base extends Component {
                                                                 alt="zina"
                                                             />
                                                         </Link>
-                                                    </div>
-                                                    <div className="menu-btn">
-                                                        <Button
-                                                            onClick={toggleDrawer}
-                                                            icon="bars"
-                                                        ></Button>
                                                     </div>
                                                 </div>
                                                 <Menu show config={config} toggleDrawer={toggleDrawer} />
