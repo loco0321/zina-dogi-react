@@ -62,7 +62,7 @@ class Base extends Component {
     }
 
     render() {
-        const { children, title, loading, className, extraProps: { user, logo, config, extraMenu, notification } } = this.props;
+        const { children, title, loading, className, extraProps: { user, logo, config, extraMenu, notification, copyright } } = this.props;
         let childrens = children ? children : null;
         if (childrens) {
             childrens = Array.isArray(childrens)
@@ -134,7 +134,7 @@ class Base extends Component {
                                         translation={translation}
                                         mainContentScroll={mainContentScroll}
                                     >
-                                        {this.renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens)}
+                                        {this.renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens, copyright)}
                                     </MainContentContainer>
                                 </div>
                             )
@@ -214,7 +214,7 @@ class Base extends Component {
         }
     };
 
-    renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens) {
+    renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens, copyright) {
         return <div className="content">
             <Header 
                 notifiable={this.props.notifiable}
@@ -244,9 +244,12 @@ class Base extends Component {
             </div>
             <footer>
                 <span className="menu" />
-                <span className="legend">
-                    Copyright <b>NOKIA</b> 2018 | Powered by <b>ZINA</b>
-                </span>
+                {!copyright && <span className="legend">
+                    Copyright <b>NOKIA</b> {new Date().getFullYear()} | Powered by <b>ZINA</b>
+                </span>}
+                {copyright && <span className="legend">
+                    {copyright}
+                </span>}
             </footer>
         </div>;
     }
