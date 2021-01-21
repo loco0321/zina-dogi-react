@@ -24947,7 +24947,8 @@ var Base = function (_Component) {
                 logo = _props$extraProps.logo,
                 config = _props$extraProps.config,
                 extraMenu = _props$extraProps.extraMenu,
-                notification = _props$extraProps.notification;
+                notification = _props$extraProps.notification,
+                copyright = _props$extraProps.copyright;
 
             var childrens = children ? children : null;
             if (childrens) {
@@ -25033,7 +25034,7 @@ var Base = function (_Component) {
                                         translation: translation,
                                         mainContentScroll: mainContentScroll
                                     },
-                                    _this2.renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens)
+                                    _this2.renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens, copyright)
                                 )
                             );
                         }
@@ -25043,7 +25044,7 @@ var Base = function (_Component) {
         }
     }, {
         key: 'renderContent',
-        value: function renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens) {
+        value: function renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens, copyright) {
             return React__default.createElement(
                 'div',
                 { className: 'content' },
@@ -25093,7 +25094,7 @@ var Base = function (_Component) {
                     'footer',
                     null,
                     React__default.createElement('span', { className: 'menu' }),
-                    React__default.createElement(
+                    !copyright && React__default.createElement(
                         'span',
                         { className: 'legend' },
                         'Copyright ',
@@ -25102,12 +25103,19 @@ var Base = function (_Component) {
                             null,
                             'NOKIA'
                         ),
-                        ' 2018 | Powered by ',
+                        ' ',
+                        new Date().getFullYear(),
+                        ' | Powered by ',
                         React__default.createElement(
                             'b',
                             null,
                             'ZINA'
                         )
+                    ),
+                    copyright && React__default.createElement(
+                        'span',
+                        { className: 'legend' },
+                        copyright
                     )
                 )
             );
