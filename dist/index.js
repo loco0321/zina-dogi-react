@@ -221,15 +221,13 @@ function warning$1(condition, message) {
 var isProduction$1 = process.env.NODE_ENV === 'production';
 var prefix = 'Invariant failed';
 function invariant(condition, message) {
-  if (condition) {
-    return;
-  }
-
-  if (isProduction$1) {
-    throw new Error(prefix);
-  } else {
+    if (condition) {
+        return;
+    }
+    if (isProduction$1) {
+        throw new Error(prefix);
+    }
     throw new Error(prefix + ": " + (message || ''));
-  }
 }
 
 function addLeadingSlash(path) {
@@ -1636,7 +1634,7 @@ function parse (str, options) {
  * @return {!function(Object=, Object=)}
  */
 function compile (str, options) {
-  return tokensToFunction(parse(str, options))
+  return tokensToFunction(parse(str, options), options)
 }
 
 /**
@@ -1666,14 +1664,14 @@ function encodeAsterisk (str) {
 /**
  * Expose a method for transforming tokens into the path function.
  */
-function tokensToFunction (tokens) {
+function tokensToFunction (tokens, options) {
   // Compile all the tokens into regexps.
   var matches = new Array(tokens.length);
 
   // Compile all the patterns before compilation.
   for (var i = 0; i < tokens.length; i++) {
     if (typeof tokens[i] === 'object') {
-      matches[i] = new RegExp('^(?:' + tokens[i].pattern + ')$');
+      matches[i] = new RegExp('^(?:' + tokens[i].pattern + ')$', flags(options));
     }
   }
 
@@ -1786,7 +1784,7 @@ function attachKeys (re, keys) {
  * @return {string}
  */
 function flags (options) {
-  return options.sensitive ? '' : 'i'
+  return options && options.sensitive ? '' : 'i'
 }
 
 /**
@@ -3331,10 +3329,27 @@ var propTypes$7 = {
   cssModule: PropTypes.object
 };
 
+var setPrototypeOf = createCommonjsModule(function (module) {
+function _setPrototypeOf(o, p) {
+  module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  module.exports["default"] = module.exports, module.exports.__esModule = true;
+  return _setPrototypeOf(o, p);
+}
+
+module.exports = _setPrototypeOf;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+});
+
+var setPrototypeOf$1 = unwrapExports(setPrototypeOf);
+
 function _inheritsLoose(subClass, superClass) {
   subClass.prototype = Object.create(superClass.prototype);
   subClass.prototype.constructor = subClass;
-  subClass.__proto__ = superClass;
+  setPrototypeOf$1(subClass, superClass);
 }
 
 function _assertThisInitialized(self) {
@@ -3464,7 +3479,7 @@ Target.propTypes = {
 
 /**!
  * @fileOverview Kickass library to create and place poppers near their reference elements.
- * @version 1.15.0
+ * @version 1.16.1
  * @license
  * Copyright (c) 2016 Federico Zivolo and contributors
  *
@@ -3486,16 +3501,17 @@ Target.propTypes = {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
+var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined' && typeof navigator !== 'undefined';
 
-var longerTimeoutBrowsers = ['Edge', 'Trident', 'Firefox'];
-var timeoutDuration = 0;
-for (var i = 0; i < longerTimeoutBrowsers.length; i += 1) {
-  if (isBrowser && navigator.userAgent.indexOf(longerTimeoutBrowsers[i]) >= 0) {
-    timeoutDuration = 1;
-    break;
+var timeoutDuration = function () {
+  var longerTimeoutBrowsers = ['Edge', 'Trident', 'Firefox'];
+  for (var i = 0; i < longerTimeoutBrowsers.length; i += 1) {
+    if (isBrowser && navigator.userAgent.indexOf(longerTimeoutBrowsers[i]) >= 0) {
+      return 1;
+    }
   }
-}
+  return 0;
+}();
 
 function microtaskDebounce(fn) {
   var called = false;
@@ -3613,6 +3629,17 @@ function getScrollParent(element) {
   }
 
   return getScrollParent(getParentNode(element));
+}
+
+/**
+ * Returns the reference node of the reference object, or the reference object itself.
+ * @method
+ * @memberof Popper.Utils
+ * @param {Element|Object} reference - the reference element (the popper will be relative to this)
+ * @returns {Element} parent
+ */
+function getReferenceNode(reference) {
+  return reference && reference.referenceNode ? reference.referenceNode : reference;
 }
 
 var isIE11 = isBrowser && !!(window.MSInputMethodContext && document.documentMode);
@@ -3798,7 +3825,7 @@ function getBordersSize(styles, axis) {
   var sideA = axis === 'x' ? 'Left' : 'Top';
   var sideB = sideA === 'Left' ? 'Right' : 'Bottom';
 
-  return parseFloat(styles['border' + sideA + 'Width'], 10) + parseFloat(styles['border' + sideB + 'Width'], 10);
+  return parseFloat(styles['border' + sideA + 'Width']) + parseFloat(styles['border' + sideB + 'Width']);
 }
 
 function getSize(axis, body, html, computedStyle) {
@@ -3923,8 +3950,8 @@ function getBoundingClientRect(element) {
 
   // subtract scrollbar size from sizes
   var sizes = element.nodeName === 'HTML' ? getWindowSizes(element.ownerDocument) : {};
-  var width = sizes.width || element.clientWidth || result.right - result.left;
-  var height = sizes.height || element.clientHeight || result.bottom - result.top;
+  var width = sizes.width || element.clientWidth || result.width;
+  var height = sizes.height || element.clientHeight || result.height;
 
   var horizScrollbar = element.offsetWidth - width;
   var vertScrollbar = element.offsetHeight - height;
@@ -3953,8 +3980,8 @@ function getOffsetRectRelativeToArbitraryNode(children, parent) {
   var scrollParent = getScrollParent(children);
 
   var styles = getStyleComputedProperty(parent);
-  var borderTopWidth = parseFloat(styles.borderTopWidth, 10);
-  var borderLeftWidth = parseFloat(styles.borderLeftWidth, 10);
+  var borderTopWidth = parseFloat(styles.borderTopWidth);
+  var borderLeftWidth = parseFloat(styles.borderLeftWidth);
 
   // In cases where the parent is fixed, we must ignore negative scroll in offset calc
   if (fixedPosition && isHTML) {
@@ -3975,8 +4002,8 @@ function getOffsetRectRelativeToArbitraryNode(children, parent) {
   // differently when margins are applied to it. The margins are included in
   // the box of the documentElement, in the other cases not.
   if (!isIE10 && isHTML) {
-    var marginTop = parseFloat(styles.marginTop, 10);
-    var marginLeft = parseFloat(styles.marginLeft, 10);
+    var marginTop = parseFloat(styles.marginTop);
+    var marginLeft = parseFloat(styles.marginLeft);
 
     offsets.top -= borderTopWidth - marginTop;
     offsets.bottom -= borderTopWidth - marginTop;
@@ -4076,7 +4103,7 @@ function getBoundaries(popper, reference, padding, boundariesElement) {
   // NOTE: 1 DOM access here
 
   var boundaries = { top: 0, left: 0 };
-  var offsetParent = fixedPosition ? getFixedPositionOffsetParent(popper) : findCommonOffsetParent(popper, reference);
+  var offsetParent = fixedPosition ? getFixedPositionOffsetParent(popper) : findCommonOffsetParent(popper, getReferenceNode(reference));
 
   // Handle viewport case
   if (boundariesElement === 'viewport') {
@@ -4204,7 +4231,7 @@ function computeAutoPlacement(placement, refRect, popper, reference, boundariesE
 function getReferenceOffsets(state, popper, reference) {
   var fixedPosition = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
 
-  var commonOffsetParent = fixedPosition ? getFixedPositionOffsetParent(popper) : findCommonOffsetParent(popper, reference);
+  var commonOffsetParent = fixedPosition ? getFixedPositionOffsetParent(popper) : findCommonOffsetParent(popper, getReferenceNode(reference));
   return getOffsetRectRelativeToArbitraryNode(reference, commonOffsetParent, fixedPosition);
 }
 
@@ -4466,7 +4493,7 @@ function destroy() {
 
   this.disableEventListeners();
 
-  // remove the popper if user explicity asked for the deletion on destroy
+  // remove the popper if user explicitly asked for the deletion on destroy
   // do not use `remove` because IE11 doesn't support it
   if (this.options.removeOnDestroy) {
     this.popper.parentNode.removeChild(this.popper);
@@ -4915,8 +4942,8 @@ function arrow(data, options) {
   // Compute the sideValue using the updated popper offsets
   // take popper margin in account because we don't have this info available
   var css = getStyleComputedProperty(data.instance.popper);
-  var popperMarginSide = parseFloat(css['margin' + sideCapitalized], 10);
-  var popperBorderSide = parseFloat(css['border' + sideCapitalized + 'Width'], 10);
+  var popperMarginSide = parseFloat(css['margin' + sideCapitalized]);
+  var popperBorderSide = parseFloat(css['border' + sideCapitalized + 'Width']);
   var sideValue = center - data.offsets.popper[side] - popperMarginSide - popperBorderSide;
 
   // prevent arrowElement from being placed not contiguously to its popper
@@ -6919,6 +6946,7 @@ DropdownItem.propTypes = propTypes$g;
 DropdownItem.defaultProps = defaultProps$f;
 DropdownItem.contextTypes = contextTypes;
 
+var defineProperty$2 = createCommonjsModule(function (module) {
 function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
@@ -6934,9 +6962,15 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
+module.exports = _defineProperty;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+});
+
+var defineProperty$3 = unwrapExports(defineProperty$2);
+
 function _objectSpread(target) {
   for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
+    var source = arguments[i] != null ? Object(arguments[i]) : {};
     var ownKeys = Object.keys(source);
 
     if (typeof Object.getOwnPropertySymbols === 'function') {
@@ -6946,7 +6980,7 @@ function _objectSpread(target) {
     }
 
     ownKeys.forEach(function (key) {
-      _defineProperty(target, key, source[key]);
+      defineProperty$3(target, key, source[key]);
     });
   }
 
@@ -7144,6 +7178,7 @@ function _interopRequireDefault(obj) {
 }
 
 module.exports = _interopRequireDefault;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 });
 
 unwrapExports(interopRequireDefault);
@@ -11683,7 +11718,7 @@ var createClass$1 = function () {
   };
 }();
 
-var defineProperty$2 = function (obj, key, value) {
+var defineProperty$4 = function (obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
       value: value,
@@ -12035,7 +12070,7 @@ Header.propTypes = {
     className: PropTypes.string,
     logo: PropTypes.string,
     user: PropTypes.object,
-    extraMenu: PropTypes.element,
+    extraMenu: PropTypes.any,
     onLogout: PropTypes.func,
     toggleDrawer: PropTypes.func
 };
@@ -12254,7 +12289,7 @@ var PrivateRoute = function PrivateRoute(props) {
     var render = function render(props) {
         var op = Object.keys(extraProps).map(function (key) {
             if (!Object.keys(props).includes(key)) {
-                return defineProperty$2({}, key, extraProps[key]);
+                return defineProperty$4({}, key, extraProps[key]);
             }
             return null;
         }).filter(function (obj) {
@@ -12459,174 +12494,140 @@ Menu.propTypes = {
     config: config_propType
 };
 
-var _ref =
-/*#__PURE__*/
-React__default.createElement("path", {
+var _ref = /*#__PURE__*/React__default.createElement("path", {
   d: "M15.987 9.991a6 6 0 010 12 6 6 0 010-12z",
   fill: "#26A6D1"
 });
 
-var _ref2 =
-/*#__PURE__*/
-React__default.createElement("path", {
+var _ref2 = /*#__PURE__*/React__default.createElement("path", {
   d: "M15.987 23.992c-4.048 0-7.385-3.008-7.917-6.912L2.555 7.517l-.006-.014-.617.891c-.152.279-.3.562-.436.851l-.295.69a15.34 15.34 0 00-.282.725 14.4 14.4 0 00-.264.826l-.178.637c-.074.297-.137.594-.194.893l-.108.631c-.044.293-.078.584-.104.875l-.052.697c-.013.266-.018.531-.018.797s.004.532.018.797l.052.697c.027.291.062.584.104.875l.108.631c.058.299.12.596.194.893l.178.637c.082.275.166.553.264.826.087.244.185.484.282.725.096.23.188.461.295.689.136.289.284.57.437.852l.199.391.092.143c.176.301.37.588.566.875l.314.467c.189.258.396.504.603.752l.414.496c.18.197.373.385.563.574.19.191.377.387.575.564l.496.416c.248.205.494.412.752.602l.463.316c.288.197.577.391.875.566l.142.092.39.199c.28.152.562.303.851.438l.083.043.405.166c1.082.461 2.212.787 3.364 1.002l4.565-7.916a8.444 8.444 0 01-1.658.168z",
   fill: "#3DB39E"
 });
 
-var _ref3 =
-/*#__PURE__*/
-React__default.createElement("path", {
+var _ref3 = /*#__PURE__*/React__default.createElement("path", {
   d: "M31.933 14.901l-.021-.264c-.113-1.336-.662-3.27-1.118-4.568h-9.443a7.984 7.984 0 01-.389 12.182l-5.625 9.756c1.978 0 4.641-.357 6.557-1.123l.065-.021.102-.043a16.248 16.248 0 001.928-.932c.563-.324 1.09-.688 1.599-1.068l.029-.023c.49-.371.949-.766 1.387-1.182l.068-.059.221-.225a15.956 15.956 0 002.477-3.193l.077-.113.139-.281a16.3 16.3 0 00.604-1.213l.236-.555c.156-.391.292-.787.417-1.188l.165-.516c.153-.557.278-1.119.371-1.688l.039-.324c.069-.488.118-.979.143-1.475l.009-.397c.008-.494-.002-.991-.037-1.487z",
   fill: "#EFC75E"
 });
 
-var _ref4 =
-/*#__PURE__*/
-React__default.createElement("path", {
+var _ref4 = /*#__PURE__*/React__default.createElement("path", {
   d: "M29.838 7.991c-.335-.58-.71-1.121-1.104-1.643l-.129-.16a15.434 15.434 0 00-1.125-1.299l-.268-.275a16.217 16.217 0 00-1.359-1.205l-.104-.088a15.79 15.79 0 00-1.648-1.105l-.114-.076-.433-.225c-.25-.135-.499-.27-.756-.391-.247-.115-.496-.217-.745-.32l-.627-.25c-.303-.109-.609-.201-.916-.295L20 .511a16.905 16.905 0 00-1.007-.219l-.476-.094a14.936 14.936 0 00-.985-.117l-.539-.055c-.282-.018-.563-.016-.847-.02l-.694-.004-.54.039a15.97 15.97 0 00-3.561.648l-.243.066c-.297.096-.59.213-.884.328l-.564.223c-.242.103-.481.224-.721.343-.232.114-.465.229-.693.356l-.26.133-.384.248c-.227.14-.452.283-.673.435-.216.151-.429.305-.637.463l-.55.439c-.227.19-.448.383-.663.583l-.408.398c-.237.238-.469.48-.688.73l-.149.18 4.551 7.895c1.045-3.201 4.052-5.518 7.603-5.518h13.85z",
   fill: "#E2574C"
 });
 
 var chrome_logo = "data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20%3F%3E%3Csvg%20height%3D%2232%22%20width%3D%2232%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M15.987%209.991c3.314%200%206%202.688%206%206%200%203.315-2.686%206-6%206-3.312%200-6-2.686-6-6%200-3.312%202.688-6%206-6z%22%20fill%3D%22%2326A6D1%22%2F%3E%3Cpath%20d%3D%22M15.987%2023.992c-4.048%200-7.385-3.008-7.917-6.912l-5.515-9.563-.006-.014-.617.891c-.152.279-.3.562-.436.851l-.295.69c-.098.238-.195.479-.282.725-.098.273-.183.549-.264.826l-.178.637c-.074.297-.137.594-.194.893l-.108.631c-.044.293-.078.584-.104.875l-.052.697c-.013.266-.018.531-.018.797s.004.532.018.797l.052.697c.027.291.062.584.104.875l.108.631c.058.299.12.596.194.893l.178.637c.082.275.166.553.264.826.087.244.185.484.282.725.096.23.188.461.295.689.136.289.284.57.437.852l.199.391.092.143c.176.301.37.588.566.875l.314.467c.189.258.396.504.603.752l.414.496c.18.197.373.385.563.574.19.191.377.387.575.564l.496.416c.248.205.494.412.752.602l.463.316c.288.197.577.391.875.566l.142.092.39.199c.28.152.562.303.851.438l.083.043.405.166c1.082.461%202.212.787%203.364%201.002l4.565-7.916c-.535.107-1.089.168-1.658.168z%22%20fill%3D%22%233DB39E%22%2F%3E%3Cpath%20d%3D%22M31.933%2014.901l-.021-.264c-.113-1.336-.662-3.27-1.118-4.568h-9.443c1.615%201.463%202.636%203.57%202.636%205.922%200%202.538-1.185%204.795-3.025%206.26l-5.625%209.756c1.978%200%204.641-.357%206.557-1.123l.065-.021.102-.043c.653-.271%201.299-.568%201.928-.932.563-.324%201.09-.688%201.599-1.068l.029-.023c.49-.371.949-.766%201.387-1.182l.068-.059.221-.225c.968-.969%201.799-2.039%202.477-3.193l.077-.113.139-.281c.218-.396.42-.801.604-1.213l.236-.555c.156-.391.292-.787.417-1.188l.165-.516c.153-.557.278-1.119.371-1.688l.039-.324c.069-.488.118-.979.143-1.475l.009-.397c.008-.494-.002-.991-.037-1.487z%22%20fill%3D%22%23EFC75E%22%2F%3E%3Cpath%20d%3D%22M29.838%207.991c-.335-.58-.71-1.121-1.104-1.643l-.129-.16c-.354-.457-.729-.891-1.125-1.299l-.268-.275c-.435-.428-.886-.834-1.359-1.205l-.104-.088c-.527-.406-1.079-.771-1.648-1.105l-.114-.076-.433-.225c-.25-.135-.499-.27-.756-.391-.247-.115-.496-.217-.745-.32l-.627-.25c-.303-.109-.609-.201-.916-.295l-.51-.148c-.334-.086-.671-.154-1.007-.219l-.476-.094c-.328-.053-.656-.086-.985-.117l-.539-.055c-.282-.018-.563-.016-.847-.02l-.694-.004-.54.039c-1.194.08-2.388.293-3.561.648l-.243.066c-.297.096-.59.213-.884.328l-.564.223c-.242.103-.481.224-.721.343-.232.114-.465.229-.693.356l-.26.133-.384.248c-.227.14-.452.283-.673.435-.216.151-.429.305-.637.463l-.55.439c-.227.19-.448.383-.663.583l-.408.398c-.237.238-.469.48-.688.73l-.149.18%204.551%207.895c1.045-3.201%204.052-5.518%207.603-5.518h13.85z%22%20fill%3D%22%23E2574C%22%2F%3E%3C%2Fsvg%3E";
 
-var _ref$1 =
-/*#__PURE__*/
-React__default.createElement("path", {
+var _ref$1 = /*#__PURE__*/React__default.createElement("path", {
   d: "M15.998-.501c8.284 0 15 6.715 15 15 0 8.283-6.716 15-15 15s-15-6.717-15-15c0-8.286 6.716-15 15-15z",
   fill: "#2394BC"
 });
 
-var _ref2$1 =
-/*#__PURE__*/
-React__default.createElement("path", {
+var _ref2$1 = /*#__PURE__*/React__default.createElement("path", {
   d: "M18.562 30.274c7.614-1.229 13.437-7.814 13.437-15.775l-.146.181c.228-1.513.188-2.861-.125-4.037-.112.871-.234 1.397-.357 1.608-.001-.068-.018-.976-.307-2.243a14.393 14.393 0 00-.616-2.596c.068.368.108.675.128.953-1.162-3.118-4.023-6.957-11.072-6.867 0 0 2.479.262 3.646 2.029 0 0-1.193-.285-2.095.152 1.099.438 2.052.896 2.863 1.374l.07.043c.208.125.385.253.573.38 1.498 1.052 2.888 2.553 2.782 4.489-.323-.51-.753-.844-1.304-1.012.679 2.66.746 4.857.197 6.59-.377-1.154-.724-1.846-1.033-2.09.431 3.566-.15 6.203-1.739 7.922.302-1.049.422-1.908.354-2.586-1.867 2.822-3.991 4.281-6.372 4.371a8.69 8.69 0 01-2.666-.426c-1.228-.415-2.339-1.124-3.328-2.13 1.544.129 2.954-.139 4.195-.772L17.68 18.5l-.008-.006a.928.928 0 01.754.021c.496-.068.67-.334.504-.783-.24-.334-.603-.637-1.069-.904-1.017-.531-2.079-.447-3.187.26-1.055.6-2.07.576-3.058-.062-.647-.447-1.272-1.049-1.876-1.801l-.24-.355c-.113.852.015 1.945.398 3.291l.008.018-.008-.016c-.384-1.346-.511-2.442-.398-3.293v-.008c.029-.744.337-1.154.924-1.246l-.249-.021.251.021c.663.061 1.424.213 2.282.463.144-.828-.045-1.695-.564-2.584v-.016c.806-.752 1.521-1.299 2.132-1.648a.887.887 0 00.481-.662l.022-.016.008-.008.03-.029c.158-.236.105-.426-.165-.594a6.725 6.725 0 01-1.695-.121l-.008.023c-.233-.068-.527-.275-.889-.625l-.927-.912-.278-.219v.029h-.008l.008-.037-.053-.055.075-.053c.128-.691.339-1.285.64-1.795l.068-.061c.302-.502.881-1.041 1.732-1.617-1.582.197-3.013.91-4.285 2.143-1.055-.387-2.305-.305-3.744.25l-.173.132-.013.007.188-.138.008-.008c-.905-.416-1.515-1.611-1.809-3.564-1.152 1.141-1.71 3.178-1.673 6.119l-.33.499-.085.058-.017.016-.007.007-.016.033c-.175.274-.416.688-.72 1.244-.437.786-.584 1.446-.627 2.021l-.004.007.002.019-.014.151.025-.04c.003.133.006.267.04.387l.934-.768c-.339.859-.564 1.77-.678 2.736l-.027.442-.293-.335a15.91 15.91 0 002.924 9.201l.055.086.088.105a16.07 16.07 0 004.958 4.464 14.991 14.991 0 004.519 1.759l.331.074c.333.064.674.112 1.016.155.253.033.506.065.762.087l.34.039.483.003.525.026.418-.021.689-.034c.409-.028.812-.073 1.212-.131l.243-.036zm-9.409-16.75zm19.527-2.741l-.007.131.005-.132.002.001z",
   fill: "#EC8840"
 });
 
 var firefox_logo = "data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20%3F%3E%3Csvg%20enable-background%3D%22new%20-0.002%20-0.501%2032%2031%22%20height%3D%2231%22%20viewBox%3D%22-0.002%20-0.501%2032%2031%22%20width%3D%2232%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M15.998-.501c8.284%200%2015%206.715%2015%2015%200%208.283-6.716%2015-15%2015s-15-6.717-15-15c0-8.286%206.716-15%2015-15z%22%20fill%3D%22%232394BC%22%2F%3E%3Cpath%20d%3D%22M18.562%2030.274c7.614-1.229%2013.437-7.814%2013.437-15.775l-.146.181c.228-1.513.188-2.861-.125-4.037-.112.871-.234%201.397-.357%201.608-.001-.068-.018-.976-.307-2.243-.137-.924-.338-1.793-.616-2.596.068.368.108.675.128.953-1.162-3.118-4.023-6.957-11.072-6.867%200%200%202.479.262%203.646%202.029%200%200-1.193-.285-2.095.152%201.099.438%202.052.896%202.863%201.374l.07.043c.208.125.385.253.573.38%201.498%201.052%202.888%202.553%202.782%204.489-.323-.51-.753-.844-1.304-1.012.679%202.66.746%204.857.197%206.59-.377-1.154-.724-1.846-1.033-2.09.431%203.566-.15%206.203-1.739%207.922.302-1.049.422-1.908.354-2.586-1.867%202.822-3.991%204.281-6.372%204.371-.941-.008-1.83-.15-2.666-.426-1.228-.415-2.339-1.124-3.328-2.13%201.544.129%202.954-.139%204.195-.772l2.033-1.332-.008-.006c.264-.1.512-.092.754.021.496-.068.67-.334.504-.783-.24-.334-.603-.637-1.069-.904-1.017-.531-2.079-.447-3.187.26-1.055.6-2.07.576-3.058-.062-.647-.447-1.272-1.049-1.876-1.801l-.24-.355c-.113.852.015%201.945.398%203.291l.008.018-.008-.016c-.384-1.346-.511-2.442-.398-3.293v-.008c.029-.744.337-1.154.924-1.246l-.249-.021.251.021c.663.061%201.424.213%202.282.463.144-.828-.045-1.695-.564-2.584v-.016c.806-.752%201.521-1.299%202.132-1.648.271-.145.429-.365.481-.662l.022-.016.008-.008.03-.029c.158-.236.105-.426-.165-.594-.565.031-1.131-.008-1.695-.121l-.008.023c-.233-.068-.527-.275-.889-.625l-.927-.912-.278-.219v.029h-.008l.008-.037-.053-.055.075-.053c.128-.691.339-1.285.64-1.795l.068-.061c.302-.502.881-1.041%201.732-1.617-1.582.197-3.013.91-4.285%202.143-1.055-.387-2.305-.305-3.744.25l-.173.132-.013.007.188-.138.008-.008c-.905-.416-1.515-1.611-1.809-3.564-1.152%201.141-1.71%203.178-1.673%206.119l-.33.499-.085.058-.017.016-.007.007-.016.033c-.175.274-.416.688-.72%201.244-.437.786-.584%201.446-.627%202.021l-.004.007.002.019-.014.151.025-.04c.003.133.006.267.04.387l.934-.768c-.339.859-.564%201.77-.678%202.736l-.027.442-.293-.335c0%203.428%201.088%206.597%202.924%209.201l.055.086.088.105c1.32%201.813%203.006%203.338%204.958%204.464%201.403.831%202.911%201.413%204.519%201.759l.331.074c.333.064.674.112%201.016.155.253.033.506.065.762.087l.34.039.483.003.525.026.418-.021.689-.034c.409-.028.812-.073%201.212-.131l.243-.036zm-9.409-16.75h0zm19.527-2.741l-.007.131.005-.132.002.001z%22%20fill%3D%22%23EC8840%22%2F%3E%3C%2Fsvg%3E";
 
-var _ref$2 =
-/*#__PURE__*/
-React__default.createElement("path", {
+var _ref$2 = /*#__PURE__*/React__default.createElement("path", {
   d: "M23 10.435C23 4.672 18.075 0 12 0 6.258 0 1.5 4.067 1 9.391c3.012-3 6.5-5.391 11-5.217 2.52.097 4.698 2.288 4.698 6.332l-9.42-.004c0-1.304.532-2.676 1.58-4.241-3.493 1.913-5.763 4.15-5.763 8.348 0 5.186 4.925 9.391 11 9.391 2.574 0 4.936-.573 6.81-1.621v-4.64c-1.436 1.076-3.361 2.087-5.762 2.087-4.055 0-7.828-1.146-7.916-5.32L23 14.498v-4.063z",
   fill: "#009ADA"
 });
 
-var _ref2$2 =
-/*#__PURE__*/
-React__default.createElement("linearGradient", {
+var _ref2$2 = /*#__PURE__*/React__default.createElement("linearGradient", {
   gradientUnits: "userSpaceOnUse",
   id: "a",
   x1: 8.09,
   x2: 15.904,
   y1: 8.815,
   y2: 12.459
-}, React__default.createElement("stop", {
+}, /*#__PURE__*/React__default.createElement("stop", {
   offset: 0,
   stopColor: "#fff",
   stopOpacity: 0.2
-}), React__default.createElement("stop", {
+}), /*#__PURE__*/React__default.createElement("stop", {
   offset: 1,
   stopColor: "#fff",
   stopOpacity: 0
 }));
 
-var _ref3$1 =
-/*#__PURE__*/
-React__default.createElement("path", {
+var _ref3$1 = /*#__PURE__*/React__default.createElement("path", {
   d: "M7.278 10.752l9.42.004c0-.089-.015-.163-.017-.25l-9.378-.004c-.004.083-.025.168-.025.25z",
   fill: "url(#a)"
 });
 
-var _ref4$1 =
-/*#__PURE__*/
-React__default.createElement("linearGradient", {
+var _ref4$1 = /*#__PURE__*/React__default.createElement("linearGradient", {
   gradientUnits: "userSpaceOnUse",
   id: "b",
   x1: 4.392,
   x2: 6.719,
   y1: 9.762,
   y2: 10.847
-}, React__default.createElement("stop", {
+}, /*#__PURE__*/React__default.createElement("stop", {
   offset: 0,
   stopColor: "#fff",
   stopOpacity: 0.2
-}), React__default.createElement("stop", {
+}), /*#__PURE__*/React__default.createElement("stop", {
   offset: 1,
   stopColor: "#fff",
   stopOpacity: 0
 }));
 
-var _ref5 =
-/*#__PURE__*/
-React__default.createElement("path", {
+var _ref5 = /*#__PURE__*/React__default.createElement("path", {
   d: "M3.095 14.609c0 .046.007.09.008.135.042-4.022 2.199-6.23 5.52-8.095.081-.13.145-.255.234-.388-3.492 1.913-5.762 4.15-5.762 8.348z",
   fill: "url(#b)"
 });
 
-var _ref6 =
-/*#__PURE__*/
-React__default.createElement("path", {
+var _ref6 = /*#__PURE__*/React__default.createElement("path", {
   d: "M12 0C6.258 0 1.5 4.067 1 9.391l.042-.04C1.686 4.17 6.364.25 12 .25c6.075 0 11 4.672 11 10.435v-.25C23 4.672 18.075 0 12 0z",
   fill: "#FFF",
   opacity: 0.2
 });
 
-var _ref7 =
-/*#__PURE__*/
-React__default.createElement("linearGradient", {
+var _ref7 = /*#__PURE__*/React__default.createElement("linearGradient", {
   gradientUnits: "userSpaceOnUse",
   id: "c",
   x1: 7.286,
   x2: 19.759,
   y1: 14.631,
   y2: 20.447
-}, React__default.createElement("stop", {
+}, /*#__PURE__*/React__default.createElement("stop", {
   offset: 0,
   stopColor: "#fff",
   stopOpacity: 0.2
-}), React__default.createElement("stop", {
+}), /*#__PURE__*/React__default.createElement("stop", {
   offset: 1,
   stopColor: "#fff",
   stopOpacity: 0
 }));
 
-var _ref8 =
-/*#__PURE__*/
-React__default.createElement("path", {
+var _ref8 = /*#__PURE__*/React__default.createElement("path", {
   d: "M15.143 20.076c2.4 0 4.326-1.011 5.762-2.087v-.25c-1.436 1.076-3.361 2.087-5.762 2.087-3.97 0-7.661-1.107-7.896-5.07h-.02c.088 4.174 3.861 5.32 7.916 5.32z",
   fill: "url(#c)"
 });
 
-var _ref9 =
-/*#__PURE__*/
-React__default.createElement("path", {
+var _ref9 = /*#__PURE__*/React__default.createElement("path", {
   d: "M7.247 14.512L23 14.504v-.25l-15.773.008c.002.087.015.165.02.25zM14.095 23.994c2.574 0 4.936-.573 6.81-1.621v-.25c-1.874 1.048-4.236 1.621-6.81 1.621-6.021 0-10.906-4.132-10.992-9.255 0 .04-.008.073-.008.114 0 5.186 4.925 9.391 11 9.391zM12 4.172c2.464.095 4.589 2.206 4.68 6.082h.018c0-4.044-2.179-6.235-4.698-6.332-4.48-.173-7.955 2.196-10.958 5.176-.012.098-.033.193-.042.291 3.012-3 6.5-5.391 11-5.217z",
   opacity: 0.1
 });
 
-var _ref10 =
-/*#__PURE__*/
-React__default.createElement("linearGradient", {
+var _ref10 = /*#__PURE__*/React__default.createElement("linearGradient", {
   gradientUnits: "userSpaceOnUse",
   id: "d",
   x1: 1.615,
   x2: 23.454,
   y1: 6.727,
   y2: 16.911
-}, React__default.createElement("stop", {
+}, /*#__PURE__*/React__default.createElement("stop", {
   offset: 0,
   stopColor: "#fff",
   stopOpacity: 0.2
-}), React__default.createElement("stop", {
+}), /*#__PURE__*/React__default.createElement("stop", {
   offset: 1,
   stopColor: "#fff",
   stopOpacity: 0
 }));
 
-var _ref11 =
-/*#__PURE__*/
-React__default.createElement("path", {
+var _ref11 = /*#__PURE__*/React__default.createElement("path", {
   d: "M23 10.435C23 4.672 18.075 0 12 0 6.258 0 1.5 4.067 1 9.391c3.012-3 6.5-5.391 11-5.217 2.52.097 4.698 2.288 4.698 6.332l-9.42-.004c0-1.304.532-2.676 1.58-4.241-3.493 1.913-5.763 4.15-5.763 8.348 0 5.186 4.925 9.391 11 9.391 2.574 0 4.936-.573 6.81-1.621v-4.64c-1.436 1.076-3.361 2.087-5.762 2.087-4.055 0-7.828-1.146-7.916-5.32L23 14.498v-4.063z",
   fill: "url(#d)"
 });
@@ -12821,18 +12822,18 @@ var resultcard = function resultcard(props) {
 };
 
 /*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
+Copyright (c) Microsoft Corporation.
 
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
 
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 /* global Reflect, Promise */
 
@@ -12888,10 +12889,11 @@ function __metadata(metadataKey, metadataValue) {
 }
 
 function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 }
@@ -12924,19 +12926,25 @@ function __generator(thisArg, body) {
     }
 }
 
+function __createBinding(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}
+
 function __exportStar(m, exports) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 
 function __values(o) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) return m.call(o);
-    return {
+    if (o && typeof o.length === "number") return {
         next: function () {
             if (o && i >= o.length) o = void 0;
             return { value: o && o[i++], done: !o };
         }
     };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 }
 
 function __read(o, n) {
@@ -13015,6 +13023,21 @@ function __importDefault(mod) {
     return (mod && mod.__esModule) ? mod : { default: mod };
 }
 
+function __classPrivateFieldGet(receiver, privateMap) {
+    if (!privateMap.has(receiver)) {
+        throw new TypeError("attempted to get private field on non-instance");
+    }
+    return privateMap.get(receiver);
+}
+
+function __classPrivateFieldSet(receiver, privateMap, value) {
+    if (!privateMap.has(receiver)) {
+        throw new TypeError("attempted to set private field on non-instance");
+    }
+    privateMap.set(receiver, value);
+    return value;
+}
+
 var tslib_1 = /*#__PURE__*/Object.freeze({
   __extends: __extends,
   get __assign () { return __assign; },
@@ -13024,6 +13047,7 @@ var tslib_1 = /*#__PURE__*/Object.freeze({
   __metadata: __metadata,
   __awaiter: __awaiter,
   __generator: __generator,
+  __createBinding: __createBinding,
   __exportStar: __exportStar,
   __values: __values,
   __read: __read,
@@ -13035,7 +13059,9 @@ var tslib_1 = /*#__PURE__*/Object.freeze({
   __asyncValues: __asyncValues,
   __makeTemplateObject: __makeTemplateObject,
   __importStar: __importStar,
-  __importDefault: __importDefault
+  __importDefault: __importDefault,
+  __classPrivateFieldGet: __classPrivateFieldGet,
+  __classPrivateFieldSet: __classPrivateFieldSet
 });
 
 var is = createCommonjsModule(function (module, exports) {
@@ -22065,24 +22091,37 @@ Drawer.propTypes = {
 };
 
 /* eslint-disable */
-// murmurhash2 via https://github.com/garycourt/murmurhash-js/blob/master/murmurhash2_gc.js
-function murmurhash2_32_gc(str) {
-  var l = str.length,
-      h = l ^ l,
+// Inspired by https://github.com/garycourt/murmurhash-js
+// Ported from https://github.com/aappleby/smhasher/blob/61a0530f28277f2e850bfc39600ce61d02b518de/src/MurmurHash2.cpp#L37-L86
+function murmur2(str) {
+  // 'm' and 'r' are mixing constants generated offline.
+  // They're not really 'magic', they just happen to work well.
+  // const m = 0x5bd1e995;
+  // const r = 24;
+  // Initialize the hash
+  var h = 0; // Mix 4 bytes at a time into the hash
+
+  var k,
       i = 0,
-      k;
+      len = str.length;
 
-  while (l >= 4) {
+  for (; len >= 4; ++i, len -= 4) {
     k = str.charCodeAt(i) & 0xff | (str.charCodeAt(++i) & 0xff) << 8 | (str.charCodeAt(++i) & 0xff) << 16 | (str.charCodeAt(++i) & 0xff) << 24;
-    k = (k & 0xffff) * 0x5bd1e995 + (((k >>> 16) * 0x5bd1e995 & 0xffff) << 16);
-    k ^= k >>> 24;
-    k = (k & 0xffff) * 0x5bd1e995 + (((k >>> 16) * 0x5bd1e995 & 0xffff) << 16);
-    h = (h & 0xffff) * 0x5bd1e995 + (((h >>> 16) * 0x5bd1e995 & 0xffff) << 16) ^ k;
-    l -= 4;
-    ++i;
-  }
+    k =
+    /* Math.imul(k, m): */
+    (k & 0xffff) * 0x5bd1e995 + ((k >>> 16) * 0xe995 << 16);
+    k ^=
+    /* k >>> r: */
+    k >>> 24;
+    h =
+    /* Math.imul(k, m): */
+    (k & 0xffff) * 0x5bd1e995 + ((k >>> 16) * 0xe995 << 16) ^
+    /* Math.imul(h, m): */
+    (h & 0xffff) * 0x5bd1e995 + ((h >>> 16) * 0xe995 << 16);
+  } // Handle the last few bytes of the input array
 
-  switch (l) {
+
+  switch (len) {
     case 3:
       h ^= (str.charCodeAt(i + 2) & 0xff) << 16;
 
@@ -22091,13 +22130,18 @@ function murmurhash2_32_gc(str) {
 
     case 1:
       h ^= str.charCodeAt(i) & 0xff;
-      h = (h & 0xffff) * 0x5bd1e995 + (((h >>> 16) * 0x5bd1e995 & 0xffff) << 16);
-  }
+      h =
+      /* Math.imul(h, m): */
+      (h & 0xffff) * 0x5bd1e995 + ((h >>> 16) * 0xe995 << 16);
+  } // Do a few final mixes of the hash to ensure the last few
+  // bytes are well-incorporated.
+
 
   h ^= h >>> 13;
-  h = (h & 0xffff) * 0x5bd1e995 + (((h >>> 16) * 0x5bd1e995 & 0xffff) << 16);
-  h ^= h >>> 15;
-  return (h >>> 0).toString(36);
+  h =
+  /* Math.imul(h, m): */
+  (h & 0xffff) * 0x5bd1e995 + ((h >>> 16) * 0xe995 << 16);
+  return ((h ^ h >>> 15) >>> 0).toString(36);
 }
 
 var unitlessKeys = {
@@ -22158,6 +22202,7 @@ function memoize(fn) {
 }
 
 var ILLEGAL_ESCAPE_SEQUENCE_ERROR = "You have illegal escape sequence in your template literal, most likely inside content's property value.\nBecause you write your CSS inside a JavaScript string you actually have to do double escaping, so for example \"content: '\\00d7';\" should become \"content: '\\\\00d7';\".\nYou can read more about this here:\nhttps://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#ES2018_revision_of_illegal_escape_sequences";
+var UNDEFINED_AS_OBJECT_KEY_ERROR = "You have passed in falsy value as style object's key (can happen when in example you pass unexported component as computed key).";
 var hyphenateRegex = /[A-Z]|^ms/g;
 var animationRegex = /_EMO_([^_]+?)_([^]*?)_EMO_/g;
 
@@ -22165,15 +22210,15 @@ var isCustomProperty = function isCustomProperty(property) {
   return property.charCodeAt(1) === 45;
 };
 
+var isProcessableValue = function isProcessableValue(value) {
+  return value != null && typeof value !== 'boolean';
+};
+
 var processStyleName = memoize(function (styleName) {
   return isCustomProperty(styleName) ? styleName : styleName.replace(hyphenateRegex, '-$&').toLowerCase();
 });
 
 var processStyleValue = function processStyleValue(key, value) {
-  if (value == null || typeof value === 'boolean') {
-    return '';
-  }
-
   switch (key) {
     case 'animation':
     case 'animationName':
@@ -22274,7 +22319,7 @@ function handleInterpolation(mergedProps, registered, interpolation, couldBeSele
             }
           }
 
-          var styles = interpolation.styles;
+          var styles = interpolation.styles + ";";
 
           if (process.env.NODE_ENV !== 'production' && interpolation.map !== undefined) {
             styles += interpolation.map;
@@ -22296,25 +22341,40 @@ function handleInterpolation(mergedProps, registered, interpolation, couldBeSele
         } else if (process.env.NODE_ENV !== 'production') {
           console.error('Functions that are interpolated in css calls will be stringified.\n' + 'If you want to have a css call based on props, create a function that returns a css call like this\n' + 'let dynamicStyle = (props) => css`color: ${props.color}`\n' + 'It can be called directly with props or interpolated in a styled call like this\n' + "let SomeComponent = styled('div')`${dynamicStyle}`");
         }
+
+        break;
       }
-    // eslint-disable-next-line no-fallthrough
 
-    default:
-      {
-        if (registered == null) {
-          return interpolation;
+    case 'string':
+      if (process.env.NODE_ENV !== 'production') {
+        var matched = [];
+        var replaced = interpolation.replace(animationRegex, function (match, p1, p2) {
+          var fakeVarName = "animation" + matched.length;
+          matched.push("const " + fakeVarName + " = keyframes`" + p2.replace(/^@keyframes animation-\w+/, '') + "`");
+          return "${" + fakeVarName + "}";
+        });
+
+        if (matched.length) {
+          console.error('`keyframes` output got interpolated into plain string, please wrap it with `css`.\n\n' + 'Instead of doing this:\n\n' + [].concat(matched, ["`" + replaced + "`"]).join('\n') + '\n\nYou should wrap it with `css` like this:\n\n' + ("css`" + replaced + "`"));
         }
-
-        var cached = registered[interpolation];
-
-        if (process.env.NODE_ENV !== 'production' && couldBeSelectorInterpolation && shouldWarnAboutInterpolatingClassNameFromCss && cached !== undefined) {
-          console.error('Interpolating a className from css`` is not recommended and will cause problems with composition.\n' + 'Interpolating a className from css`` will be completely unsupported in a future major version of Emotion');
-          shouldWarnAboutInterpolatingClassNameFromCss = false;
-        }
-
-        return cached !== undefined && !couldBeSelectorInterpolation ? cached : interpolation;
       }
+
+      break;
+  } // finalize string values (regular strings and functions interpolated into css calls)
+
+
+  if (registered == null) {
+    return interpolation;
   }
+
+  var cached = registered[interpolation];
+
+  if (process.env.NODE_ENV !== 'production' && couldBeSelectorInterpolation && shouldWarnAboutInterpolatingClassNameFromCss && cached !== undefined) {
+    console.error('Interpolating a className from css`` is not recommended and will cause problems with composition.\n' + 'Interpolating a className from css`` will be completely unsupported in a future major version of Emotion');
+    shouldWarnAboutInterpolatingClassNameFromCss = false;
+  }
+
+  return cached !== undefined && !couldBeSelectorInterpolation ? cached : interpolation;
 }
 
 function createStringFromObject(mergedProps, registered, obj) {
@@ -22331,7 +22391,7 @@ function createStringFromObject(mergedProps, registered, obj) {
       if (typeof value !== 'object') {
         if (registered != null && registered[value] !== undefined) {
           string += _key + "{" + registered[value] + "}";
-        } else {
+        } else if (isProcessableValue(value)) {
           string += processStyleName(_key) + ":" + processStyleValue(_key, value) + ";";
         }
       } else {
@@ -22341,7 +22401,9 @@ function createStringFromObject(mergedProps, registered, obj) {
 
         if (Array.isArray(value) && typeof value[0] === 'string' && (registered == null || registered[value[0]] === undefined)) {
           for (var _i = 0; _i < value.length; _i++) {
-            string += processStyleName(_key) + ":" + processStyleValue(_key, value[_i]) + ";";
+            if (isProcessableValue(value[_i])) {
+              string += processStyleName(_key) + ":" + processStyleValue(_key, value[_i]) + ";";
+            }
           }
         } else {
           var interpolated = handleInterpolation(mergedProps, registered, value, false);
@@ -22356,6 +22418,10 @@ function createStringFromObject(mergedProps, registered, obj) {
 
             default:
               {
+                if (process.env.NODE_ENV !== 'production' && _key === 'undefined') {
+                  console.error(UNDEFINED_AS_OBJECT_KEY_ERROR);
+                }
+
                 string += _key + "{" + interpolated + "}";
               }
           }
@@ -22430,14 +22496,18 @@ var serializeStyles = function serializeStyles(args, registered, mergedProps) {
     match[1];
   }
 
-  var name = murmurhash2_32_gc(styles) + identifierName;
+  var name = murmur2(styles) + identifierName;
 
   if (process.env.NODE_ENV !== 'production') {
+    // $FlowFixMe SerializedStyles type doesn't have toString property (and we don't want to add it)
     return {
       name: name,
       styles: styles,
       map: sourceMap,
-      next: cursor
+      next: cursor,
+      toString: function toString() {
+        return "You have tried to stringify object returned from `css` function. It isn't supposed to be used directly (e.g. as value of the `className` prop), but rather handed to emotion so it can handle it (e.g. as value of `css` prop).";
+      }
     };
   }
 
@@ -22455,14 +22525,6 @@ function css$1() {
 
   return serializeStyles(args);
 }
-
-function _inheritsLoose$1(subClass, superClass) {
-  subClass.prototype = Object.create(superClass.prototype);
-  subClass.prototype.constructor = subClass;
-  subClass.__proto__ = superClass;
-}
-
-var inheritsLoose = _inheritsLoose$1;
 
 /*
 
@@ -23551,33 +23613,32 @@ var insertStyles = function insertStyles(cache, serialized, isStringTag) {
 };
 
 var isBrowser$3 = typeof document !== 'undefined';
+var hasOwnProperty$1 = Object.prototype.hasOwnProperty;
 
-var EmotionCacheContext = React.createContext( // we're doing this to avoid preconstruct's dead code elimination in this one case
+var EmotionCacheContext = /*#__PURE__*/React.createContext( // we're doing this to avoid preconstruct's dead code elimination in this one case
 // because this module is primarily intended for the browser and node
 // but it's also required in react native and similar environments sometimes
 // and we could have a special build just for that
 // but this is much easier and the native packages
 // might use a different theme context in the future anyway
 typeof HTMLElement !== 'undefined' ? createCache() : null);
-var ThemeContext = React.createContext({});
+var ThemeContext = /*#__PURE__*/React.createContext({});
 var CacheProvider = EmotionCacheContext.Provider;
 
 var withEmotionCache = function withEmotionCache(func) {
   var render = function render(props, ref) {
-    return React.createElement(EmotionCacheContext.Consumer, null, function (cache) {
+    return /*#__PURE__*/React.createElement(EmotionCacheContext.Consumer, null, function (cache) {
       return func(props, cache, ref);
     });
   }; // $FlowFixMe
 
 
-  return React.forwardRef(render);
+  return /*#__PURE__*/React.forwardRef(render);
 };
 
 if (!isBrowser$3) {
-  var BasicProvider =
-  /*#__PURE__*/
-  function (_React$Component) {
-    inheritsLoose(BasicProvider, _React$Component);
+  var BasicProvider = /*#__PURE__*/function (_React$Component) {
+    _inheritsLoose(BasicProvider, _React$Component);
 
     function BasicProvider(props, context, updater) {
       var _this;
@@ -23592,7 +23653,7 @@ if (!isBrowser$3) {
     var _proto = BasicProvider.prototype;
 
     _proto.render = function render() {
-      return React.createElement(EmotionCacheContext.Provider, this.state, this.props.children(this.state.value));
+      return /*#__PURE__*/React.createElement(EmotionCacheContext.Provider, this.state, this.props.children(this.state.value));
     };
 
     return BasicProvider;
@@ -23600,9 +23661,9 @@ if (!isBrowser$3) {
 
   withEmotionCache = function withEmotionCache(func) {
     return function (props) {
-      return React.createElement(EmotionCacheContext.Consumer, null, function (context) {
+      return /*#__PURE__*/React.createElement(EmotionCacheContext.Consumer, null, function (context) {
         if (context === null) {
-          return React.createElement(BasicProvider, null, function (newContext) {
+          return /*#__PURE__*/React.createElement(BasicProvider, null, function (newContext) {
             return func(props, newContext);
           });
         } else {
@@ -23621,7 +23682,42 @@ var sanitizeIdentifier = function sanitizeIdentifier(identifier) {
 
 var typePropName = '__EMOTION_TYPE_PLEASE_DO_NOT_USE__';
 var labelPropName = '__EMOTION_LABEL_PLEASE_DO_NOT_USE__';
-var hasOwnProperty$1 = Object.prototype.hasOwnProperty;
+var createEmotionProps = function createEmotionProps(type, props) {
+  if (process.env.NODE_ENV !== 'production' && typeof props.css === 'string' && // check if there is a css declaration
+  props.css.indexOf(':') !== -1) {
+    throw new Error("Strings are not allowed as css prop values, please wrap it in a css template literal from '@emotion/css' like this: css`" + props.css + "`");
+  }
+
+  var newProps = {};
+
+  for (var key in props) {
+    if (hasOwnProperty$1.call(props, key)) {
+      newProps[key] = props[key];
+    }
+  }
+
+  newProps[typePropName] = type; // TODO: check if this still works with all of those different JSX functions
+
+  if (process.env.NODE_ENV !== 'production') {
+    var error = new Error();
+
+    if (error.stack) {
+      // chrome
+      var match = error.stack.match(/at (?:Object\.|Module\.|)(?:jsx|createEmotionProps).*\n\s+at (?:Object\.|)([A-Z][A-Za-z$]+) /);
+
+      if (!match) {
+        // safari and firefox
+        match = error.stack.match(/.*\n([A-Z][A-Za-z$]+)@/);
+      }
+
+      if (match) {
+        newProps[labelPropName] = sanitizeIdentifier(match[1]);
+      }
+    }
+  }
+
+  return newProps;
+};
 
 var render = function render(cache, props, theme, ref) {
   var cssProp = theme === null ? props.css : props.css(theme); // so that using `css` from `emotion` and passing the result to the css prop works
@@ -23636,8 +23732,10 @@ var render = function render(cache, props, theme, ref) {
   var registeredStyles = [cssProp];
   var className = '';
 
-  if (props.className !== undefined) {
+  if (typeof props.className === 'string') {
     className = getRegisteredStyles(cache.registered, registeredStyles, props.className);
+  } else if (props.className != null) {
+    className = props.className + " ";
   }
 
   var serialized = serializeStyles(registeredStyles);
@@ -23662,7 +23760,7 @@ var render = function render(cache, props, theme, ref) {
 
   newProps.ref = ref;
   newProps.className = className;
-  var ele = React.createElement(type, newProps);
+  var ele = /*#__PURE__*/React.createElement(type, newProps);
 
   if (!isBrowser$3 && rules !== undefined) {
     var _ref;
@@ -23675,18 +23773,18 @@ var render = function render(cache, props, theme, ref) {
       next = next.next;
     }
 
-    return React.createElement(React.Fragment, null, React.createElement("style", (_ref = {}, _ref["data-emotion-" + cache.key] = serializedNames, _ref.dangerouslySetInnerHTML = {
+    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("style", (_ref = {}, _ref["data-emotion-" + cache.key] = serializedNames, _ref.dangerouslySetInnerHTML = {
       __html: rules
     }, _ref.nonce = cache.sheet.nonce, _ref)), ele);
   }
 
   return ele;
-};
+}; // eslint-disable-next-line no-undef
 
-var Emotion = withEmotionCache(function (props, cache, ref) {
-  // use Context.read for the theme when it's stable
+
+var Emotion = /* #__PURE__ */withEmotionCache(function (props, cache, ref) {
   if (typeof props.css === 'function') {
-    return React.createElement(ThemeContext.Consumer, null, function (theme) {
+    return /*#__PURE__*/React.createElement(ThemeContext.Consumer, null, function (theme) {
       return render(cache, props, theme, ref);
     });
   }
@@ -23696,8 +23794,7 @@ var Emotion = withEmotionCache(function (props, cache, ref) {
 
 if (process.env.NODE_ENV !== 'production') {
   Emotion.displayName = 'EmotionCssPropInternal';
-} // $FlowFixMe
-
+}
 
 var jsx$1 = function jsx(type, props) {
   var args = arguments;
@@ -23707,46 +23804,13 @@ var jsx$1 = function jsx(type, props) {
     return React.createElement.apply(undefined, args);
   }
 
-  if (process.env.NODE_ENV !== 'production' && typeof props.css === 'string' && // check if there is a css declaration
-  props.css.indexOf(':') !== -1) {
-    throw new Error("Strings are not allowed as css prop values, please wrap it in a css template literal from '@emotion/css' like this: css`" + props.css + "`");
-  }
-
   var argsLength = args.length;
   var createElementArgArray = new Array(argsLength);
   createElementArgArray[0] = Emotion;
-  var newProps = {};
+  createElementArgArray[1] = createEmotionProps(type, props);
 
-  for (var key in props) {
-    if (hasOwnProperty$1.call(props, key)) {
-      newProps[key] = props[key];
-    }
-  }
-
-  newProps[typePropName] = type;
-
-  if (process.env.NODE_ENV !== 'production') {
-    var error = new Error();
-
-    if (error.stack) {
-      // chrome
-      var match = error.stack.match(/at (?:Object\.|)jsx.*\n\s+at ([A-Z][A-Za-z$]+) /);
-
-      if (!match) {
-        // safari and firefox
-        match = error.stack.match(/^.*\n([A-Z][A-Za-z$]+)@/);
-      }
-
-      if (match) {
-        newProps[labelPropName] = sanitizeIdentifier(match[1]);
-      }
-    }
-  }
-
-  createElementArgArray[1] = newProps;
-
-  for (var i = 2; i < argsLength; i++) {
-    createElementArgArray[i] = args[i];
+  for (var i$$1 = 2; i$$1 < argsLength; i$$1++) {
+    createElementArgArray[i$$1] = args[i$$1];
   } // $FlowFixMe
 
 
@@ -23754,9 +23818,7 @@ var jsx$1 = function jsx(type, props) {
 };
 
 var warnedAboutCssPropForGlobal = false;
-var Global =
-/* #__PURE__ */
-withEmotionCache(function (props, cache) {
+var Global = /* #__PURE__ */withEmotionCache(function (props, cache) {
   if (process.env.NODE_ENV !== 'production' && !warnedAboutCssPropForGlobal && ( // check for className as well since the user is
   // probably using the custom createElement which
   // means it will be turned into a className prop
@@ -23769,9 +23831,9 @@ withEmotionCache(function (props, cache) {
   var styles = props.styles;
 
   if (typeof styles === 'function') {
-    return React.createElement(ThemeContext.Consumer, null, function (theme) {
+    return /*#__PURE__*/React.createElement(ThemeContext.Consumer, null, function (theme) {
       var serialized = serializeStyles([styles(theme)]);
-      return React.createElement(InnerGlobal, {
+      return /*#__PURE__*/React.createElement(InnerGlobal, {
         serialized: serialized,
         cache: cache
       });
@@ -23779,7 +23841,7 @@ withEmotionCache(function (props, cache) {
   }
 
   var serialized = serializeStyles([styles]);
-  return React.createElement(InnerGlobal, {
+  return /*#__PURE__*/React.createElement(InnerGlobal, {
     serialized: serialized,
     cache: cache
   });
@@ -23788,10 +23850,8 @@ withEmotionCache(function (props, cache) {
 // maintain place over rerenders.
 // initial render from browser, insertBefore context.sheet.tags[0] or if a style hasn't been inserted there yet, appendChild
 // initial client-side render from SSR, use place of hydrating tag
-var InnerGlobal =
-/*#__PURE__*/
-function (_React$Component) {
-  inheritsLoose(InnerGlobal, _React$Component);
+var InnerGlobal = /*#__PURE__*/function (_React$Component) {
+  _inheritsLoose(InnerGlobal, _React$Component);
 
   function InnerGlobal(props, context, updater) {
     return _React$Component.call(this, props, context, updater) || this;
@@ -23867,7 +23927,7 @@ function (_React$Component) {
       if (!shouldCache) {
         var _ref;
 
-        return React.createElement("style", (_ref = {}, _ref["data-emotion-" + this.props.cache.key] = serializedNames, _ref.dangerouslySetInnerHTML = {
+        return /*#__PURE__*/React.createElement("style", (_ref = {}, _ref["data-emotion-" + this.props.cache.key] = serializedNames, _ref.dangerouslySetInnerHTML = {
           __html: rules
         }, _ref.nonce = this.props.cache.sheet.nonce, _ref));
       }
@@ -23895,11 +23955,11 @@ var keyframes = function keyframes() {
 
 var classnames$1 = function classnames(args) {
   var len = args.length;
-  var i = 0;
+  var i$$1 = 0;
   var cls = '';
 
-  for (; i < len; i++) {
-    var arg = args[i];
+  for (; i$$1 < len; i$$1++) {
+    var arg = args[i$$1];
     if (arg == null) continue;
     var toAdd = void 0;
 
@@ -23952,7 +24012,7 @@ function merge(registered, css, className) {
 }
 
 var ClassNames = withEmotionCache(function (props, context) {
-  return React.createElement(ThemeContext.Consumer, null, function (theme) {
+  return /*#__PURE__*/React.createElement(ThemeContext.Consumer, null, function (theme) {
     var rules = '';
     var serializedHashes = '';
     var hasRendered = false;
@@ -24008,7 +24068,7 @@ var ClassNames = withEmotionCache(function (props, context) {
     if (!isBrowser$3 && rules.length !== 0) {
       var _ref;
 
-      return React.createElement(React.Fragment, null, React.createElement("style", (_ref = {}, _ref["data-emotion-" + context.key] = serializedHashes.substring(1), _ref.dangerouslySetInnerHTML = {
+      return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("style", (_ref = {}, _ref["data-emotion-" + context.key] = serializedHashes.substring(1), _ref.dangerouslySetInnerHTML = {
         __html: rules
       }, _ref.nonce = context.sheet.nonce, _ref)), ele);
     }
@@ -24018,15 +24078,29 @@ var ClassNames = withEmotionCache(function (props, context) {
 });
 
 var core_esm = /*#__PURE__*/Object.freeze({
-  CacheProvider: CacheProvider,
   ClassNames: ClassNames,
   Global: Global,
-  ThemeContext: ThemeContext,
+  createElement: jsx$1,
   jsx: jsx$1,
   keyframes: keyframes,
+  CacheProvider: CacheProvider,
+  ThemeContext: ThemeContext,
   get withEmotionCache () { return withEmotionCache; },
   css: css$1
 });
+
+var inheritsLoose = createCommonjsModule(function (module) {
+function _inheritsLoose(subClass, superClass) {
+  subClass.prototype = Object.create(superClass.prototype);
+  subClass.prototype.constructor = subClass;
+  setPrototypeOf(subClass, superClass);
+}
+
+module.exports = _inheritsLoose;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+});
+
+unwrapExports(inheritsLoose);
 
 var setStatic_1 = createCommonjsModule(function (module, exports) {
 
@@ -24830,8 +24904,8 @@ var Base = function (_Component) {
             if (childrens) {
                 return React__default.Children.toArray(childrens).map(function (child, index) {
                     var op = {
-                        className: 'zina_card',
-                        key: 'zina_card_' + index
+                        className: "zina_card",
+                        key: "zina_card_" + index
                     };
                     return React__default.createElement(
                         ZinaCard,
@@ -24864,28 +24938,28 @@ var Base = function (_Component) {
             if (_this.props.breadcrumbs) {
                 var items = _this.props.breadcrumbs.map(function (breadcrumb, index) {
                     var op = {
-                        key: 'breadcrumb_' + index,
-                        className: 'breadcrumb-item'
+                        key: "breadcrumb_" + index,
+                        className: "breadcrumb-item"
                     };
                     if (breadcrumb.rel) {
                         return React__default.createElement(
-                            'li',
+                            "li",
                             op,
                             React__default.createElement(
                                 Link,
                                 { to: breadcrumb.rel },
                                 breadcrumb.icon && React__default.createElement(Icon, { icon: breadcrumb.icon }),
-                                ' ',
+                                " ",
                                 breadcrumb.name
                             )
                         );
                     } else {
                         var op2 = _extends$c({}, op, {
-                            className: op.className + ' active',
-                            'aria-current': 'page'
+                            className: op.className + " active",
+                            "aria-current": "page"
                         });
                         return React__default.createElement(
-                            'li',
+                            "li",
                             op2,
                             breadcrumb.icon && React__default.createElement(Icon, { icon: breadcrumb.icon }),
                             breadcrumb.name
@@ -24893,11 +24967,11 @@ var Base = function (_Component) {
                     }
                 });
                 return React__default.createElement(
-                    'nav',
-                    { 'aria-label': 'breadcrumb' },
+                    "nav",
+                    { "aria-label": "breadcrumb" },
                     React__default.createElement(
-                        'ol',
-                        { className: 'breadcrumb' },
+                        "ol",
+                        { className: "breadcrumb" },
                         items
                     )
                 );
@@ -24911,29 +24985,29 @@ var Base = function (_Component) {
     }
 
     createClass$1(Base, [{
-        key: 'componentDidMount',
+        key: "componentDidMount",
         value: function componentDidMount() {
             var title = this.props.title;
 
-            document.title = 'ZINA' + (title ? ' | ' + title : '');
-            window.addEventListener('resize', this._onChangeSize);
+            document.title = "ZINA" + (title ? " | " + title : "");
+            window.addEventListener("resize", this._onChangeSize);
         }
     }, {
-        key: 'componentDidUpdate',
+        key: "componentDidUpdate",
         value: function componentDidUpdate(prevProps) {
             var title = this.props.title;
 
             if (title !== prevProps.title) {
-                document.title = 'ZINA' + (title ? ' | ' + title : '');
+                document.title = "ZINA" + (title ? " | " + title : "");
             }
         }
     }, {
-        key: 'componentWillUnmount',
+        key: "componentWillUnmount",
         value: function componentWillUnmount() {
             window.removeEventListener("resize", this._onChangeSize);
         }
     }, {
-        key: 'render',
+        key: "render",
         value: function render() {
             var _this2 = this;
 
@@ -24958,22 +25032,22 @@ var Base = function (_Component) {
                 ErrorBoundary,
                 null,
                 loading && React__default.createElement(
-                    'div',
-                    { className: 'loading' },
-                    'Loading ...',
+                    "div",
+                    { className: "loading" },
+                    "Loading ...",
                     React__default.createElement(BarLoader$1, {
-                        sizeUnit: 'px',
+                        sizeUnit: "px",
                         size: 250,
-                        color: '#fff',
+                        color: "#fff",
                         loading: true
                     })
                 ),
                 React__default.createElement(
-                    'div',
-                    { className: ['zina', className].join(' ') },
+                    "div",
+                    { className: ["zina", className].join(" ") },
                     React__default.createElement(
                         Drawer,
-                        { position: 'left', size: this.state.drawerSize },
+                        { position: "left", size: this.state.drawerSize },
                         function (args) {
                             var position = args.position,
                                 size = args.size,
@@ -24986,8 +25060,8 @@ var Base = function (_Component) {
                                 handleTouchEnd = args.handleTouchEnd;
 
                             return React__default.createElement(
-                                'div',
-                                { style: { height: '100%' } },
+                                "div",
+                                { style: { height: "100%" } },
                                 React__default.createElement(DrawerContainer, {
                                     position: position,
                                     size: size,
@@ -24998,34 +25072,38 @@ var Base = function (_Component) {
                                     handleTouchMove: handleTouchMove,
                                     handleTouchEnd: handleTouchEnd,
                                     drawerContent: React__default.createElement(
-                                        'div',
-                                        { className: 'drawer' },
+                                        "div",
+                                        { className: "drawer" },
                                         React__default.createElement(
-                                            'div',
-                                            { className: 'navbar navbar-dark header' },
+                                            "div",
+                                            { className: "navbar navbar-dark header" },
                                             React__default.createElement(
-                                                'div',
-                                                { className: 'menu-btn' },
+                                                "div",
+                                                { className: "menu-btn" },
                                                 React__default.createElement(ButtonX, {
                                                     onClick: toggleDrawer,
-                                                    icon: 'bars'
+                                                    icon: "bars"
                                                 })
                                             ),
                                             React__default.createElement(
-                                                'div',
-                                                { className: 'navbar-brand' },
+                                                "div",
+                                                { className: "navbar-brand" },
                                                 React__default.createElement(
                                                     Link,
-                                                    { to: '/' },
-                                                    React__default.createElement('img', {
-                                                        className: 'logo',
+                                                    { to: "/" },
+                                                    React__default.createElement("img", {
+                                                        className: "logo",
                                                         src: logo,
-                                                        alt: 'zina'
+                                                        alt: "zina"
                                                     })
                                                 )
                                             )
                                         ),
-                                        React__default.createElement(Menu, { show: true, config: config, toggleDrawer: toggleDrawer })
+                                        React__default.createElement(Menu, {
+                                            show: true,
+                                            config: config,
+                                            toggleDrawer: toggleDrawer
+                                        })
                                     )
                                 }),
                                 React__default.createElement(
@@ -25043,11 +25121,11 @@ var Base = function (_Component) {
             );
         }
     }, {
-        key: 'renderContent',
+        key: "renderContent",
         value: function renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens, copyright) {
             return React__default.createElement(
-                'div',
-                { className: 'content' },
+                "div",
+                { className: "content" },
                 React__default.createElement(Header, {
                     notifiable: this.props.notifiable,
                     showUserMenu: this.props.showUserMenu,
@@ -25059,31 +25137,31 @@ var Base = function (_Component) {
                     notification: notification
                 }),
                 React__default.createElement(
-                    'div',
-                    { className: 'maincontent' },
+                    "div",
+                    { className: "maincontent" },
                     React__default.createElement(
-                        'div',
-                        { className: 'menu' },
+                        "div",
+                        { className: "menu" },
                         React__default.createElement(Menu, { config: config, toggleDrawer: toggleDrawer })
                     ),
                     React__default.createElement(
-                        'div',
-                        { className: 'sheet' },
+                        "div",
+                        { className: "sheet" },
                         this._computeBreadcrumb(),
                         React__default.createElement(
-                            'div',
-                            { className: 'container-fluid' },
+                            "div",
+                            { className: "container-fluid" },
                             React__default.createElement(
-                                'div',
-                                { className: 'panel' },
+                                "div",
+                                { className: "panel" },
                                 title && React__default.createElement(
-                                    'h3',
+                                    "h3",
                                     null,
                                     title
                                 ),
                                 React__default.createElement(
-                                    'div',
-                                    { className: 'page-content' },
+                                    "div",
+                                    { className: "page-content" },
                                     this._computeChildrens(childrens)
                                 )
                             )
@@ -25091,31 +25169,30 @@ var Base = function (_Component) {
                     )
                 ),
                 React__default.createElement(
-                    'footer',
+                    "footer",
                     null,
-                    React__default.createElement('span', { className: 'menu' }),
-                    !copyright && React__default.createElement(
-                        'span',
-                        { className: 'legend' },
-                        'Copyright ',
-                        React__default.createElement(
-                            'b',
-                            null,
-                            'NOKIA'
-                        ),
-                        ' ',
-                        new Date().getFullYear(),
-                        ' | Powered by ',
-                        React__default.createElement(
-                            'b',
-                            null,
-                            'ZINA'
-                        )
-                    ),
-                    copyright && React__default.createElement(
-                        'span',
-                        { className: 'legend' },
+                    React__default.createElement("span", { className: "menu" }),
+                    copyright ? React__default.createElement(
+                        "span",
+                        { className: "legend" },
                         copyright
+                    ) : React__default.createElement(
+                        "span",
+                        { className: "legend" },
+                        "Copyright ",
+                        React__default.createElement(
+                            "b",
+                            null,
+                            "NOKIA"
+                        ),
+                        " ",
+                        new Date().getFullYear(),
+                        " | Powered by ",
+                        React__default.createElement(
+                            "b",
+                            null,
+                            "ZINA"
+                        )
                     )
                 )
             );
@@ -25131,7 +25208,7 @@ Base.propTypes = {
     notifiable: PropTypes.bool,
 
     extraProps: PropTypes.shape({
-        extraMenu: PropTypes.func,
+        extraMenu: PropTypes.any,
         user: PropTypes.object.isRequired,
         logo: PropTypes.string.isRequired,
         config: config_propType,
@@ -25140,7 +25217,8 @@ Base.propTypes = {
             component: PropTypes.func,
             list: PropTypes.array.isRequired
         }),
-        logout: PropTypes.func.isRequired
+        logout: PropTypes.func.isRequired,
+        copyright: PropTypes.any
     }).isRequired
 };
 Base.defaultProps = {
@@ -25525,44 +25603,51 @@ deepmerge.all = function deepmergeAll(array, options) {
 
 var deepmerge_1 = deepmerge;
 
-var reactIs_production_min = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});
-var b="function"===typeof Symbol&&Symbol.for,c=b?Symbol.for("react.element"):60103,d=b?Symbol.for("react.portal"):60106,e=b?Symbol.for("react.fragment"):60107,f=b?Symbol.for("react.strict_mode"):60108,g=b?Symbol.for("react.profiler"):60114,h=b?Symbol.for("react.provider"):60109,k=b?Symbol.for("react.context"):60110,l=b?Symbol.for("react.async_mode"):60111,m=b?Symbol.for("react.concurrent_mode"):60111,n=b?Symbol.for("react.forward_ref"):60112,p=b?Symbol.for("react.suspense"):60113,q=b?Symbol.for("react.suspense_list"):
-60120,r=b?Symbol.for("react.memo"):60115,t=b?Symbol.for("react.lazy"):60116,v=b?Symbol.for("react.fundamental"):60117,w=b?Symbol.for("react.responder"):60118,x=b?Symbol.for("react.scope"):60119;function y(a){if("object"===typeof a&&null!==a){var u=a.$$typeof;switch(u){case c:switch(a=a.type,a){case l:case m:case e:case g:case f:case p:return a;default:switch(a=a&&a.$$typeof,a){case k:case n:case h:return a;default:return u}}case t:case r:case d:return u}}}function z(a){return y(a)===m}
-exports.typeOf=y;exports.AsyncMode=l;exports.ConcurrentMode=m;exports.ContextConsumer=k;exports.ContextProvider=h;exports.Element=c;exports.ForwardRef=n;exports.Fragment=e;exports.Lazy=t;exports.Memo=r;exports.Portal=d;exports.Profiler=g;exports.StrictMode=f;exports.Suspense=p;
-exports.isValidElementType=function(a){return "string"===typeof a||"function"===typeof a||a===e||a===m||a===g||a===f||a===p||a===q||"object"===typeof a&&null!==a&&(a.$$typeof===t||a.$$typeof===r||a.$$typeof===h||a.$$typeof===k||a.$$typeof===n||a.$$typeof===v||a.$$typeof===w||a.$$typeof===x)};exports.isAsyncMode=function(a){return z(a)||y(a)===l};exports.isConcurrentMode=z;exports.isContextConsumer=function(a){return y(a)===k};exports.isContextProvider=function(a){return y(a)===h};
-exports.isElement=function(a){return "object"===typeof a&&null!==a&&a.$$typeof===c};exports.isForwardRef=function(a){return y(a)===n};exports.isFragment=function(a){return y(a)===e};exports.isLazy=function(a){return y(a)===t};exports.isMemo=function(a){return y(a)===r};exports.isPortal=function(a){return y(a)===d};exports.isProfiler=function(a){return y(a)===g};exports.isStrictMode=function(a){return y(a)===f};exports.isSuspense=function(a){return y(a)===p};
-});
+/** @license React v16.13.1
+ * react-is.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+var b="function"===typeof Symbol&&Symbol.for,c=b?Symbol.for("react.element"):60103,d=b?Symbol.for("react.portal"):60106,e=b?Symbol.for("react.fragment"):60107,f=b?Symbol.for("react.strict_mode"):60108,g=b?Symbol.for("react.profiler"):60114,h=b?Symbol.for("react.provider"):60109,k=b?Symbol.for("react.context"):60110,l=b?Symbol.for("react.async_mode"):60111,m=b?Symbol.for("react.concurrent_mode"):60111,n=b?Symbol.for("react.forward_ref"):60112,p=b?Symbol.for("react.suspense"):60113,q=b?
+Symbol.for("react.suspense_list"):60120,r=b?Symbol.for("react.memo"):60115,t=b?Symbol.for("react.lazy"):60116,v=b?Symbol.for("react.block"):60121,w=b?Symbol.for("react.fundamental"):60117,x=b?Symbol.for("react.responder"):60118,y=b?Symbol.for("react.scope"):60119;
+function z(a){if("object"===typeof a&&null!==a){var u=a.$$typeof;switch(u){case c:switch(a=a.type,a){case l:case m:case e:case g:case f:case p:return a;default:switch(a=a&&a.$$typeof,a){case k:case n:case t:case r:case h:return a;default:return u}}case d:return u}}}function A(a){return z(a)===m}var AsyncMode=l;var ConcurrentMode=m;var ContextConsumer=k;var ContextProvider=h;var Element$1=c;var ForwardRef=n;var Fragment=e;var Lazy=t;var Memo=r;var Portal$1=d;
+var Profiler=g;var StrictMode=f;var Suspense=p;var isAsyncMode=function(a){return A(a)||z(a)===l};var isConcurrentMode=A;var isContextConsumer=function(a){return z(a)===k};var isContextProvider=function(a){return z(a)===h};var isElement=function(a){return "object"===typeof a&&null!==a&&a.$$typeof===c};var isForwardRef=function(a){return z(a)===n};var isFragment=function(a){return z(a)===e};var isLazy=function(a){return z(a)===t};
+var isMemo=function(a){return z(a)===r};var isPortal=function(a){return z(a)===d};var isProfiler=function(a){return z(a)===g};var isStrictMode=function(a){return z(a)===f};var isSuspense=function(a){return z(a)===p};
+var isValidElementType=function(a){return "string"===typeof a||"function"===typeof a||a===e||a===m||a===g||a===f||a===p||a===q||"object"===typeof a&&null!==a&&(a.$$typeof===t||a.$$typeof===r||a.$$typeof===h||a.$$typeof===k||a.$$typeof===n||a.$$typeof===w||a.$$typeof===x||a.$$typeof===y||a.$$typeof===v)};var typeOf=z;
 
-unwrapExports(reactIs_production_min);
-var reactIs_production_min_1 = reactIs_production_min.typeOf;
-var reactIs_production_min_2 = reactIs_production_min.AsyncMode;
-var reactIs_production_min_3 = reactIs_production_min.ConcurrentMode;
-var reactIs_production_min_4 = reactIs_production_min.ContextConsumer;
-var reactIs_production_min_5 = reactIs_production_min.ContextProvider;
-var reactIs_production_min_6 = reactIs_production_min.Element;
-var reactIs_production_min_7 = reactIs_production_min.ForwardRef;
-var reactIs_production_min_8 = reactIs_production_min.Fragment;
-var reactIs_production_min_9 = reactIs_production_min.Lazy;
-var reactIs_production_min_10 = reactIs_production_min.Memo;
-var reactIs_production_min_11 = reactIs_production_min.Portal;
-var reactIs_production_min_12 = reactIs_production_min.Profiler;
-var reactIs_production_min_13 = reactIs_production_min.StrictMode;
-var reactIs_production_min_14 = reactIs_production_min.Suspense;
-var reactIs_production_min_15 = reactIs_production_min.isValidElementType;
-var reactIs_production_min_16 = reactIs_production_min.isAsyncMode;
-var reactIs_production_min_17 = reactIs_production_min.isConcurrentMode;
-var reactIs_production_min_18 = reactIs_production_min.isContextConsumer;
-var reactIs_production_min_19 = reactIs_production_min.isContextProvider;
-var reactIs_production_min_20 = reactIs_production_min.isElement;
-var reactIs_production_min_21 = reactIs_production_min.isForwardRef;
-var reactIs_production_min_22 = reactIs_production_min.isFragment;
-var reactIs_production_min_23 = reactIs_production_min.isLazy;
-var reactIs_production_min_24 = reactIs_production_min.isMemo;
-var reactIs_production_min_25 = reactIs_production_min.isPortal;
-var reactIs_production_min_26 = reactIs_production_min.isProfiler;
-var reactIs_production_min_27 = reactIs_production_min.isStrictMode;
-var reactIs_production_min_28 = reactIs_production_min.isSuspense;
+var reactIs_production_min = {
+	AsyncMode: AsyncMode,
+	ConcurrentMode: ConcurrentMode,
+	ContextConsumer: ContextConsumer,
+	ContextProvider: ContextProvider,
+	Element: Element$1,
+	ForwardRef: ForwardRef,
+	Fragment: Fragment,
+	Lazy: Lazy,
+	Memo: Memo,
+	Portal: Portal$1,
+	Profiler: Profiler,
+	StrictMode: StrictMode,
+	Suspense: Suspense,
+	isAsyncMode: isAsyncMode,
+	isConcurrentMode: isConcurrentMode,
+	isContextConsumer: isContextConsumer,
+	isContextProvider: isContextProvider,
+	isElement: isElement,
+	isForwardRef: isForwardRef,
+	isFragment: isFragment,
+	isLazy: isLazy,
+	isMemo: isMemo,
+	isPortal: isPortal,
+	isProfiler: isProfiler,
+	isStrictMode: isStrictMode,
+	isSuspense: isSuspense,
+	isValidElementType: isValidElementType,
+	typeOf: typeOf
+};
 
 var reactIs_development = createCommonjsModule(function (module, exports) {
 
@@ -25570,8 +25655,6 @@ var reactIs_development = createCommonjsModule(function (module, exports) {
 
 if (process.env.NODE_ENV !== "production") {
   (function() {
-
-Object.defineProperty(exports, '__esModule', { value: true });
 
 // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
 // nor polyfill, then a plain number is used for performance.
@@ -25592,69 +25675,15 @@ var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
 var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for('react.suspense_list') : 0xead8;
 var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
 var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
+var REACT_BLOCK_TYPE = hasSymbol ? Symbol.for('react.block') : 0xead9;
 var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for('react.fundamental') : 0xead5;
 var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for('react.responder') : 0xead6;
 var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for('react.scope') : 0xead7;
 
 function isValidElementType(type) {
   return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
-  type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE);
+  type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE || type.$$typeof === REACT_BLOCK_TYPE);
 }
-
-/**
- * Forked from fbjs/warning:
- * https://github.com/facebook/fbjs/blob/e66ba20ad5be433eb54423f2b097d829324d9de6/packages/fbjs/src/__forks__/warning.js
- *
- * Only change is we use console.warn instead of console.error,
- * and do nothing when 'console' is not supported.
- * This really simplifies the code.
- * ---
- * Similar to invariant but only logs a warning if the condition is not met.
- * This can be used to log issues in development environments in critical
- * paths. Removing the logging code for production environments will keep the
- * same logic and follow the same code paths.
- */
-var lowPriorityWarningWithoutStack = function () {};
-
-{
-  var printWarning = function (format) {
-    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      args[_key - 1] = arguments[_key];
-    }
-
-    var argIndex = 0;
-    var message = 'Warning: ' + format.replace(/%s/g, function () {
-      return args[argIndex++];
-    });
-
-    if (typeof console !== 'undefined') {
-      console.warn(message);
-    }
-
-    try {
-      // --- Welcome to debugging React ---
-      // This error was thrown as a convenience so that you can use this stack
-      // to find the callsite that caused this warning to fire.
-      throw new Error(message);
-    } catch (x) {}
-  };
-
-  lowPriorityWarningWithoutStack = function (condition, format) {
-    if (format === undefined) {
-      throw new Error('`lowPriorityWarningWithoutStack(condition, format, ...args)` requires a warning ' + 'message argument');
-    }
-
-    if (!condition) {
-      for (var _len2 = arguments.length, args = new Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-        args[_key2 - 2] = arguments[_key2];
-      }
-
-      printWarning.apply(void 0, [format].concat(args));
-    }
-  };
-}
-
-var lowPriorityWarningWithoutStack$1 = lowPriorityWarningWithoutStack;
 
 function typeOf(object) {
   if (typeof object === 'object' && object !== null) {
@@ -25679,6 +25708,8 @@ function typeOf(object) {
             switch ($$typeofType) {
               case REACT_CONTEXT_TYPE:
               case REACT_FORWARD_REF_TYPE:
+              case REACT_LAZY_TYPE:
+              case REACT_MEMO_TYPE:
               case REACT_PROVIDER_TYPE:
                 return $$typeofType;
 
@@ -25688,8 +25719,6 @@ function typeOf(object) {
 
         }
 
-      case REACT_LAZY_TYPE:
-      case REACT_MEMO_TYPE:
       case REACT_PORTAL_TYPE:
         return $$typeof;
     }
@@ -25716,8 +25745,9 @@ var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecat
 function isAsyncMode(object) {
   {
     if (!hasWarnedAboutDeprecatedIsAsyncMode) {
-      hasWarnedAboutDeprecatedIsAsyncMode = true;
-      lowPriorityWarningWithoutStack$1(false, 'The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
+      hasWarnedAboutDeprecatedIsAsyncMode = true; // Using console['warn'] to evade Babel and ESLint
+
+      console['warn']('The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
     }
   }
 
@@ -25760,7 +25790,6 @@ function isSuspense(object) {
   return typeOf(object) === REACT_SUSPENSE_TYPE;
 }
 
-exports.typeOf = typeOf;
 exports.AsyncMode = AsyncMode;
 exports.ConcurrentMode = ConcurrentMode;
 exports.ContextConsumer = ContextConsumer;
@@ -25774,7 +25803,6 @@ exports.Portal = Portal;
 exports.Profiler = Profiler;
 exports.StrictMode = StrictMode;
 exports.Suspense = Suspense;
-exports.isValidElementType = isValidElementType;
 exports.isAsyncMode = isAsyncMode;
 exports.isConcurrentMode = isConcurrentMode;
 exports.isContextConsumer = isContextConsumer;
@@ -25788,39 +25816,39 @@ exports.isPortal = isPortal;
 exports.isProfiler = isProfiler;
 exports.isStrictMode = isStrictMode;
 exports.isSuspense = isSuspense;
+exports.isValidElementType = isValidElementType;
+exports.typeOf = typeOf;
   })();
 }
 });
-
-unwrapExports(reactIs_development);
-var reactIs_development_1 = reactIs_development.typeOf;
-var reactIs_development_2 = reactIs_development.AsyncMode;
-var reactIs_development_3 = reactIs_development.ConcurrentMode;
-var reactIs_development_4 = reactIs_development.ContextConsumer;
-var reactIs_development_5 = reactIs_development.ContextProvider;
-var reactIs_development_6 = reactIs_development.Element;
-var reactIs_development_7 = reactIs_development.ForwardRef;
-var reactIs_development_8 = reactIs_development.Fragment;
-var reactIs_development_9 = reactIs_development.Lazy;
-var reactIs_development_10 = reactIs_development.Memo;
-var reactIs_development_11 = reactIs_development.Portal;
-var reactIs_development_12 = reactIs_development.Profiler;
-var reactIs_development_13 = reactIs_development.StrictMode;
-var reactIs_development_14 = reactIs_development.Suspense;
-var reactIs_development_15 = reactIs_development.isValidElementType;
-var reactIs_development_16 = reactIs_development.isAsyncMode;
-var reactIs_development_17 = reactIs_development.isConcurrentMode;
-var reactIs_development_18 = reactIs_development.isContextConsumer;
-var reactIs_development_19 = reactIs_development.isContextProvider;
-var reactIs_development_20 = reactIs_development.isElement;
-var reactIs_development_21 = reactIs_development.isForwardRef;
-var reactIs_development_22 = reactIs_development.isFragment;
-var reactIs_development_23 = reactIs_development.isLazy;
-var reactIs_development_24 = reactIs_development.isMemo;
-var reactIs_development_25 = reactIs_development.isPortal;
-var reactIs_development_26 = reactIs_development.isProfiler;
-var reactIs_development_27 = reactIs_development.isStrictMode;
-var reactIs_development_28 = reactIs_development.isSuspense;
+var reactIs_development_1 = reactIs_development.AsyncMode;
+var reactIs_development_2 = reactIs_development.ConcurrentMode;
+var reactIs_development_3 = reactIs_development.ContextConsumer;
+var reactIs_development_4 = reactIs_development.ContextProvider;
+var reactIs_development_5 = reactIs_development.Element;
+var reactIs_development_6 = reactIs_development.ForwardRef;
+var reactIs_development_7 = reactIs_development.Fragment;
+var reactIs_development_8 = reactIs_development.Lazy;
+var reactIs_development_9 = reactIs_development.Memo;
+var reactIs_development_10 = reactIs_development.Portal;
+var reactIs_development_11 = reactIs_development.Profiler;
+var reactIs_development_12 = reactIs_development.StrictMode;
+var reactIs_development_13 = reactIs_development.Suspense;
+var reactIs_development_14 = reactIs_development.isAsyncMode;
+var reactIs_development_15 = reactIs_development.isConcurrentMode;
+var reactIs_development_16 = reactIs_development.isContextConsumer;
+var reactIs_development_17 = reactIs_development.isContextProvider;
+var reactIs_development_18 = reactIs_development.isElement;
+var reactIs_development_19 = reactIs_development.isForwardRef;
+var reactIs_development_20 = reactIs_development.isFragment;
+var reactIs_development_21 = reactIs_development.isLazy;
+var reactIs_development_22 = reactIs_development.isMemo;
+var reactIs_development_23 = reactIs_development.isPortal;
+var reactIs_development_24 = reactIs_development.isProfiler;
+var reactIs_development_25 = reactIs_development.isStrictMode;
+var reactIs_development_26 = reactIs_development.isSuspense;
+var reactIs_development_27 = reactIs_development.isValidElementType;
+var reactIs_development_28 = reactIs_development.typeOf;
 
 var reactIs = createCommonjsModule(function (module) {
 
@@ -25835,100 +25863,98 @@ if (process.env.NODE_ENV === 'production') {
  * Copyright 2015, Yahoo! Inc.
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
-
 var REACT_STATICS$1 = {
-    childContextTypes: true,
-    contextType: true,
-    contextTypes: true,
-    defaultProps: true,
-    displayName: true,
-    getDefaultProps: true,
-    getDerivedStateFromError: true,
-    getDerivedStateFromProps: true,
-    mixins: true,
-    propTypes: true,
-    type: true
+  childContextTypes: true,
+  contextType: true,
+  contextTypes: true,
+  defaultProps: true,
+  displayName: true,
+  getDefaultProps: true,
+  getDerivedStateFromError: true,
+  getDerivedStateFromProps: true,
+  mixins: true,
+  propTypes: true,
+  type: true
 };
-
 var KNOWN_STATICS$1 = {
-    name: true,
-    length: true,
-    prototype: true,
-    caller: true,
-    callee: true,
-    arguments: true,
-    arity: true
+  name: true,
+  length: true,
+  prototype: true,
+  caller: true,
+  callee: true,
+  arguments: true,
+  arity: true
 };
-
 var FORWARD_REF_STATICS = {
-    '$$typeof': true,
-    render: true,
-    defaultProps: true,
-    displayName: true,
-    propTypes: true
+  '$$typeof': true,
+  render: true,
+  defaultProps: true,
+  displayName: true,
+  propTypes: true
 };
-
 var MEMO_STATICS = {
-    '$$typeof': true,
-    compare: true,
-    defaultProps: true,
-    displayName: true,
-    propTypes: true,
-    type: true
+  '$$typeof': true,
+  compare: true,
+  defaultProps: true,
+  displayName: true,
+  propTypes: true,
+  type: true
 };
-
 var TYPE_STATICS = {};
 TYPE_STATICS[reactIs.ForwardRef] = FORWARD_REF_STATICS;
+TYPE_STATICS[reactIs.Memo] = MEMO_STATICS;
 
 function getStatics(component) {
-    if (reactIs.isMemo(component)) {
-        return MEMO_STATICS;
-    }
-    return TYPE_STATICS[component['$$typeof']] || REACT_STATICS$1;
+  // React v16.11 and below
+  if (reactIs.isMemo(component)) {
+    return MEMO_STATICS;
+  } // React v16.12 and above
+
+
+  return TYPE_STATICS[component['$$typeof']] || REACT_STATICS$1;
 }
 
-var defineProperty$3 = Object.defineProperty;
+var defineProperty$5 = Object.defineProperty;
 var getOwnPropertyNames$1 = Object.getOwnPropertyNames;
 var getOwnPropertySymbols$1 = Object.getOwnPropertySymbols;
 var getOwnPropertyDescriptor$1 = Object.getOwnPropertyDescriptor;
 var getPrototypeOf$1 = Object.getPrototypeOf;
 var objectPrototype$1 = Object.prototype;
-
 function hoistNonReactStatics$1(targetComponent, sourceComponent, blacklist) {
-    if (typeof sourceComponent !== 'string') {
-        // don't hoist over string (html) components
+  if (typeof sourceComponent !== 'string') {
+    // don't hoist over string (html) components
+    if (objectPrototype$1) {
+      var inheritedComponent = getPrototypeOf$1(sourceComponent);
 
-        if (objectPrototype$1) {
-            var inheritedComponent = getPrototypeOf$1(sourceComponent);
-            if (inheritedComponent && inheritedComponent !== objectPrototype$1) {
-                hoistNonReactStatics$1(targetComponent, inheritedComponent, blacklist);
-            }
-        }
-
-        var keys = getOwnPropertyNames$1(sourceComponent);
-
-        if (getOwnPropertySymbols$1) {
-            keys = keys.concat(getOwnPropertySymbols$1(sourceComponent));
-        }
-
-        var targetStatics = getStatics(targetComponent);
-        var sourceStatics = getStatics(sourceComponent);
-
-        for (var i = 0; i < keys.length; ++i) {
-            var key = keys[i];
-            if (!KNOWN_STATICS$1[key] && !(blacklist && blacklist[key]) && !(sourceStatics && sourceStatics[key]) && !(targetStatics && targetStatics[key])) {
-                var descriptor = getOwnPropertyDescriptor$1(sourceComponent, key);
-                try {
-                    // Avoid failures from read-only properties
-                    defineProperty$3(targetComponent, key, descriptor);
-                } catch (e) {}
-            }
-        }
-
-        return targetComponent;
+      if (inheritedComponent && inheritedComponent !== objectPrototype$1) {
+        hoistNonReactStatics$1(targetComponent, inheritedComponent, blacklist);
+      }
     }
 
-    return targetComponent;
+    var keys = getOwnPropertyNames$1(sourceComponent);
+
+    if (getOwnPropertySymbols$1) {
+      keys = keys.concat(getOwnPropertySymbols$1(sourceComponent));
+    }
+
+    var targetStatics = getStatics(targetComponent);
+    var sourceStatics = getStatics(sourceComponent);
+
+    for (var i = 0; i < keys.length; ++i) {
+      var key = keys[i];
+
+      if (!KNOWN_STATICS$1[key] && !(blacklist && blacklist[key]) && !(sourceStatics && sourceStatics[key]) && !(targetStatics && targetStatics[key])) {
+        var descriptor = getOwnPropertyDescriptor$1(sourceComponent, key);
+
+        try {
+          // Avoid failures from read-only properties
+          defineProperty$5(targetComponent, key, descriptor);
+        } catch (e) {}
+      }
+    }
+  }
+
+  return targetComponent;
 }
 
 var hoistNonReactStatics_cjs$1 = hoistNonReactStatics$1;
@@ -27072,7 +27098,7 @@ function arrayEach(array, iteratee) {
   return array;
 }
 
-var defineProperty$4 = (function() {
+var defineProperty$6 = (function() {
   try {
     var func = getNative(Object, 'defineProperty');
     func({}, '', {});
@@ -27090,8 +27116,8 @@ var defineProperty$4 = (function() {
  * @param {*} value The value to assign.
  */
 function baseAssignValue(object, key, value) {
-  if (key == '__proto__' && defineProperty$4) {
-    defineProperty$4(object, key, {
+  if (key == '__proto__' && defineProperty$6) {
+    defineProperty$6(object, key, {
       'configurable': true,
       'enumerable': true,
       'value': value,
@@ -27751,7 +27777,7 @@ function baseKeysIn(object) {
  * _.keysIn(new Foo);
  * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
  */
-function keysIn$1(object) {
+function keysIn(object) {
   return isArrayLike(object) ? arrayLikeKeys(object, true) : baseKeysIn(object);
 }
 
@@ -27765,7 +27791,7 @@ function keysIn$1(object) {
  * @returns {Object} Returns `object`.
  */
 function baseAssignIn(object, source) {
-  return object && copyObject(source, keysIn$1(source), object);
+  return object && copyObject(source, keysIn(source), object);
 }
 
 /** Detect free variable `exports`. */
@@ -27992,7 +28018,7 @@ function getAllKeys(object) {
  * @returns {Array} Returns the array of property names and symbols.
  */
 function getAllKeysIn(object) {
-  return baseGetAllKeys(object, keysIn$1, getSymbolsIn);
+  return baseGetAllKeys(object, keysIn, getSymbolsIn);
 }
 
 /* Built-in method references that are verified to be native. */
@@ -30277,7 +30303,7 @@ var unitlessKeys$1 = {
 
 /* eslint-disable */
 // murmurhash2 via https://github.com/garycourt/murmurhash-js/blob/master/murmurhash2_gc.js
-function murmurhash2_32_gc$1(str) {
+function murmurhash2_32_gc(str) {
   var l = str.length,
       h = l ^ l,
       i = 0,
@@ -31333,7 +31359,7 @@ function createEmotion(context, options) {
   var labelPattern = /label:\s*([^\s;\n{]+)\s*;/g;
 
   var createClassName = function createClassName(styles, identifierName) {
-    return murmurhash2_32_gc$1(styles + identifierName) + identifierName;
+    return murmurhash2_32_gc(styles + identifierName) + identifierName;
   };
 
   if (process.env.NODE_ENV !== 'production') {
@@ -31556,10 +31582,10 @@ var root$2 = typeof window === 'undefined' ? commonjsGlobal : window
   , raf = root$2['request' + suffix]
   , caf = root$2['cancel' + suffix] || root$2['cancelRequest' + suffix];
 
-for(var i$1 = 0; !raf && i$1 < vendors.length; i$1++) {
-  raf = root$2[vendors[i$1] + 'Request' + suffix];
-  caf = root$2[vendors[i$1] + 'Cancel' + suffix]
-      || root$2[vendors[i$1] + 'CancelRequest' + suffix];
+for(var i = 0; !raf && i < vendors.length; i++) {
+  raf = root$2[vendors[i] + 'Request' + suffix];
+  caf = root$2[vendors[i] + 'Cancel' + suffix]
+      || root$2[vendors[i] + 'CancelRequest' + suffix];
 }
 
 // Some versions of FF have rAF but not cAF
@@ -31935,7 +31961,7 @@ function _createClass$2(Constructor, protoProps, staticProps) {
   return Constructor;
 }
 
-function _defineProperty$1(obj, key, value) {
+function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
       value: value,
@@ -31980,7 +32006,7 @@ function _objectSpread$1(target) {
     }
 
     ownKeys.forEach(function (key) {
-      _defineProperty$1(target, key, source[key]);
+      _defineProperty(target, key, source[key]);
     });
   }
 
@@ -32472,7 +32498,7 @@ var menuCSS = function menuCSS(_ref2) {
       colors = _ref2$theme.colors;
   return _ref3 = {
     label: 'menu'
-  }, _defineProperty$1(_ref3, alignToControl(placement), '100%'), _defineProperty$1(_ref3, "backgroundColor", colors.neutral0), _defineProperty$1(_ref3, "borderRadius", borderRadius), _defineProperty$1(_ref3, "boxShadow", '0 0 0 1px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1)'), _defineProperty$1(_ref3, "marginBottom", spacing.menuGutter), _defineProperty$1(_ref3, "marginTop", spacing.menuGutter), _defineProperty$1(_ref3, "position", 'absolute'), _defineProperty$1(_ref3, "width", '100%'), _defineProperty$1(_ref3, "zIndex", 1), _ref3;
+  }, _defineProperty(_ref3, alignToControl(placement), '100%'), _defineProperty(_ref3, "backgroundColor", colors.neutral0), _defineProperty(_ref3, "borderRadius", borderRadius), _defineProperty(_ref3, "boxShadow", '0 0 0 1px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1)'), _defineProperty(_ref3, "marginBottom", spacing.menuGutter), _defineProperty(_ref3, "marginTop", spacing.menuGutter), _defineProperty(_ref3, "position", 'absolute'), _defineProperty(_ref3, "width", '100%'), _defineProperty(_ref3, "zIndex", 1), _ref3;
 }; // NOTE: internal only
 
 var MenuPlacer =
@@ -32493,12 +32519,12 @@ function (_Component) {
 
     _this = _possibleConstructorReturn$c(this, (_getPrototypeOf2 = _getPrototypeOf(MenuPlacer)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "state", {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "state", {
       maxHeight: _this.props.maxMenuHeight,
       placement: null
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getPlacement", function (ref) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getPlacement", function (ref) {
       var _this$props = _this.props,
           minMenuHeight = _this$props.minMenuHeight,
           maxMenuHeight = _this$props.maxMenuHeight,
@@ -32525,7 +32551,7 @@ function (_Component) {
       _this.setState(state);
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getUpdatedProps", function () {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getUpdatedProps", function () {
       var menuPlacement = _this.props.menuPlacement;
       var placement = _this.state.placement || coercePlacement(menuPlacement);
       return _objectSpread$1({}, _this.props, {
@@ -32551,7 +32577,7 @@ function (_Component) {
   return MenuPlacer;
 }(React.Component);
 
-_defineProperty$1(MenuPlacer, "contextTypes", {
+_defineProperty(MenuPlacer, "contextTypes", {
   getPortalPlacement: PropTypes.func
 });
 
@@ -32691,11 +32717,11 @@ function (_Component2) {
 
     _this2 = _possibleConstructorReturn$c(this, (_getPrototypeOf3 = _getPrototypeOf(MenuPortal)).call.apply(_getPrototypeOf3, [this].concat(args)));
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this2)), "state", {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this2)), "state", {
       placement: null
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this2)), "getPortalPlacement", function (_ref7) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this2)), "getPortalPlacement", function (_ref7) {
       var placement = _ref7.placement;
       var initialPlacement = coercePlacement(_this2.props.menuPlacement); // avoid re-renders if the placement has not changed
 
@@ -32757,7 +32783,7 @@ function (_Component2) {
   return MenuPortal;
 }(React.Component);
 
-_defineProperty$1(MenuPortal, "childContextTypes", {
+_defineProperty(MenuPortal, "childContextTypes", {
   getPortalPlacement: PropTypes.func
 });
 
@@ -33316,9 +33342,9 @@ function (_Component) {
 
     _this = _possibleConstructorReturn$c(this, (_getPrototypeOf2 = _getPrototypeOf(ScrollLock)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "originalStyles", {});
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "originalStyles", {});
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "listenerOptions", {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "listenerOptions", {
       capture: false,
       passive: false
     });
@@ -33422,7 +33448,7 @@ function (_Component) {
   return ScrollLock;
 }(React.Component);
 
-_defineProperty$1(ScrollLock, "defaultProps", {
+_defineProperty(ScrollLock, "defaultProps", {
   accountForScrollbars: true
 });
 
@@ -33448,11 +33474,11 @@ function (_PureComponent) {
 
     _this = _possibleConstructorReturn$c(this, (_getPrototypeOf2 = _getPrototypeOf(ScrollBlock)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "state", {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "state", {
       touchScrollTarget: null
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getScrollTarget", function (ref) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getScrollTarget", function (ref) {
       if (ref === _this.state.touchScrollTarget) return;
 
       _this.setState({
@@ -33460,7 +33486,7 @@ function (_PureComponent) {
       });
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "blurSelectInput", function () {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "blurSelectInput", function () {
       if (document.activeElement) {
         document.activeElement.blur();
       }
@@ -33533,20 +33559,20 @@ function (_Component) {
 
     _this = _possibleConstructorReturn$c(this, (_getPrototypeOf2 = _getPrototypeOf(ScrollCaptor)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "isBottom", false);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "isBottom", false);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "isTop", false);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "isTop", false);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "scrollTarget", void 0);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "scrollTarget", void 0);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "touchStart", void 0);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "touchStart", void 0);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "cancelScroll", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "cancelScroll", function (event) {
       event.preventDefault();
       event.stopPropagation();
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "handleEventDelta", function (event, delta) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "handleEventDelta", function (event, delta) {
       var _this$props = _this.props,
           onBottomArrive = _this$props.onBottomArrive,
           onBottomLeave = _this$props.onBottomLeave,
@@ -33596,22 +33622,22 @@ function (_Component) {
       }
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onWheel", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onWheel", function (event) {
       _this.handleEventDelta(event, event.deltaY);
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onTouchStart", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onTouchStart", function (event) {
       // set touch start so we can calculate touchmove delta
       _this.touchStart = event.changedTouches[0].clientY;
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onTouchMove", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onTouchMove", function (event) {
       var deltaY = _this.touchStart - event.changedTouches[0].clientY;
 
       _this.handleEventDelta(event, deltaY);
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getScrollTarget", function (ref) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getScrollTarget", function (ref) {
       _this.scrollTarget = ref;
     });
 
@@ -33702,7 +33728,7 @@ function (_Component2) {
   return ScrollCaptorSwitch;
 }(React.Component);
 
-_defineProperty$1(ScrollCaptorSwitch, "defaultProps", {
+_defineProperty(ScrollCaptorSwitch, "defaultProps", {
   isEnabled: true
 });
 
@@ -34421,7 +34447,7 @@ function (_Component2) {
   return MultiValue;
 }(React.Component);
 
-_defineProperty$1(MultiValue, "defaultProps", {
+_defineProperty(MultiValue, "defaultProps", {
   cropWithEllipsis: true
 });
 
@@ -34702,7 +34728,7 @@ function (_Component) {
 
     _this = _possibleConstructorReturn$c(this, _getPrototypeOf(Select).call(this, _props));
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "state", {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "state", {
       ariaLiveSelection: '',
       ariaLiveContext: '',
       focusedOption: null,
@@ -34716,67 +34742,67 @@ function (_Component) {
       selectValue: []
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "blockOptionHover", false);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "blockOptionHover", false);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "isComposing", false);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "isComposing", false);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "clearFocusValueOnUpdate", false);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "clearFocusValueOnUpdate", false);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "commonProps", void 0);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "commonProps", void 0);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "components", void 0);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "components", void 0);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "hasGroups", false);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "hasGroups", false);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "initialTouchX", 0);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "initialTouchX", 0);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "initialTouchY", 0);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "initialTouchY", 0);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "inputIsHiddenAfterUpdate", void 0);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "inputIsHiddenAfterUpdate", void 0);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "instancePrefix", '');
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "instancePrefix", '');
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "openAfterFocus", false);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "openAfterFocus", false);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "scrollToFocusedOptionOnUpdate", false);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "scrollToFocusedOptionOnUpdate", false);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "userIsDragging", void 0);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "userIsDragging", void 0);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "controlRef", null);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "controlRef", null);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getControlRef", function (ref) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getControlRef", function (ref) {
       _this.controlRef = ref;
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "focusedOptionRef", null);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "focusedOptionRef", null);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getFocusedOptionRef", function (ref) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getFocusedOptionRef", function (ref) {
       _this.focusedOptionRef = ref;
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "menuListRef", null);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "menuListRef", null);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getMenuListRef", function (ref) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getMenuListRef", function (ref) {
       _this.menuListRef = ref;
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "inputRef", null);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "inputRef", null);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getInputRef", function (ref) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getInputRef", function (ref) {
       _this.inputRef = ref;
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "cacheComponents", function (components$$1) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "cacheComponents", function (components$$1) {
       _this.components = defaultComponents({
         components: components$$1
       });
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "focus", _this.focusInput);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "focus", _this.focusInput);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "blur", _this.blurInput);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "blur", _this.blurInput);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onChange", function (newValue, actionMeta) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onChange", function (newValue, actionMeta) {
       var _this$props = _this.props,
           onChange = _this$props.onChange,
           name = _this$props.name;
@@ -34785,7 +34811,7 @@ function (_Component) {
       }));
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "setValue", function (newValue) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "setValue", function (newValue) {
       var action = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'set-value';
       var option = arguments.length > 2 ? arguments[2] : undefined;
       var _this$props2 = _this.props,
@@ -34811,7 +34837,7 @@ function (_Component) {
       });
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "selectOption", function (newValue) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "selectOption", function (newValue) {
       var _this$props3 = _this.props,
           blurInputOnSelect = _this$props3.blurInputOnSelect,
           isMulti = _this$props3.isMulti;
@@ -34879,7 +34905,7 @@ function (_Component) {
       }
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "removeValue", function (removedValue) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "removeValue", function (removedValue) {
       var selectValue = _this.state.selectValue;
 
       var candidate = _this.getOptionValue(removedValue);
@@ -34901,7 +34927,7 @@ function (_Component) {
       _this.focusInput();
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "clearValue", function () {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "clearValue", function () {
       var isMulti = _this.props.isMulti;
 
       _this.onChange(isMulti ? [] : null, {
@@ -34909,7 +34935,7 @@ function (_Component) {
       });
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "popValue", function () {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "popValue", function () {
       var selectValue = _this.state.selectValue;
       var lastSelectedValue = selectValue[selectValue.length - 1];
 
@@ -34926,37 +34952,37 @@ function (_Component) {
       });
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getOptionLabel", function (data) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getOptionLabel", function (data) {
       return _this.props.getOptionLabel(data);
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getOptionValue", function (data) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getOptionValue", function (data) {
       return _this.props.getOptionValue(data);
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getStyles", function (key, props) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getStyles", function (key, props) {
       var base = defaultStyles[key](props);
       base.boxSizing = 'border-box';
       var custom = _this.props.styles[key];
       return custom ? custom(base, props) : base;
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getElementId", function (element) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getElementId", function (element) {
       return "".concat(_this.instancePrefix, "-").concat(element);
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getActiveDescendentId", function () {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getActiveDescendentId", function () {
       var menuIsOpen = _this.props.menuIsOpen;
       var _this$state = _this.state,
           menuOptions = _this$state.menuOptions,
           focusedOption = _this$state.focusedOption;
       if (!focusedOption || !menuIsOpen) return undefined;
-      var index$$1 = menuOptions.focusable.indexOf(focusedOption);
-      var option = menuOptions.render[index$$1];
+      var index = menuOptions.focusable.indexOf(focusedOption);
+      var option = menuOptions.render[index];
       return option && option.key;
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "announceAriaLiveSelection", function (_ref2) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "announceAriaLiveSelection", function (_ref2) {
       var event = _ref2.event,
           context = _ref2.context;
 
@@ -34965,7 +34991,7 @@ function (_Component) {
       });
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "announceAriaLiveContext", function (_ref3) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "announceAriaLiveContext", function (_ref3) {
       var event = _ref3.event,
           context = _ref3.context;
 
@@ -34976,7 +35002,7 @@ function (_Component) {
       });
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onMenuMouseDown", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onMenuMouseDown", function (event) {
       if (event.button !== 0) {
         return;
       }
@@ -34987,11 +35013,11 @@ function (_Component) {
       _this.focusInput();
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onMenuMouseMove", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onMenuMouseMove", function (event) {
       _this.blockOptionHover = false;
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onControlMouseDown", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onControlMouseDown", function (event) {
       var openMenuOnClick = _this.props.openMenuOnClick;
 
       if (!_this.state.isFocused) {
@@ -35017,7 +35043,7 @@ function (_Component) {
       }
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onDropdownIndicatorMouseDown", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onDropdownIndicatorMouseDown", function (event) {
       // ignore mouse events that weren't triggered by the primary button
       if (event && event.type === 'mousedown' && event.button !== 0) {
         return;
@@ -35042,7 +35068,7 @@ function (_Component) {
       event.stopPropagation();
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onClearIndicatorMouseDown", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onClearIndicatorMouseDown", function (event) {
       // ignore mouse events that weren't triggered by the primary button
       if (event && event.type === 'mousedown' && event.button !== 0) {
         return;
@@ -35057,7 +35083,7 @@ function (_Component) {
       });
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onScroll", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onScroll", function (event) {
       if (typeof _this.props.closeMenuOnScroll === 'boolean') {
         if (event.target instanceof HTMLElement && isDocumentElement(event.target)) {
           _this.props.onMenuClose();
@@ -35069,15 +35095,15 @@ function (_Component) {
       }
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onCompositionStart", function () {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onCompositionStart", function () {
       _this.isComposing = true;
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onCompositionEnd", function () {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onCompositionEnd", function () {
       _this.isComposing = false;
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onTouchStart", function (_ref4) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onTouchStart", function (_ref4) {
       var touches = _ref4.touches;
       var touch = touches.item(0);
 
@@ -35090,7 +35116,7 @@ function (_Component) {
       _this.userIsDragging = false;
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onTouchMove", function (_ref5) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onTouchMove", function (_ref5) {
       var touches = _ref5.touches;
       var touch = touches.item(0);
 
@@ -35104,7 +35130,7 @@ function (_Component) {
       _this.userIsDragging = deltaX > moveThreshold || deltaY > moveThreshold;
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onTouchEnd", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onTouchEnd", function (event) {
       if (_this.userIsDragging) return; // close the menu if the user taps outside
       // we're checking on event.target here instead of event.currentTarget, because we want to assert information
       // on events on child elements, not the document (which we've attached this handler to).
@@ -35118,25 +35144,25 @@ function (_Component) {
       _this.initialTouchY = 0;
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onControlTouchEnd", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onControlTouchEnd", function (event) {
       if (_this.userIsDragging) return;
 
       _this.onControlMouseDown(event);
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onClearIndicatorTouchEnd", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onClearIndicatorTouchEnd", function (event) {
       if (_this.userIsDragging) return;
 
       _this.onClearIndicatorMouseDown(event);
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onDropdownIndicatorTouchEnd", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onDropdownIndicatorTouchEnd", function (event) {
       if (_this.userIsDragging) return;
 
       _this.onDropdownIndicatorMouseDown(event);
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "handleInputChange", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "handleInputChange", function (event) {
       var inputValue = event.currentTarget.value;
       _this.inputIsHiddenAfterUpdate = false;
 
@@ -35147,7 +35173,7 @@ function (_Component) {
       _this.onMenuOpen();
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onInputFocus", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onInputFocus", function (event) {
       var _this$props5 = _this.props,
           isSearchable = _this$props5.isSearchable,
           isMulti = _this$props5.isMulti;
@@ -35177,7 +35203,7 @@ function (_Component) {
       _this.openAfterFocus = false;
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onInputBlur", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onInputBlur", function (event) {
       if (_this.menuListRef && _this.menuListRef.contains(document.activeElement)) {
         _this.inputRef.focus();
 
@@ -35200,7 +35226,7 @@ function (_Component) {
       });
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onOptionHover", function (focusedOption) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onOptionHover", function (focusedOption) {
       if (_this.blockOptionHover || _this.state.focusedOption === focusedOption) {
         return;
       }
@@ -35210,7 +35236,7 @@ function (_Component) {
       });
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "shouldHideSelectedOptions", function () {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "shouldHideSelectedOptions", function () {
       var _this$props6 = _this.props,
           hideSelectedOptions = _this$props6.hideSelectedOptions,
           isMulti = _this$props6.isMulti;
@@ -35218,7 +35244,7 @@ function (_Component) {
       return hideSelectedOptions;
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onKeyDown", function (event) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onKeyDown", function (event) {
       var _this$props7 = _this.props,
           isMulti = _this$props7.isMulti,
           backspaceRemovesValue = _this$props7.backspaceRemovesValue,
@@ -36444,7 +36470,7 @@ function (_Component) {
   return Select;
 }(React.Component);
 
-_defineProperty$1(Select, "defaultProps", defaultProps$15);
+_defineProperty(Select, "defaultProps", defaultProps$15);
 
 var defaultProps$1$1 = {
   defaultInputValue: '',
@@ -36473,15 +36499,15 @@ var manageState = function manageState(SelectComponent) {
 
       _this = _possibleConstructorReturn$c(this, (_getPrototypeOf2 = _getPrototypeOf(StateManager)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
-      _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "select", void 0);
+      _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "select", void 0);
 
-      _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "state", {
+      _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "state", {
         inputValue: _this.props.inputValue !== undefined ? _this.props.inputValue : _this.props.defaultInputValue,
         menuIsOpen: _this.props.menuIsOpen !== undefined ? _this.props.menuIsOpen : _this.props.defaultMenuIsOpen,
         value: _this.props.value !== undefined ? _this.props.value : _this.props.defaultValue
       });
 
-      _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onChange", function (value, actionMeta) {
+      _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onChange", function (value, actionMeta) {
         _this.callProp('onChange', value, actionMeta);
 
         _this.setState({
@@ -36489,7 +36515,7 @@ var manageState = function manageState(SelectComponent) {
         });
       });
 
-      _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onInputChange", function (value, actionMeta) {
+      _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onInputChange", function (value, actionMeta) {
         // TODO: for backwards compatibility, we allow the prop to return a new
         // value, but now inputValue is a controllable prop we probably shouldn't
         var newValue = _this.callProp('onInputChange', value, actionMeta);
@@ -36499,7 +36525,7 @@ var manageState = function manageState(SelectComponent) {
         });
       });
 
-      _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onMenuOpen", function () {
+      _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onMenuOpen", function () {
         _this.callProp('onMenuOpen');
 
         _this.setState({
@@ -36507,7 +36533,7 @@ var manageState = function manageState(SelectComponent) {
         });
       });
 
-      _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onMenuClose", function () {
+      _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onMenuClose", function () {
         _this.callProp('onMenuClose');
 
         _this.setState({
@@ -36575,7 +36601,7 @@ var manageState = function manageState(SelectComponent) {
     }]);
 
     return StateManager;
-  }(React.Component), _defineProperty$1(_class, "defaultProps", defaultProps$1$1), _temp;
+  }(React.Component), _defineProperty(_class, "defaultProps", defaultProps$1$1), _temp;
 };
 
 var defaultProps$2$1 = {
@@ -36598,15 +36624,15 @@ var makeAsyncSelect = function makeAsyncSelect(SelectComponent) {
 
       _this = _possibleConstructorReturn$c(this, _getPrototypeOf(Async).call(this));
 
-      _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "select", void 0);
+      _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "select", void 0);
 
-      _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "lastRequest", void 0);
+      _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "lastRequest", void 0);
 
-      _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "mounted", false);
+      _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "mounted", false);
 
-      _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "optionsCache", {});
+      _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "optionsCache", {});
 
-      _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "handleInputChange", function (newValue, actionMeta) {
+      _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "handleInputChange", function (newValue, actionMeta) {
         var _this$props = _this.props,
             cacheOptions = _this$props.cacheOptions,
             onInputChange = _this$props.onInputChange; // TODO
@@ -36768,7 +36794,7 @@ var makeAsyncSelect = function makeAsyncSelect(SelectComponent) {
     }]);
 
     return Async;
-  }(React.Component), _defineProperty$1(_class, "defaultProps", defaultProps$2$1), _temp;
+  }(React.Component), _defineProperty(_class, "defaultProps", defaultProps$2$1), _temp;
 };
 var SelectState = manageState(Select);
 var Async = makeAsyncSelect(SelectState);
@@ -36820,9 +36846,9 @@ var makeCreatableSelect = function makeCreatableSelect(SelectComponent) {
 
       _this = _possibleConstructorReturn$c(this, _getPrototypeOf(Creatable).call(this, props));
 
-      _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "select", void 0);
+      _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "select", void 0);
 
-      _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onChange", function (newValue, actionMeta) {
+      _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "onChange", function (newValue, actionMeta) {
         var _this$props = _this.props,
             getNewOptionData = _this$props.getNewOptionData,
             inputValue = _this$props.inputValue,
@@ -36919,7 +36945,7 @@ var makeCreatableSelect = function makeCreatableSelect(SelectComponent) {
     }]);
 
     return Creatable;
-  }(React.Component), _defineProperty$1(_class, "defaultProps", defaultProps$3$1), _temp;
+  }(React.Component), _defineProperty(_class, "defaultProps", defaultProps$3$1), _temp;
 }; // TODO: do this in package entrypoint
 
 var SelectCreatable = makeCreatableSelect(Select);
@@ -37005,15 +37031,15 @@ function (_Component) {
 
     _this = _possibleConstructorReturn$c(this, (_getPrototypeOf2 = _getPrototypeOf(Collapse)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "duration", collapseDuration);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "duration", collapseDuration);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "rafID", void 0);
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "rafID", void 0);
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "state", {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "state", {
       width: 'auto'
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "transition", {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "transition", {
       exiting: {
         width: 0,
         transition: "width ".concat(_this.duration, "ms ease-out")
@@ -37023,7 +37049,7 @@ function (_Component) {
       }
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getWidth", function (ref) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getWidth", function (ref) {
       if (ref && isNaN(_this.state.width)) {
         /*
           Here we're invoking requestAnimationFrame with a callback invoking our
@@ -37044,7 +37070,7 @@ function (_Component) {
       }
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getStyle", function (width) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getStyle", function (width) {
       return {
         overflow: 'hidden',
         whiteSpace: 'nowrap',
@@ -37052,7 +37078,7 @@ function (_Component) {
       };
     });
 
-    _defineProperty$1(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getTransition", function (state) {
+    _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "getTransition", function (state) {
       return _this.transition[state];
     });
 
@@ -37165,7 +37191,7 @@ var MultiValue$1 = AnimatedComponents.MultiValue;
 var Placeholder$1 = AnimatedComponents.Placeholder;
 var SingleValue$1 = AnimatedComponents.SingleValue;
 var ValueContainer$1 = AnimatedComponents.ValueContainer;
-var index$8 = memoizeOne(makeAnimated, exportedEqual);
+var index$a = memoizeOne(makeAnimated, exportedEqual);
 
 var index$1$1 = manageState(Select);
 
