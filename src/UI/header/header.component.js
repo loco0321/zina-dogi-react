@@ -99,7 +99,7 @@ Header.propTypes = {
     className: PropTypes.string,
     logo: PropTypes.string,
     user: PropTypes.object,
-    extraMenu: PropTypes.any,
+    extraMenu: PropTypes.element,
     onLogout: PropTypes.func,
     toggleDrawer: PropTypes.func,
 };
