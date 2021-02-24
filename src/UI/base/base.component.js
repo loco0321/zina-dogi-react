@@ -1,17 +1,15 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-import ErrorBoundary from "../bonduary/ErrorBonduary";
-import Drawer, {
-    DrawerContainer,
-    MainContentContainer
-} from "react-swipeable-drawer";
-import Header from "../header/header.component";
-import Menu, { config_propType } from "../menu/menu.component";
-import Icon from "../icon/icon.component";
-import Button from "../button/button.component";
-import BarLoader from "react-spinners/BarLoader";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import ErrorBoundary from '../bonduary/ErrorBonduary';
+import Drawer, { DrawerContainer, MainContentContainer } from 'react-swipeable-drawer';
+import Header from '../header/header.component'
+import Menu, { config_propType } from '../menu/menu.component';
+import Icon from '../icon/icon.component'
+import Button from '../button/button.component';
+import BarLoader from 'react-spinners/BarLoader';
 import { ZinaCard } from "./zinaCard.component";
+
 
 class Base extends Component {
     static propTypes = {
@@ -21,7 +19,7 @@ class Base extends Component {
         notifiable: PropTypes.bool,
 
         extraProps: PropTypes.shape({
-            extraMenu: PropTypes.any,
+            extraMenu: PropTypes.func,
             user: PropTypes.object.isRequired,
             logo: PropTypes.string.isRequired,
             config: config_propType,
@@ -31,32 +29,31 @@ class Base extends Component {
                 list: PropTypes.array.isRequired
             }),
             logout: PropTypes.func.isRequired,
-            copyright: PropTypes.any
         }).isRequired
     };
 
     static defaultProps = {
         showUserMenu: true,
-        notifiable: true
-    };
+        notifiable: true,
+    }
 
     constructor(props) {
         super(props);
         this.state = {
             drawerSize: this._computeSize()
-        };
+        }
     }
 
     componentDidMount() {
         const { title } = this.props;
-        document.title = `ZINA${title ? ` | ${title}` : ""}`;
-        window.addEventListener("resize", this._onChangeSize);
+        document.title = `ZINA${title ? ` | ${title}` : ''}`;
+        window.addEventListener('resize', this._onChangeSize);
     }
 
     componentDidUpdate(prevProps) {
         const { title } = this.props;
         if (title !== prevProps.title) {
-            document.title = `ZINA${title ? ` | ${title}` : ""}`;
+            document.title = `ZINA${title ? ` | ${title}` : ''}`;
         }
     }
 
@@ -65,25 +62,12 @@ class Base extends Component {
     }
 
     render() {
-        const {
-            children,
-            title,
-            loading,
-            className,
-            extraProps: {
-                user,
-                logo,
-                config,
-                extraMenu,
-                notification,
-                copyright
-            }
-        } = this.props;
+        const { children, title, loading, className, extraProps: { user, logo, config, extraMenu, notification, copyright } } = this.props;
         let childrens = children ? children : null;
         if (childrens) {
             childrens = Array.isArray(childrens)
                 ? childrens
-                : [this.props.children];
+                : [this.props.children]
         }
         return (
             <ErrorBoundary>
@@ -91,16 +75,16 @@ class Base extends Component {
                     <div className="loading">
                         Loading ...
                         <BarLoader
-                            sizeUnit={"px"}
+                            sizeUnit={'px'}
                             size={250}
-                            color={"#fff"}
+                            color={'#fff'}
                             loading={true}
                         />
                     </div>
                 )}
-                <div className={["zina", className].join(" ")}>
+                <div className={['zina', className].join(' ')}>
                     <Drawer position="left" size={this.state.drawerSize}>
-                        {args => {
+                        {(args) => {
                             const {
                                 position,
                                 size,
@@ -113,7 +97,7 @@ class Base extends Component {
                                 handleTouchEnd
                             } = args;
                             return (
-                                <div style={{ height: "100%" }}>
+                                <div style={{ height: '100%' }}>
                                     <DrawerContainer
                                         position={position}
                                         size={size}
@@ -128,9 +112,7 @@ class Base extends Component {
                                                 <div className="navbar navbar-dark header">
                                                     <div className="menu-btn">
                                                         <Button
-                                                            onClick={
-                                                                toggleDrawer
-                                                            }
+                                                            onClick={toggleDrawer}
                                                             icon="bars"
                                                         ></Button>
                                                     </div>
@@ -144,11 +126,7 @@ class Base extends Component {
                                                         </Link>
                                                     </div>
                                                 </div>
-                                                <Menu
-                                                    show
-                                                    config={config}
-                                                    toggleDrawer={toggleDrawer}
-                                                />
+                                                <Menu show config={config} toggleDrawer={toggleDrawer} />
                                             </div>
                                         }
                                     />
@@ -156,20 +134,10 @@ class Base extends Component {
                                         translation={translation}
                                         mainContentScroll={mainContentScroll}
                                     >
-                                        {this.renderContent(
-                                            toggleDrawer,
-                                            user,
-                                            logo,
-                                            extraMenu,
-                                            notification,
-                                            config,
-                                            title,
-                                            childrens,
-                                            copyright
-                                        )}
+                                        {this.renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens, copyright)}
                                     </MainContentContainer>
                                 </div>
-                            );
+                            )
                         }}
                     </Drawer>
                 </div>
@@ -179,15 +147,16 @@ class Base extends Component {
 
     _computeChildrens = childrens => {
         if (childrens) {
-            return React.Children.toArray(childrens).map((child, index) => {
-                const op = {
-                    className: "zina_card",
-                    key: `zina_card_${index}`
-                };
-                return <ZinaCard {...op}>{child}</ZinaCard>;
-            });
+            return React.Children.toArray(childrens)
+                .map((child, index) => {
+                    const op = {
+                        className: 'zina_card',
+                        key: `zina_card_${index}`
+                    };
+                    return (<ZinaCard {...op}>{child}</ZinaCard>);
+                });
         }
-        return null;
+        return null
     };
     _computeSize = (size = 250) => (size * 100) / window.innerWidth;
 
@@ -199,7 +168,7 @@ class Base extends Component {
     _onChangeSize = () => {
         const drawerSize = this._computeSize();
         if (this.state.drawerSize !== drawerSize) {
-            this.setState({ drawerSize });
+            this.setState({ drawerSize })
         }
     };
 
@@ -208,7 +177,7 @@ class Base extends Component {
             const items = this.props.breadcrumbs.map((breadcrumb, index) => {
                 const op = {
                     key: `breadcrumb_${index}`,
-                    className: "breadcrumb-item"
+                    className: 'breadcrumb-item'
                 };
                 if (breadcrumb.rel) {
                     return (
@@ -216,7 +185,7 @@ class Base extends Component {
                             <Link to={breadcrumb.rel}>
                                 {breadcrumb.icon && (
                                     <Icon icon={breadcrumb.icon} />
-                                )}{" "}
+                                )}{' '}
                                 {breadcrumb.name}
                             </Link>
                         </li>
@@ -224,12 +193,14 @@ class Base extends Component {
                 } else {
                     const op2 = {
                         ...op,
-                        className: op.className + " active",
-                        "aria-current": "page"
+                        className: op.className + ' active',
+                        'aria-current': 'page'
                     };
                     return (
                         <li {...op2}>
-                            {breadcrumb.icon && <Icon icon={breadcrumb.icon} />}
+                            {breadcrumb.icon && (
+                                <Icon icon={breadcrumb.icon} />
+                            )}
                             {breadcrumb.name}
                         </li>
                     );
@@ -243,59 +214,47 @@ class Base extends Component {
         }
     };
 
-    renderContent(
-        toggleDrawer,
-        user,
-        logo,
-        extraMenu,
-        notification,
-        config,
-        title,
-        childrens,
-        copyright
-    ) {
-        return (
-            <div className="content">
-                <Header
-                    notifiable={this.props.notifiable}
-                    showUserMenu={this.props.showUserMenu}
-                    toggleDrawer={toggleDrawer}
-                    onLogout={this._onLogout}
-                    user={user}
-                    logo={logo}
-                    extraMenu={extraMenu}
-                    notification={notification}
-                />
-                <div className="maincontent">
-                    <div className="menu">
-                        <Menu config={config} toggleDrawer={toggleDrawer} />
-                    </div>
-                    <div className="sheet">
-                        {this._computeBreadcrumb()}
-                        <div className="container-fluid">
-                            <div className="panel">
-                                {title && <h3>{title}</h3>}
-                                <div className="page-content">
-                                    {this._computeChildrens(childrens)}
-                                </div>
+    renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens, copyright) {
+        return <div className="content">
+            <Header 
+                notifiable={this.props.notifiable}
+                showUserMenu={this.props.showUserMenu}
+                toggleDrawer={toggleDrawer}
+                onLogout={this._onLogout}
+                user={user}
+                logo={logo}
+                extraMenu={extraMenu}
+                notification={notification}
+            />
+            <div className="maincontent">
+                <div className="menu">
+                    <Menu config={config} toggleDrawer={toggleDrawer} />
+                </div>
+                <div className="sheet">
+                    {this._computeBreadcrumb()}
+                    <div className="container-fluid">
+                        <div className="panel">
+                            {title && <h3>{title}</h3>}
+                            <div className="page-content">
+                                {this._computeChildrens(childrens)}
                             </div>
                         </div>
                     </div>
                 </div>
-                <footer>
-                    <span className="menu" />
-                    {copyright ? (
-                        <span className="legend">{copyright}</span>
-                    ) : (
-                        <span className="legend">
-                            Copyright <b>NOKIA</b> {new Date().getFullYear()} |
-                            Powered by <b>ZINA</b>
-                        </span>
-                    )}
-                </footer>
             </div>
-        );
+            <footer>
+                <span className="menu" />
+                {!copyright && <span className="legend">
+                    Copyright <b>NOKIA</b> {new Date().getFullYear()} | Powered by <b>ZINA</b>
+                </span>}
+                {copyright && <span className="legend">
+                    {copyright}
+                </span>}
+            </footer>
+        </div>;
     }
 }
 
 export default Base;
+
+
