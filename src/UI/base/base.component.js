@@ -19,7 +19,7 @@ class Base extends Component {
         notifiable: PropTypes.bool,
 
         extraProps: PropTypes.shape({
-            extraMenu: PropTypes.func,
+            extraMenu: PropTypes.any,
             user: PropTypes.object.isRequired,
             logo: PropTypes.string.isRequired,
             config: config_propType,
@@ -29,6 +29,7 @@ class Base extends Component {
                 list: PropTypes.array.isRequired
             }),
             logout: PropTypes.func.isRequired,
+            copyright: PropTypes.any
         }).isRequired
     };
 

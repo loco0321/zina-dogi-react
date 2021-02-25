@@ -1,6 +1,6 @@
 $nokia_pure_headline: 'Nokia Pure Headline';
-$path: '../node_modules/zina-dogi-react/src/assets/fonts/NokiaPureHeadline-Webfont';
-$fa-font-path: '../node_modules/zina-dogi-react/src/assets/fonts/webfonts';
+$path: '~zina-dogi-react/src/assets/fonts/NokiaPureHeadline-Webfont';
+$fa-font-path: '~zina-dogi-react/src/assets/fonts/webfonts';
 @include font-face(
     $nokia_pure_headline,
     'NokiaPureHeadline-UltraLight',
