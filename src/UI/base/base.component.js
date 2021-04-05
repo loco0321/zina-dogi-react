@@ -26,7 +26,8 @@ class Base extends Component {
             notification: PropTypes.shape({
                 page: PropTypes.string,
                 component: PropTypes.func,
-                list: PropTypes.array.isRequired
+                list: PropTypes.array.isRequired,
+                size: PropTypes.number,
             }),
             logout: PropTypes.func.isRequired,
             copyright: PropTypes.any

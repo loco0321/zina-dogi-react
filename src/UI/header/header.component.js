@@ -1,18 +1,18 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import React from "react";
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 import {
     UncontrolledDropdown,
     DropdownToggle,
     DropdownMenu,
     DropdownItem,
     Button
-} from 'reactstrap';
-import Icon from '../icon/icon.component'
-import Notification from '../notification/notification.component';
-import NotificationPanel from '../notification/notification_panel.component';
+} from "reactstrap";
+import Icon from "../icon/icon.component";
+import Notification from "../notification/notification.component";
+import NotificationPanel from "../notification/notification_panel.component";
 // styles
-import './header.scss';
+import "./header.scss";
 const Header = ({
     onLogout,
     user,
@@ -25,7 +25,7 @@ const Header = ({
     userMenuItems,
     className
 }) => {
-    let fullName = 'Zina User';
+    let fullName = "Zina User";
     if (user) {
         if (user.first_name && user.last_name) {
             fullName = `${user.first_name} ${user.last_name}`;
@@ -33,7 +33,7 @@ const Header = ({
             fullName = user.username;
         }
     }
-    className = ['navbar', 'navbar-dark', 'header', className].join(' ');
+    className = ["navbar", "navbar-dark", "header", className].join(" ");
     return (
         <nav className={className}>
             <div className="navbar-brand">
@@ -45,7 +45,6 @@ const Header = ({
                 <Link to="/">
                     <img className="logo" src={logo} alt="zina" />
                 </Link>
-                
             </div>
             <div className="controls">
                 {extraMenu}
@@ -54,35 +53,53 @@ const Header = ({
                         <DropdownToggle tag="span">
                             <Icon icon="bell" />
                         </DropdownToggle>
-                        <NotificationPanel 
+                        <NotificationPanel
                             page={notification.page}
-                            size={notification.list? notification.list.length: 0}
+                            size={
+                                notification.size
+                                    ? notification.size
+                                    : notification.list
+                                    ? notification.list.length
+                                    : 0
+                            }
                         >
-                            {notification.list && notification.list.slice(0, 10).map((notification_item, index) =>{
-                                const ops = {
-                                    key:`notification_${index}`,
-                                    ...notification_item,
-                                    generalClick: notification.onClick,
-                                    index
-                                }
-                                if(notification.component){
-                                    const NotificationItem = notification.component;
-                                    return <NotificationItem {...ops} />    
-                                }else{
-                                    return <Notification {...ops} />
-                                }
-                                
-                            })}
+                            {notification.list &&
+                                notification.list
+                                    .slice(0, 10)
+                                    .map((notification_item, index) => {
+                                        const ops = {
+                                            key: `notification_${index}`,
+                                            ...notification_item,
+                                            generalClick: notification.onClick,
+                                            index
+                                        };
+                                        if (notification.component) {
+                                            const NotificationItem =
+                                                notification.component;
+                                            return (
+                                                <NotificationItem {...ops} />
+                                            );
+                                        } else {
+                                            return <Notification {...ops} />;
+                                        }
+                                    })}
                         </NotificationPanel>
                     </UncontrolledDropdown>
                 )}
                 {showUserMenu && (
-                    <UncontrolledDropdown setActiveFromChild className="custom-carets">
+                    <UncontrolledDropdown
+                        setActiveFromChild
+                        className="custom-carets"
+                    >
                         <DropdownToggle tag="a" caret>
                             <span className="user-name">{fullName}</span>
                         </DropdownToggle>
                         <DropdownMenu right>
-                            {!userMenuItems && (<DropdownItem onClick={onLogout}>Logout</DropdownItem>)}
+                            {!userMenuItems && (
+                                <DropdownItem onClick={onLogout}>
+                                    Logout
+                                </DropdownItem>
+                            )}
                             {userMenuItems && userMenuItems(onLogout)}
                         </DropdownMenu>
                     </UncontrolledDropdown>
@@ -92,7 +109,6 @@ const Header = ({
     );
 };
 
-
 Header.propTypes = {
     notifiable: PropTypes.bool,
     showUserMenu: PropTypes.bool,
@@ -101,11 +117,11 @@ Header.propTypes = {
     user: PropTypes.object,
     extraMenu: PropTypes.element,
     onLogout: PropTypes.func,
-    toggleDrawer: PropTypes.func,
+    toggleDrawer: PropTypes.func
 };
 
 Header.defaultProps = {
     notifiable: false,
-    showUserMenu: false,
+    showUserMenu: false
 };
 export default Header;
