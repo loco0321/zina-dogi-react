@@ -12261,57 +12261,57 @@ var Header = function Header(_ref) {
         userMenuItems = _ref.userMenuItems,
         className = _ref.className;
 
-    var fullName = 'Zina User';
+    var fullName = "Zina User";
     if (user) {
         if (user.first_name && user.last_name) {
-            fullName = user.first_name + ' ' + user.last_name;
+            fullName = user.first_name + " " + user.last_name;
         } else if (user.username) {
             fullName = user.username;
         }
     }
-    className = ['navbar', 'navbar-dark', 'header', className].join(' ');
+    className = ["navbar", "navbar-dark", "header", className].join(" ");
     return React.createElement(
-        'nav',
+        "nav",
         { className: className },
         React.createElement(
-            'div',
-            { className: 'navbar-brand' },
+            "div",
+            { className: "navbar-brand" },
             React.createElement(
-                'div',
-                { className: 'menu-btn' },
+                "div",
+                { className: "menu-btn" },
                 React.createElement(
                     Button,
                     { onClick: toggleDrawer },
-                    React.createElement(Icon, { icon: 'bars' })
+                    React.createElement(Icon, { icon: "bars" })
                 )
             ),
             React.createElement(
                 Link,
-                { to: '/' },
-                React.createElement('img', { className: 'logo', src: logo, alt: 'zina' })
+                { to: "/" },
+                React.createElement("img", { className: "logo", src: logo, alt: "zina" })
             )
         ),
         React.createElement(
-            'div',
-            { className: 'controls' },
+            "div",
+            { className: "controls" },
             extraMenu,
             notifiable && notification && React.createElement(
                 UncontrolledDropdown,
                 { setActiveFromChild: true },
                 React.createElement(
                     DropdownToggle,
-                    { tag: 'span' },
-                    React.createElement(Icon, { icon: 'bell' })
+                    { tag: "span" },
+                    React.createElement(Icon, { icon: "bell" })
                 ),
                 React.createElement(
                     NotificationPanel,
                     {
                         page: notification.page,
-                        size: notification.list ? notification.list.length : 0
+                        size: notification.size ? notification.size : notification.list ? notification.list.length : 0
                     },
                     notification.list && notification.list.slice(0, 10).map(function (notification_item, index) {
                         var ops = _extends$c({
-                            key: 'notification_' + index
+                            key: "notification_" + index
                         }, notification_item, {
                             generalClick: notification.onClick,
                             index: index
@@ -12327,13 +12327,16 @@ var Header = function Header(_ref) {
             ),
             showUserMenu && React.createElement(
                 UncontrolledDropdown,
-                { setActiveFromChild: true, className: 'custom-carets' },
+                {
+                    setActiveFromChild: true,
+                    className: "custom-carets"
+                },
                 React.createElement(
                     DropdownToggle,
-                    { tag: 'a', caret: true },
+                    { tag: "a", caret: true },
                     React.createElement(
-                        'span',
-                        { className: 'user-name' },
+                        "span",
+                        { className: "user-name" },
                         fullName
                     )
                 ),
@@ -12343,7 +12346,7 @@ var Header = function Header(_ref) {
                     !userMenuItems && React.createElement(
                         DropdownItem,
                         { onClick: onLogout },
-                        'Logout'
+                        "Logout"
                     ),
                     userMenuItems && userMenuItems(onLogout)
                 )
@@ -25500,7 +25503,8 @@ Base.propTypes = {
         notification: PropTypes.shape({
             page: PropTypes.string,
             component: PropTypes.func,
-            list: PropTypes.array.isRequired
+            list: PropTypes.array.isRequired,
+            size: PropTypes.number
         }),
         logout: PropTypes.func.isRequired,
         copyright: PropTypes.any
