@@ -29,6 +29,7 @@ class Base extends Component {
                 list: PropTypes.array.isRequired,
                 size: PropTypes.number,
             }),
+            userMenuItems: PropTypes.func,
             logout: PropTypes.func.isRequired,
             copyright: PropTypes.any
         }).isRequired
@@ -64,7 +65,7 @@ class Base extends Component {
     }
 
     render() {
-        const { children, title, loading, className, extraProps: { user, logo, config, extraMenu, notification, copyright } } = this.props;
+        const { children, title, loading, className, extraProps: { user, logo, config, extraMenu, notification, userMenuItems, copyright } } = this.props;
         let childrens = children ? children : null;
         if (childrens) {
             childrens = Array.isArray(childrens)
@@ -136,7 +137,7 @@ class Base extends Component {
                                         translation={translation}
                                         mainContentScroll={mainContentScroll}
                                     >
-                                        {this.renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens, copyright)}
+                                        {this.renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens, copyright, userMenuItems)}
                                     </MainContentContainer>
                                 </div>
                             )
@@ -216,7 +217,7 @@ class Base extends Component {
         }
     };
 
-    renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens, copyright) {
+    renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens, copyright, userMenuItems) {
         return <div className="content">
             <Header 
                 notifiable={this.props.notifiable}
@@ -227,6 +228,7 @@ class Base extends Component {
                 logo={logo}
                 extraMenu={extraMenu}
                 notification={notification}
+                userMenuItems={userMenuItems}
             />
             <div className="maincontent">
                 <div className="menu">

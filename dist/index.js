@@ -4,13 +4,45 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var warning = _interopDefault(require('warning'));
 var React = require('react');
 var React__default = _interopDefault(React);
 var PropTypes = _interopDefault(require('prop-types'));
 var ReactDOM = require('react-dom');
 var ReactDOM__default = _interopDefault(ReactDOM);
 var ReactDOMServer = _interopDefault(require('react-dom/server'));
+
+var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+function unwrapExports (x) {
+	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+}
+
+function createCommonjsModule(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
+
+var setPrototypeOf = createCommonjsModule(function (module) {
+function _setPrototypeOf(o, p) {
+  module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  module.exports["default"] = module.exports, module.exports.__esModule = true;
+  return _setPrototypeOf(o, p);
+}
+
+module.exports = _setPrototypeOf;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+});
+
+var setPrototypeOf$1 = unwrapExports(setPrototypeOf);
+
+function _inheritsLoose(subClass, superClass) {
+  subClass.prototype = Object.create(superClass.prototype);
+  subClass.prototype.constructor = subClass;
+  setPrototypeOf$1(subClass, superClass);
+}
 
 function _extends() {
   _extends = Object.assign || function (target) {
@@ -140,7 +172,7 @@ function valueEqual(a, b) {
 }
 
 var isProduction = process.env.NODE_ENV === 'production';
-function warning$1(condition, message) {
+function warning(condition, message) {
   if (!isProduction) {
     if (condition) {
       return;
@@ -282,7 +314,7 @@ function createTransitionManager() {
   var prompt = null;
 
   function setPrompt(nextPrompt) {
-    process.env.NODE_ENV !== "production" ? warning$1(prompt == null, 'A history supports only one prompt at a time') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(prompt == null, 'A history supports only one prompt at a time') : void 0;
     prompt = nextPrompt;
     return function () {
       if (prompt === nextPrompt) prompt = null;
@@ -300,7 +332,7 @@ function createTransitionManager() {
         if (typeof getUserConfirmation === 'function') {
           getUserConfirmation(result, callback);
         } else {
-          process.env.NODE_ENV !== "production" ? warning$1(false, 'A history needs a getUserConfirmation function in order to use a prompt message') : void 0;
+          process.env.NODE_ENV !== "production" ? warning(false, 'A history needs a getUserConfirmation function in order to use a prompt message') : void 0;
           callback(true);
         }
       } else {
@@ -436,7 +468,7 @@ function createBrowserHistory(props) {
         search = _window$location.search,
         hash = _window$location.hash;
     var path = pathname + search + hash;
-    process.env.NODE_ENV !== "production" ? warning$1(!basename || hasBasename(path, basename), 'You are attempting to use a basename on a page whose URL path does not begin ' + 'with the basename. Expected path "' + path + '" to begin with "' + basename + '".') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!basename || hasBasename(path, basename), 'You are attempting to use a basename on a page whose URL path does not begin ' + 'with the basename. Expected path "' + path + '" to begin with "' + basename + '".') : void 0;
     if (basename) path = stripBasename(path, basename);
     return createLocation(path, state, key);
   }
@@ -510,7 +542,7 @@ function createBrowserHistory(props) {
   }
 
   function push(path, state) {
-    process.env.NODE_ENV !== "production" ? warning$1(!(typeof path === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to push when the 1st ' + 'argument is a location-like object that already has state; it is ignored') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(typeof path === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to push when the 1st ' + 'argument is a location-like object that already has state; it is ignored') : void 0;
     var action = 'PUSH';
     var location = createLocation(path, state, createKey(), history.location);
     transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
@@ -538,14 +570,14 @@ function createBrowserHistory(props) {
           });
         }
       } else {
-        process.env.NODE_ENV !== "production" ? warning$1(state === undefined, 'Browser history cannot push state in browsers that do not support HTML5 history') : void 0;
+        process.env.NODE_ENV !== "production" ? warning(state === undefined, 'Browser history cannot push state in browsers that do not support HTML5 history') : void 0;
         window.location.href = href;
       }
     });
   }
 
   function replace(path, state) {
-    process.env.NODE_ENV !== "production" ? warning$1(!(typeof path === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to replace when the 1st ' + 'argument is a location-like object that already has state; it is ignored') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(typeof path === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to replace when the 1st ' + 'argument is a location-like object that already has state; it is ignored') : void 0;
     var action = 'REPLACE';
     var location = createLocation(path, state, createKey(), history.location);
     transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
@@ -571,7 +603,7 @@ function createBrowserHistory(props) {
           });
         }
       } else {
-        process.env.NODE_ENV !== "production" ? warning$1(state === undefined, 'Browser history cannot replace state in browsers that do not support HTML5 history') : void 0;
+        process.env.NODE_ENV !== "production" ? warning(state === undefined, 'Browser history cannot replace state in browsers that do not support HTML5 history') : void 0;
         window.location.replace(href);
       }
     });
@@ -713,7 +745,7 @@ function createHashHistory(props) {
 
   function getDOMLocation() {
     var path = decodePath(getHashPath());
-    process.env.NODE_ENV !== "production" ? warning$1(!basename || hasBasename(path, basename), 'You are attempting to use a basename on a page whose URL path does not begin ' + 'with the basename. Expected path "' + path + '" to begin with "' + basename + '".') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!basename || hasBasename(path, basename), 'You are attempting to use a basename on a page whose URL path does not begin ' + 'with the basename. Expected path "' + path + '" to begin with "' + basename + '".') : void 0;
     if (basename) path = stripBasename(path, basename);
     return createLocation(path);
   }
@@ -808,7 +840,7 @@ function createHashHistory(props) {
   }
 
   function push(path, state) {
-    process.env.NODE_ENV !== "production" ? warning$1(state === undefined, 'Hash history cannot push state; it is ignored') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(state === undefined, 'Hash history cannot push state; it is ignored') : void 0;
     var action = 'PUSH';
     var location = createLocation(path, undefined, undefined, history.location);
     transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
@@ -832,14 +864,14 @@ function createHashHistory(props) {
           location: location
         });
       } else {
-        process.env.NODE_ENV !== "production" ? warning$1(false, 'Hash history cannot PUSH the same path; a new entry will not be added to the history stack') : void 0;
+        process.env.NODE_ENV !== "production" ? warning(false, 'Hash history cannot PUSH the same path; a new entry will not be added to the history stack') : void 0;
         setState();
       }
     });
   }
 
   function replace(path, state) {
-    process.env.NODE_ENV !== "production" ? warning$1(state === undefined, 'Hash history cannot replace state; it is ignored') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(state === undefined, 'Hash history cannot replace state; it is ignored') : void 0;
     var action = 'REPLACE';
     var location = createLocation(path, undefined, undefined, history.location);
     transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
@@ -866,7 +898,7 @@ function createHashHistory(props) {
   }
 
   function go(n) {
-    process.env.NODE_ENV !== "production" ? warning$1(canGoWithoutReload, 'Hash history go(n) causes a full page reload in this browser') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(canGoWithoutReload, 'Hash history go(n) causes a full page reload in this browser') : void 0;
     globalHistory.go(n);
   }
 
@@ -981,7 +1013,7 @@ function createMemoryHistory(props) {
   var createHref = createPath;
 
   function push(path, state) {
-    process.env.NODE_ENV !== "production" ? warning$1(!(typeof path === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to push when the 1st ' + 'argument is a location-like object that already has state; it is ignored') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(typeof path === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to push when the 1st ' + 'argument is a location-like object that already has state; it is ignored') : void 0;
     var action = 'PUSH';
     var location = createLocation(path, state, createKey(), history.location);
     transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
@@ -1006,7 +1038,7 @@ function createMemoryHistory(props) {
   }
 
   function replace(path, state) {
-    process.env.NODE_ENV !== "production" ? warning$1(!(typeof path === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to replace when the 1st ' + 'argument is a location-like object that already has state; it is ignored') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(typeof path === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to replace when the 1st ' + 'argument is a location-like object that already has state; it is ignored') : void 0;
     var action = 'REPLACE';
     var location = createLocation(path, state, createKey(), history.location);
     transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
@@ -1082,385 +1114,175 @@ function createMemoryHistory(props) {
   return history;
 }
 
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
+var MAX_SIGNED_31_BIT_INT = 1073741823;
+var commonjsGlobal$1 = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : {};
 
-/**
- * Use invariant() to assert state which your program assumes to be true.
- *
- * Provide sprintf-style format (only %s is supported) and arguments
- * to provide information about what broke and what you were
- * expecting.
- *
- * The invariant message will be stripped in production, but the invariant
- * will remain to ensure logic does not differ in production.
- */
+function getUniqueId() {
+  var key = '__global_unique_id__';
+  return commonjsGlobal$1[key] = (commonjsGlobal$1[key] || 0) + 1;
+}
 
-var NODE_ENV = process.env.NODE_ENV;
-
-var invariant$1 = function(condition, format, a, b, c, d, e, f) {
-  if (NODE_ENV !== 'production') {
-    if (format === undefined) {
-      throw new Error('invariant requires an error message argument');
-    }
+function objectIs(x, y) {
+  if (x === y) {
+    return x !== 0 || 1 / x === 1 / y;
+  } else {
+    return x !== x && y !== y;
   }
+}
 
-  if (!condition) {
-    var error;
-    if (format === undefined) {
-      error = new Error(
-        'Minified exception occurred; use the non-minified dev environment ' +
-        'for the full error message and additional helpful warnings.'
-      );
-    } else {
-      var args = [a, b, c, d, e, f];
-      var argIndex = 0;
-      error = new Error(
-        format.replace(/%s/g, function() { return args[argIndex++]; })
-      );
-      error.name = 'Invariant Violation';
-    }
-
-    error.framesToPop = 1; // we don't care about invariant's own frame
-    throw error;
-  }
-};
-
-var invariant_1 = invariant$1;
-
-var _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * The public API for putting history on context.
- */
-
-var Router = function (_React$Component) {
-  _inherits(Router, _React$Component);
-
-  function Router() {
-    var _temp, _this, _ret;
-
-    _classCallCheck(this, Router);
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, _React$Component.call.apply(_React$Component, [this].concat(args))), _this), _this.state = {
-      match: _this.computeMatch(_this.props.history.location.pathname)
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
-
-  Router.prototype.getChildContext = function getChildContext() {
-    return {
-      router: _extends$1({}, this.context.router, {
-        history: this.props.history,
-        route: {
-          location: this.props.history.location,
-          match: this.state.match
-        }
-      })
-    };
-  };
-
-  Router.prototype.computeMatch = function computeMatch(pathname) {
-    return {
-      path: "/",
-      url: "/",
-      params: {},
-      isExact: pathname === "/"
-    };
-  };
-
-  Router.prototype.componentWillMount = function componentWillMount() {
-    var _this2 = this;
-
-    var _props = this.props,
-        children = _props.children,
-        history = _props.history;
-
-
-    invariant_1(children == null || React__default.Children.count(children) === 1, "A <Router> may have only one child element");
-
-    // Do this here so we can setState when a <Redirect> changes the
-    // location in componentWillMount. This happens e.g. when doing
-    // server rendering using a <StaticRouter>.
-    this.unlisten = history.listen(function () {
-      _this2.setState({
-        match: _this2.computeMatch(history.location.pathname)
+function createEventEmitter(value) {
+  var handlers = [];
+  return {
+    on: function on(handler) {
+      handlers.push(handler);
+    },
+    off: function off(handler) {
+      handlers = handlers.filter(function (h) {
+        return h !== handler;
       });
-    });
+    },
+    get: function get() {
+      return value;
+    },
+    set: function set(newValue, changedBits) {
+      value = newValue;
+      handlers.forEach(function (handler) {
+        return handler(value, changedBits);
+      });
+    }
   };
+}
 
-  Router.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
-    warning(this.props.history === nextProps.history, "You cannot change <Router history>");
-  };
+function onlyChild(children) {
+  return Array.isArray(children) ? children[0] : children;
+}
 
-  Router.prototype.componentWillUnmount = function componentWillUnmount() {
-    this.unlisten();
-  };
+function createReactContext(defaultValue, calculateChangedBits) {
+  var _Provider$childContex, _Consumer$contextType;
 
-  Router.prototype.render = function render() {
-    var children = this.props.children;
+  var contextProp = '__create-react-context-' + getUniqueId() + '__';
 
-    return children ? React__default.Children.only(children) : null;
-  };
+  var Provider = /*#__PURE__*/function (_Component) {
+    _inheritsLoose(Provider, _Component);
 
-  return Router;
-}(React__default.Component);
+    function Provider() {
+      var _this;
 
-Router.propTypes = {
-  history: PropTypes.object.isRequired,
-  children: PropTypes.node
-};
-Router.contextTypes = {
-  router: PropTypes.object
-};
-Router.childContextTypes = {
-  router: PropTypes.object.isRequired
-};
-
-// Written in this round about way for babel-transform-imports
-
-function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn$1(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits$1(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * The public API for a <Router> that uses HTML5 history.
- */
-
-var BrowserRouter = function (_React$Component) {
-  _inherits$1(BrowserRouter, _React$Component);
-
-  function BrowserRouter() {
-    var _temp, _this, _ret;
-
-    _classCallCheck$1(this, BrowserRouter);
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+      _this = _Component.apply(this, arguments) || this;
+      _this.emitter = createEventEmitter(_this.props.value);
+      return _this;
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn$1(this, _React$Component.call.apply(_React$Component, [this].concat(args))), _this), _this.history = createBrowserHistory(_this.props), _temp), _possibleConstructorReturn$1(_this, _ret);
-  }
+    var _proto = Provider.prototype;
 
-  BrowserRouter.prototype.componentWillMount = function componentWillMount() {
-    warning(!this.props.history, "<BrowserRouter> ignores the history prop. To use a custom history, " + "use `import { Router }` instead of `import { BrowserRouter as Router }`.");
-  };
+    _proto.getChildContext = function getChildContext() {
+      var _ref;
 
-  BrowserRouter.prototype.render = function render() {
-    return React__default.createElement(Router, { history: this.history, children: this.props.children });
-  };
+      return _ref = {}, _ref[contextProp] = this.emitter, _ref;
+    };
 
-  return BrowserRouter;
-}(React__default.Component);
+    _proto.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+      if (this.props.value !== nextProps.value) {
+        var oldValue = this.props.value;
+        var newValue = nextProps.value;
+        var changedBits;
 
-BrowserRouter.propTypes = {
-  basename: PropTypes.string,
-  forceRefresh: PropTypes.bool,
-  getUserConfirmation: PropTypes.func,
-  keyLength: PropTypes.number,
-  children: PropTypes.node
-};
+        if (objectIs(oldValue, newValue)) {
+          changedBits = 0;
+        } else {
+          changedBits = typeof calculateChangedBits === 'function' ? calculateChangedBits(oldValue, newValue) : MAX_SIGNED_31_BIT_INT;
 
-function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+          if (process.env.NODE_ENV !== 'production') {
+            warning((changedBits & MAX_SIGNED_31_BIT_INT) === changedBits, 'calculateChangedBits: Expected the return value to be a ' + '31-bit integer. Instead received: ' + changedBits);
+          }
 
-function _possibleConstructorReturn$2(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+          changedBits |= 0;
 
-function _inherits$2(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * The public API for a <Router> that uses window.location.hash.
- */
-
-var HashRouter = function (_React$Component) {
-  _inherits$2(HashRouter, _React$Component);
-
-  function HashRouter() {
-    var _temp, _this, _ret;
-
-    _classCallCheck$2(this, HashRouter);
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn$2(this, _React$Component.call.apply(_React$Component, [this].concat(args))), _this), _this.history = createHashHistory(_this.props), _temp), _possibleConstructorReturn$2(_this, _ret);
-  }
-
-  HashRouter.prototype.componentWillMount = function componentWillMount() {
-    warning(!this.props.history, "<HashRouter> ignores the history prop. To use a custom history, " + "use `import { Router }` instead of `import { HashRouter as Router }`.");
-  };
-
-  HashRouter.prototype.render = function render() {
-    return React__default.createElement(Router, { history: this.history, children: this.props.children });
-  };
-
-  return HashRouter;
-}(React__default.Component);
-
-HashRouter.propTypes = {
-  basename: PropTypes.string,
-  getUserConfirmation: PropTypes.func,
-  hashType: PropTypes.oneOf(["hashbang", "noslash", "slash"]),
-  children: PropTypes.node
-};
-
-var _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn$3(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits$3(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var isModifiedEvent = function isModifiedEvent(event) {
-  return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
-};
-
-/**
- * The public API for rendering a history-aware <a>.
- */
-
-var Link = function (_React$Component) {
-  _inherits$3(Link, _React$Component);
-
-  function Link() {
-    var _temp, _this, _ret;
-
-    _classCallCheck$3(this, Link);
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn$3(this, _React$Component.call.apply(_React$Component, [this].concat(args))), _this), _this.handleClick = function (event) {
-      if (_this.props.onClick) _this.props.onClick(event);
-
-      if (!event.defaultPrevented && // onClick prevented default
-      event.button === 0 && // ignore everything but left clicks
-      !_this.props.target && // let browser handle "target=_blank" etc.
-      !isModifiedEvent(event) // ignore clicks with modifier keys
-      ) {
-          event.preventDefault();
-
-          var history = _this.context.router.history;
-          var _this$props = _this.props,
-              replace = _this$props.replace,
-              to = _this$props.to;
-
-
-          if (replace) {
-            history.replace(to);
-          } else {
-            history.push(to);
+          if (changedBits !== 0) {
+            this.emitter.set(nextProps.value, changedBits);
           }
         }
-    }, _temp), _possibleConstructorReturn$3(_this, _ret);
-  }
+      }
+    };
 
-  Link.prototype.render = function render() {
-    var _props = this.props,
-        replace = _props.replace,
-        to = _props.to,
-        innerRef = _props.innerRef,
-        props = _objectWithoutProperties(_props, ["replace", "to", "innerRef"]); // eslint-disable-line no-unused-vars
+    _proto.render = function render() {
+      return this.props.children;
+    };
 
-    invariant_1(this.context.router, "You should not use <Link> outside a <Router>");
+    return Provider;
+  }(React.Component);
 
-    invariant_1(to !== undefined, 'You must specify the "to" property');
+  Provider.childContextTypes = (_Provider$childContex = {}, _Provider$childContex[contextProp] = PropTypes.object.isRequired, _Provider$childContex);
 
-    var history = this.context.router.history;
+  var Consumer = /*#__PURE__*/function (_Component2) {
+    _inheritsLoose(Consumer, _Component2);
 
-    var location = typeof to === "string" ? createLocation(to, null, null, history.location) : to;
+    function Consumer() {
+      var _this2;
 
-    var href = history.createHref(location);
-    return React__default.createElement("a", _extends$2({}, props, { onClick: this.handleClick, href: href, ref: innerRef }));
-  };
+      _this2 = _Component2.apply(this, arguments) || this;
+      _this2.state = {
+        value: _this2.getValue()
+      };
 
-  return Link;
-}(React__default.Component);
+      _this2.onUpdate = function (newValue, changedBits) {
+        var observedBits = _this2.observedBits | 0;
 
-Link.propTypes = {
-  onClick: PropTypes.func,
-  target: PropTypes.string,
-  replace: PropTypes.bool,
-  to: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-  innerRef: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
-};
-Link.defaultProps = {
-  replace: false
-};
-Link.contextTypes = {
-  router: PropTypes.shape({
-    history: PropTypes.shape({
-      push: PropTypes.func.isRequired,
-      replace: PropTypes.func.isRequired,
-      createHref: PropTypes.func.isRequired
-    }).isRequired
-  }).isRequired
-};
+        if ((observedBits & changedBits) !== 0) {
+          _this2.setState({
+            value: _this2.getValue()
+          });
+        }
+      };
 
-function _classCallCheck$4(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn$4(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits$4(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * The public API for a <Router> that stores location in memory.
- */
-
-var MemoryRouter = function (_React$Component) {
-  _inherits$4(MemoryRouter, _React$Component);
-
-  function MemoryRouter() {
-    var _temp, _this, _ret;
-
-    _classCallCheck$4(this, MemoryRouter);
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+      return _this2;
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn$4(this, _React$Component.call.apply(_React$Component, [this].concat(args))), _this), _this.history = createMemoryHistory(_this.props), _temp), _possibleConstructorReturn$4(_this, _ret);
-  }
+    var _proto2 = Consumer.prototype;
 
-  MemoryRouter.prototype.componentWillMount = function componentWillMount() {
-    warning(!this.props.history, "<MemoryRouter> ignores the history prop. To use a custom history, " + "use `import { Router }` instead of `import { MemoryRouter as Router }`.");
+    _proto2.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+      var observedBits = nextProps.observedBits;
+      this.observedBits = observedBits === undefined || observedBits === null ? MAX_SIGNED_31_BIT_INT : observedBits;
+    };
+
+    _proto2.componentDidMount = function componentDidMount() {
+      if (this.context[contextProp]) {
+        this.context[contextProp].on(this.onUpdate);
+      }
+
+      var observedBits = this.props.observedBits;
+      this.observedBits = observedBits === undefined || observedBits === null ? MAX_SIGNED_31_BIT_INT : observedBits;
+    };
+
+    _proto2.componentWillUnmount = function componentWillUnmount() {
+      if (this.context[contextProp]) {
+        this.context[contextProp].off(this.onUpdate);
+      }
+    };
+
+    _proto2.getValue = function getValue() {
+      if (this.context[contextProp]) {
+        return this.context[contextProp].get();
+      } else {
+        return defaultValue;
+      }
+    };
+
+    _proto2.render = function render() {
+      return onlyChild(this.props.children)(this.state.value);
+    };
+
+    return Consumer;
+  }(React.Component);
+
+  Consumer.contextTypes = (_Consumer$contextType = {}, _Consumer$contextType[contextProp] = PropTypes.object, _Consumer$contextType);
+  return {
+    Provider: Provider,
+    Consumer: Consumer
   };
+}
 
-  MemoryRouter.prototype.render = function render() {
-    return React__default.createElement(Router, { history: this.history, children: this.props.children });
-  };
-
-  return MemoryRouter;
-}(React__default.Component);
-
-MemoryRouter.propTypes = {
-  initialEntries: PropTypes.array,
-  initialIndex: PropTypes.number,
-  getUserConfirmation: PropTypes.func,
-  keyLength: PropTypes.number,
-  children: PropTypes.node
-};
-
-// Written in this round about way for babel-transform-imports
+var index = React__default.createContext || createReactContext;
 
 var isarray = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
@@ -1895,719 +1717,6 @@ pathToRegexp_1.compile = compile_1;
 pathToRegexp_1.tokensToFunction = tokensToFunction_1;
 pathToRegexp_1.tokensToRegExp = tokensToRegExp_1;
 
-var patternCache = {};
-var cacheLimit = 10000;
-var cacheCount = 0;
-
-var compilePath = function compilePath(pattern, options) {
-  var cacheKey = "" + options.end + options.strict + options.sensitive;
-  var cache = patternCache[cacheKey] || (patternCache[cacheKey] = {});
-
-  if (cache[pattern]) return cache[pattern];
-
-  var keys = [];
-  var re = pathToRegexp_1(pattern, keys, options);
-  var compiledPattern = { re: re, keys: keys };
-
-  if (cacheCount < cacheLimit) {
-    cache[pattern] = compiledPattern;
-    cacheCount++;
-  }
-
-  return compiledPattern;
-};
-
-/**
- * Public API for matching a URL pathname to a path pattern.
- */
-var matchPath = function matchPath(pathname) {
-  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var parent = arguments[2];
-
-  if (typeof options === "string") options = { path: options };
-
-  var _options = options,
-      path = _options.path,
-      _options$exact = _options.exact,
-      exact = _options$exact === undefined ? false : _options$exact,
-      _options$strict = _options.strict,
-      strict = _options$strict === undefined ? false : _options$strict,
-      _options$sensitive = _options.sensitive,
-      sensitive = _options$sensitive === undefined ? false : _options$sensitive;
-
-
-  if (path == null) return parent;
-
-  var _compilePath = compilePath(path, { end: exact, strict: strict, sensitive: sensitive }),
-      re = _compilePath.re,
-      keys = _compilePath.keys;
-
-  var match = re.exec(pathname);
-
-  if (!match) return null;
-
-  var url = match[0],
-      values = match.slice(1);
-
-  var isExact = pathname === url;
-
-  if (exact && !isExact) return null;
-
-  return {
-    path: path, // the path pattern used to match
-    url: path === "/" && url === "" ? "/" : url, // the matched portion of the URL
-    isExact: isExact, // whether or not we matched exactly
-    params: keys.reduce(function (memo, key, index) {
-      memo[key.name] = values[index];
-      return memo;
-    }, {})
-  };
-};
-
-var _extends$3 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-function _classCallCheck$5(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn$5(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits$5(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var isEmptyChildren = function isEmptyChildren(children) {
-  return React__default.Children.count(children) === 0;
-};
-
-/**
- * The public API for matching a single path and rendering.
- */
-
-var Route = function (_React$Component) {
-  _inherits$5(Route, _React$Component);
-
-  function Route() {
-    var _temp, _this, _ret;
-
-    _classCallCheck$5(this, Route);
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn$5(this, _React$Component.call.apply(_React$Component, [this].concat(args))), _this), _this.state = {
-      match: _this.computeMatch(_this.props, _this.context.router)
-    }, _temp), _possibleConstructorReturn$5(_this, _ret);
-  }
-
-  Route.prototype.getChildContext = function getChildContext() {
-    return {
-      router: _extends$3({}, this.context.router, {
-        route: {
-          location: this.props.location || this.context.router.route.location,
-          match: this.state.match
-        }
-      })
-    };
-  };
-
-  Route.prototype.computeMatch = function computeMatch(_ref, router) {
-    var computedMatch = _ref.computedMatch,
-        location = _ref.location,
-        path = _ref.path,
-        strict = _ref.strict,
-        exact = _ref.exact,
-        sensitive = _ref.sensitive;
-
-    if (computedMatch) return computedMatch; // <Switch> already computed the match for us
-
-    invariant_1(router, "You should not use <Route> or withRouter() outside a <Router>");
-
-    var route = router.route;
-
-    var pathname = (location || route.location).pathname;
-
-    return matchPath(pathname, { path: path, strict: strict, exact: exact, sensitive: sensitive }, route.match);
-  };
-
-  Route.prototype.componentWillMount = function componentWillMount() {
-    warning(!(this.props.component && this.props.render), "You should not use <Route component> and <Route render> in the same route; <Route render> will be ignored");
-
-    warning(!(this.props.component && this.props.children && !isEmptyChildren(this.props.children)), "You should not use <Route component> and <Route children> in the same route; <Route children> will be ignored");
-
-    warning(!(this.props.render && this.props.children && !isEmptyChildren(this.props.children)), "You should not use <Route render> and <Route children> in the same route; <Route children> will be ignored");
-  };
-
-  Route.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps, nextContext) {
-    warning(!(nextProps.location && !this.props.location), '<Route> elements should not change from uncontrolled to controlled (or vice versa). You initially used no "location" prop and then provided one on a subsequent render.');
-
-    warning(!(!nextProps.location && this.props.location), '<Route> elements should not change from controlled to uncontrolled (or vice versa). You provided a "location" prop initially but omitted it on a subsequent render.');
-
-    this.setState({
-      match: this.computeMatch(nextProps, nextContext.router)
-    });
-  };
-
-  Route.prototype.render = function render() {
-    var match = this.state.match;
-    var _props = this.props,
-        children = _props.children,
-        component = _props.component,
-        render = _props.render;
-    var _context$router = this.context.router,
-        history = _context$router.history,
-        route = _context$router.route,
-        staticContext = _context$router.staticContext;
-
-    var location = this.props.location || route.location;
-    var props = { match: match, location: location, history: history, staticContext: staticContext };
-
-    if (component) return match ? React__default.createElement(component, props) : null;
-
-    if (render) return match ? render(props) : null;
-
-    if (typeof children === "function") return children(props);
-
-    if (children && !isEmptyChildren(children)) return React__default.Children.only(children);
-
-    return null;
-  };
-
-  return Route;
-}(React__default.Component);
-
-Route.propTypes = {
-  computedMatch: PropTypes.object, // private, from <Switch>
-  path: PropTypes.string,
-  exact: PropTypes.bool,
-  strict: PropTypes.bool,
-  sensitive: PropTypes.bool,
-  component: PropTypes.func,
-  render: PropTypes.func,
-  children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
-  location: PropTypes.object
-};
-Route.contextTypes = {
-  router: PropTypes.shape({
-    history: PropTypes.object.isRequired,
-    route: PropTypes.object.isRequired,
-    staticContext: PropTypes.object
-  })
-};
-Route.childContextTypes = {
-  router: PropTypes.object.isRequired
-};
-
-// Written in this round about way for babel-transform-imports
-
-var _extends$4 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-function _objectWithoutProperties$1(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-/**
- * A <Link> wrapper that knows if it's "active" or not.
- */
-var NavLink = function NavLink(_ref) {
-  var to = _ref.to,
-      exact = _ref.exact,
-      strict = _ref.strict,
-      location = _ref.location,
-      activeClassName = _ref.activeClassName,
-      className = _ref.className,
-      activeStyle = _ref.activeStyle,
-      style = _ref.style,
-      getIsActive = _ref.isActive,
-      ariaCurrent = _ref["aria-current"],
-      rest = _objectWithoutProperties$1(_ref, ["to", "exact", "strict", "location", "activeClassName", "className", "activeStyle", "style", "isActive", "aria-current"]);
-
-  var path = (typeof to === "undefined" ? "undefined" : _typeof(to)) === "object" ? to.pathname : to;
-
-  // Regex taken from: https://github.com/pillarjs/path-to-regexp/blob/master/index.js#L202
-  var escapedPath = path && path.replace(/([.+*?=^!:${}()[\]|/\\])/g, "\\$1");
-
-  return React__default.createElement(Route, {
-    path: escapedPath,
-    exact: exact,
-    strict: strict,
-    location: location,
-    children: function children(_ref2) {
-      var location = _ref2.location,
-          match = _ref2.match;
-
-      var isActive = !!(getIsActive ? getIsActive(match, location) : match);
-
-      return React__default.createElement(Link, _extends$4({
-        to: to,
-        className: isActive ? [className, activeClassName].filter(function (i) {
-          return i;
-        }).join(" ") : className,
-        style: isActive ? _extends$4({}, style, activeStyle) : style,
-        "aria-current": isActive && ariaCurrent || null
-      }, rest));
-    }
-  });
-};
-
-NavLink.propTypes = {
-  to: Link.propTypes.to,
-  exact: PropTypes.bool,
-  strict: PropTypes.bool,
-  location: PropTypes.object,
-  activeClassName: PropTypes.string,
-  className: PropTypes.string,
-  activeStyle: PropTypes.object,
-  style: PropTypes.object,
-  isActive: PropTypes.func,
-  "aria-current": PropTypes.oneOf(["page", "step", "location", "date", "time", "true"])
-};
-
-NavLink.defaultProps = {
-  activeClassName: "active",
-  "aria-current": "page"
-};
-
-function _classCallCheck$6(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn$6(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits$6(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * The public API for prompting the user before navigating away
- * from a screen with a component.
- */
-
-var Prompt = function (_React$Component) {
-  _inherits$6(Prompt, _React$Component);
-
-  function Prompt() {
-    _classCallCheck$6(this, Prompt);
-
-    return _possibleConstructorReturn$6(this, _React$Component.apply(this, arguments));
-  }
-
-  Prompt.prototype.enable = function enable(message) {
-    if (this.unblock) this.unblock();
-
-    this.unblock = this.context.router.history.block(message);
-  };
-
-  Prompt.prototype.disable = function disable() {
-    if (this.unblock) {
-      this.unblock();
-      this.unblock = null;
-    }
-  };
-
-  Prompt.prototype.componentWillMount = function componentWillMount() {
-    invariant_1(this.context.router, "You should not use <Prompt> outside a <Router>");
-
-    if (this.props.when) this.enable(this.props.message);
-  };
-
-  Prompt.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
-    if (nextProps.when) {
-      if (!this.props.when || this.props.message !== nextProps.message) this.enable(nextProps.message);
-    } else {
-      this.disable();
-    }
-  };
-
-  Prompt.prototype.componentWillUnmount = function componentWillUnmount() {
-    this.disable();
-  };
-
-  Prompt.prototype.render = function render() {
-    return null;
-  };
-
-  return Prompt;
-}(React__default.Component);
-
-Prompt.propTypes = {
-  when: PropTypes.bool,
-  message: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired
-};
-Prompt.defaultProps = {
-  when: true
-};
-Prompt.contextTypes = {
-  router: PropTypes.shape({
-    history: PropTypes.shape({
-      block: PropTypes.func.isRequired
-    }).isRequired
-  }).isRequired
-};
-
-// Written in this round about way for babel-transform-imports
-
-var patternCache$1 = {};
-var cacheLimit$1 = 10000;
-var cacheCount$1 = 0;
-
-var compileGenerator = function compileGenerator(pattern) {
-  var cacheKey = pattern;
-  var cache = patternCache$1[cacheKey] || (patternCache$1[cacheKey] = {});
-
-  if (cache[pattern]) return cache[pattern];
-
-  var compiledGenerator = pathToRegexp_1.compile(pattern);
-
-  if (cacheCount$1 < cacheLimit$1) {
-    cache[pattern] = compiledGenerator;
-    cacheCount$1++;
-  }
-
-  return compiledGenerator;
-};
-
-/**
- * Public API for generating a URL pathname from a pattern and parameters.
- */
-var generatePath = function generatePath() {
-  var pattern = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "/";
-  var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-  if (pattern === "/") {
-    return pattern;
-  }
-  var generator = compileGenerator(pattern);
-  return generator(params, { pretty: true });
-};
-
-var _extends$5 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-function _classCallCheck$7(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn$7(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits$7(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * The public API for updating the location programmatically
- * with a component.
- */
-
-var Redirect = function (_React$Component) {
-  _inherits$7(Redirect, _React$Component);
-
-  function Redirect() {
-    _classCallCheck$7(this, Redirect);
-
-    return _possibleConstructorReturn$7(this, _React$Component.apply(this, arguments));
-  }
-
-  Redirect.prototype.isStatic = function isStatic() {
-    return this.context.router && this.context.router.staticContext;
-  };
-
-  Redirect.prototype.componentWillMount = function componentWillMount() {
-    invariant_1(this.context.router, "You should not use <Redirect> outside a <Router>");
-
-    if (this.isStatic()) this.perform();
-  };
-
-  Redirect.prototype.componentDidMount = function componentDidMount() {
-    if (!this.isStatic()) this.perform();
-  };
-
-  Redirect.prototype.componentDidUpdate = function componentDidUpdate(prevProps) {
-    var prevTo = createLocation(prevProps.to);
-    var nextTo = createLocation(this.props.to);
-
-    if (locationsAreEqual(prevTo, nextTo)) {
-      warning(false, "You tried to redirect to the same route you're currently on: " + ("\"" + nextTo.pathname + nextTo.search + "\""));
-      return;
-    }
-
-    this.perform();
-  };
-
-  Redirect.prototype.computeTo = function computeTo(_ref) {
-    var computedMatch = _ref.computedMatch,
-        to = _ref.to;
-
-    if (computedMatch) {
-      if (typeof to === "string") {
-        return generatePath(to, computedMatch.params);
-      } else {
-        return _extends$5({}, to, {
-          pathname: generatePath(to.pathname, computedMatch.params)
-        });
-      }
-    }
-
-    return to;
-  };
-
-  Redirect.prototype.perform = function perform() {
-    var history = this.context.router.history;
-    var push = this.props.push;
-
-    var to = this.computeTo(this.props);
-
-    if (push) {
-      history.push(to);
-    } else {
-      history.replace(to);
-    }
-  };
-
-  Redirect.prototype.render = function render() {
-    return null;
-  };
-
-  return Redirect;
-}(React__default.Component);
-
-Redirect.propTypes = {
-  computedMatch: PropTypes.object, // private, from <Switch>
-  push: PropTypes.bool,
-  from: PropTypes.string,
-  to: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired
-};
-Redirect.defaultProps = {
-  push: false
-};
-Redirect.contextTypes = {
-  router: PropTypes.shape({
-    history: PropTypes.shape({
-      push: PropTypes.func.isRequired,
-      replace: PropTypes.func.isRequired
-    }).isRequired,
-    staticContext: PropTypes.object
-  }).isRequired
-};
-
-// Written in this round about way for babel-transform-imports
-
-var _extends$6 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-function _objectWithoutProperties$2(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-function _classCallCheck$8(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn$8(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits$8(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var addLeadingSlash$1 = function addLeadingSlash(path) {
-  return path.charAt(0) === "/" ? path : "/" + path;
-};
-
-var addBasename = function addBasename(basename, location) {
-  if (!basename) return location;
-
-  return _extends$6({}, location, {
-    pathname: addLeadingSlash$1(basename) + location.pathname
-  });
-};
-
-var stripBasename$1 = function stripBasename(basename, location) {
-  if (!basename) return location;
-
-  var base = addLeadingSlash$1(basename);
-
-  if (location.pathname.indexOf(base) !== 0) return location;
-
-  return _extends$6({}, location, {
-    pathname: location.pathname.substr(base.length)
-  });
-};
-
-var createURL = function createURL(location) {
-  return typeof location === "string" ? location : createPath(location);
-};
-
-var staticHandler = function staticHandler(methodName) {
-  return function () {
-    invariant_1(false, "You cannot %s with <StaticRouter>", methodName);
-  };
-};
-
-var noop = function noop() {};
-
-/**
- * The public top-level API for a "static" <Router>, so-called because it
- * can't actually change the current location. Instead, it just records
- * location changes in a context object. Useful mainly in testing and
- * server-rendering scenarios.
- */
-
-var StaticRouter = function (_React$Component) {
-  _inherits$8(StaticRouter, _React$Component);
-
-  function StaticRouter() {
-    var _temp, _this, _ret;
-
-    _classCallCheck$8(this, StaticRouter);
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return _ret = (_temp = (_this = _possibleConstructorReturn$8(this, _React$Component.call.apply(_React$Component, [this].concat(args))), _this), _this.createHref = function (path) {
-      return addLeadingSlash$1(_this.props.basename + createURL(path));
-    }, _this.handlePush = function (location) {
-      var _this$props = _this.props,
-          basename = _this$props.basename,
-          context = _this$props.context;
-
-      context.action = "PUSH";
-      context.location = addBasename(basename, createLocation(location));
-      context.url = createURL(context.location);
-    }, _this.handleReplace = function (location) {
-      var _this$props2 = _this.props,
-          basename = _this$props2.basename,
-          context = _this$props2.context;
-
-      context.action = "REPLACE";
-      context.location = addBasename(basename, createLocation(location));
-      context.url = createURL(context.location);
-    }, _this.handleListen = function () {
-      return noop;
-    }, _this.handleBlock = function () {
-      return noop;
-    }, _temp), _possibleConstructorReturn$8(_this, _ret);
-  }
-
-  StaticRouter.prototype.getChildContext = function getChildContext() {
-    return {
-      router: {
-        staticContext: this.props.context
-      }
-    };
-  };
-
-  StaticRouter.prototype.componentWillMount = function componentWillMount() {
-    warning(!this.props.history, "<StaticRouter> ignores the history prop. To use a custom history, " + "use `import { Router }` instead of `import { StaticRouter as Router }`.");
-  };
-
-  StaticRouter.prototype.render = function render() {
-    var _props = this.props,
-        basename = _props.basename,
-        context = _props.context,
-        location = _props.location,
-        props = _objectWithoutProperties$2(_props, ["basename", "context", "location"]);
-
-    var history = {
-      createHref: this.createHref,
-      action: "POP",
-      location: stripBasename$1(basename, createLocation(location)),
-      push: this.handlePush,
-      replace: this.handleReplace,
-      go: staticHandler("go"),
-      goBack: staticHandler("goBack"),
-      goForward: staticHandler("goForward"),
-      listen: this.handleListen,
-      block: this.handleBlock
-    };
-
-    return React__default.createElement(Router, _extends$6({}, props, { history: history }));
-  };
-
-  return StaticRouter;
-}(React__default.Component);
-
-StaticRouter.propTypes = {
-  basename: PropTypes.string,
-  context: PropTypes.object.isRequired,
-  location: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
-};
-StaticRouter.defaultProps = {
-  basename: "",
-  location: "/"
-};
-StaticRouter.childContextTypes = {
-  router: PropTypes.object.isRequired
-};
-
-// Written in this round about way for babel-transform-imports
-
-function _classCallCheck$9(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn$9(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits$9(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * The public API for rendering the first <Route> that matches.
- */
-
-var Switch = function (_React$Component) {
-  _inherits$9(Switch, _React$Component);
-
-  function Switch() {
-    _classCallCheck$9(this, Switch);
-
-    return _possibleConstructorReturn$9(this, _React$Component.apply(this, arguments));
-  }
-
-  Switch.prototype.componentWillMount = function componentWillMount() {
-    invariant_1(this.context.router, "You should not use <Switch> outside a <Router>");
-  };
-
-  Switch.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
-    warning(!(nextProps.location && !this.props.location), '<Switch> elements should not change from uncontrolled to controlled (or vice versa). You initially used no "location" prop and then provided one on a subsequent render.');
-
-    warning(!(!nextProps.location && this.props.location), '<Switch> elements should not change from controlled to uncontrolled (or vice versa). You provided a "location" prop initially but omitted it on a subsequent render.');
-  };
-
-  Switch.prototype.render = function render() {
-    var route = this.context.router.route;
-    var children = this.props.children;
-
-    var location = this.props.location || route.location;
-
-    var match = void 0,
-        child = void 0;
-    React__default.Children.forEach(children, function (element) {
-      if (match == null && React__default.isValidElement(element)) {
-        var _element$props = element.props,
-            pathProp = _element$props.path,
-            exact = _element$props.exact,
-            strict = _element$props.strict,
-            sensitive = _element$props.sensitive,
-            from = _element$props.from;
-
-        var path = pathProp || from;
-
-        child = element;
-        match = matchPath(location.pathname, { path: path, exact: exact, strict: strict, sensitive: sensitive }, route.match);
-      }
-    });
-
-    return match ? React__default.cloneElement(child, { location: location, computedMatch: match }) : null;
-  };
-
-  return Switch;
-}(React__default.Component);
-
-Switch.contextTypes = {
-  router: PropTypes.shape({
-    route: PropTypes.object.isRequired
-  }).isRequired
-};
-Switch.propTypes = {
-  children: PropTypes.node,
-  location: PropTypes.object
-};
-
-// Written in this round about way for babel-transform-imports
-
-// Written in this round about way for babel-transform-imports
-
-// Written in this round about way for babel-transform-imports
-
-var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-function unwrapExports (x) {
-	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
-}
-
-function createCommonjsModule(fn, module) {
-	return module = { exports: {} }, fn(module, module.exports), module.exports;
-}
-
 /** @license React v16.13.1
  * react-is.production.min.js
  *
@@ -2863,6 +1972,22 @@ if (process.env.NODE_ENV === 'production') {
   module.exports = reactIs_development;
 }
 });
+var reactIs_1 = reactIs.isValidElementType;
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
 
 /**
  * Copyright 2015, Yahoo! Inc.
@@ -2964,21 +2089,1001 @@ function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
 
 var hoistNonReactStatics_cjs = hoistNonReactStatics;
 
-// Written in this round about way for babel-transform-imports
+// TODO: Replace with React.createContext once we can assume React 16+
 
-function _objectWithoutPropertiesLoose(source, excluded) {
-  if (source == null) return {};
-  var target = {};
-  var sourceKeys = Object.keys(source);
-  var key, i;
+var createNamedContext = function createNamedContext(name) {
+  var context = index();
+  context.displayName = name;
+  return context;
+};
 
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0) continue;
-    target[key] = source[key];
+var historyContext =
+/*#__PURE__*/
+createNamedContext("Router-History");
+
+// TODO: Replace with React.createContext once we can assume React 16+
+
+var createNamedContext$1 = function createNamedContext(name) {
+  var context = index();
+  context.displayName = name;
+  return context;
+};
+
+var context =
+/*#__PURE__*/
+createNamedContext$1("Router");
+
+/**
+ * The public API for putting history on context.
+ */
+
+var Router =
+/*#__PURE__*/
+function (_React$Component) {
+  _inheritsLoose(Router, _React$Component);
+
+  Router.computeRootMatch = function computeRootMatch(pathname) {
+    return {
+      path: "/",
+      url: "/",
+      params: {},
+      isExact: pathname === "/"
+    };
+  };
+
+  function Router(props) {
+    var _this;
+
+    _this = _React$Component.call(this, props) || this;
+    _this.state = {
+      location: props.history.location
+    }; // This is a bit of a hack. We have to start listening for location
+    // changes here in the constructor in case there are any <Redirect>s
+    // on the initial render. If there are, they will replace/push when
+    // they mount and since cDM fires in children before parents, we may
+    // get a new location before the <Router> is mounted.
+
+    _this._isMounted = false;
+    _this._pendingLocation = null;
+
+    if (!props.staticContext) {
+      _this.unlisten = props.history.listen(function (location) {
+        if (_this._isMounted) {
+          _this.setState({
+            location: location
+          });
+        } else {
+          _this._pendingLocation = location;
+        }
+      });
+    }
+
+    return _this;
   }
 
-  return target;
+  var _proto = Router.prototype;
+
+  _proto.componentDidMount = function componentDidMount() {
+    this._isMounted = true;
+
+    if (this._pendingLocation) {
+      this.setState({
+        location: this._pendingLocation
+      });
+    }
+  };
+
+  _proto.componentWillUnmount = function componentWillUnmount() {
+    if (this.unlisten) this.unlisten();
+  };
+
+  _proto.render = function render() {
+    return React__default.createElement(context.Provider, {
+      value: {
+        history: this.props.history,
+        location: this.state.location,
+        match: Router.computeRootMatch(this.state.location.pathname),
+        staticContext: this.props.staticContext
+      }
+    }, React__default.createElement(historyContext.Provider, {
+      children: this.props.children || null,
+      value: this.props.history
+    }));
+  };
+
+  return Router;
+}(React__default.Component);
+
+if (process.env.NODE_ENV !== "production") {
+  Router.propTypes = {
+    children: PropTypes.node,
+    history: PropTypes.object.isRequired,
+    staticContext: PropTypes.object
+  };
+
+  Router.prototype.componentDidUpdate = function (prevProps) {
+    process.env.NODE_ENV !== "production" ? warning(prevProps.history === this.props.history, "You cannot change <Router history>") : void 0;
+  };
+}
+
+/**
+ * The public API for a <Router> that stores location in memory.
+ */
+
+var MemoryRouter =
+/*#__PURE__*/
+function (_React$Component) {
+  _inheritsLoose(MemoryRouter, _React$Component);
+
+  function MemoryRouter() {
+    var _this;
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _React$Component.call.apply(_React$Component, [this].concat(args)) || this;
+    _this.history = createMemoryHistory(_this.props);
+    return _this;
+  }
+
+  var _proto = MemoryRouter.prototype;
+
+  _proto.render = function render() {
+    return React__default.createElement(Router, {
+      history: this.history,
+      children: this.props.children
+    });
+  };
+
+  return MemoryRouter;
+}(React__default.Component);
+
+if (process.env.NODE_ENV !== "production") {
+  MemoryRouter.propTypes = {
+    initialEntries: PropTypes.array,
+    initialIndex: PropTypes.number,
+    getUserConfirmation: PropTypes.func,
+    keyLength: PropTypes.number,
+    children: PropTypes.node
+  };
+
+  MemoryRouter.prototype.componentDidMount = function () {
+    process.env.NODE_ENV !== "production" ? warning(!this.props.history, "<MemoryRouter> ignores the history prop. To use a custom history, " + "use `import { Router }` instead of `import { MemoryRouter as Router }`.") : void 0;
+  };
+}
+
+var Lifecycle =
+/*#__PURE__*/
+function (_React$Component) {
+  _inheritsLoose(Lifecycle, _React$Component);
+
+  function Lifecycle() {
+    return _React$Component.apply(this, arguments) || this;
+  }
+
+  var _proto = Lifecycle.prototype;
+
+  _proto.componentDidMount = function componentDidMount() {
+    if (this.props.onMount) this.props.onMount.call(this, this);
+  };
+
+  _proto.componentDidUpdate = function componentDidUpdate(prevProps) {
+    if (this.props.onUpdate) this.props.onUpdate.call(this, this, prevProps);
+  };
+
+  _proto.componentWillUnmount = function componentWillUnmount() {
+    if (this.props.onUnmount) this.props.onUnmount.call(this, this);
+  };
+
+  _proto.render = function render() {
+    return null;
+  };
+
+  return Lifecycle;
+}(React__default.Component);
+
+/**
+ * The public API for prompting the user before navigating away from a screen.
+ */
+
+function Prompt(_ref) {
+  var message = _ref.message,
+      _ref$when = _ref.when,
+      when = _ref$when === void 0 ? true : _ref$when;
+  return React__default.createElement(context.Consumer, null, function (context) {
+    !context ? process.env.NODE_ENV !== "production" ? invariant(false, "You should not use <Prompt> outside a <Router>") : invariant(false) : void 0;
+    if (!when || context.staticContext) return null;
+    var method = context.history.block;
+    return React__default.createElement(Lifecycle, {
+      onMount: function onMount(self) {
+        self.release = method(message);
+      },
+      onUpdate: function onUpdate(self, prevProps) {
+        if (prevProps.message !== message) {
+          self.release();
+          self.release = method(message);
+        }
+      },
+      onUnmount: function onUnmount(self) {
+        self.release();
+      },
+      message: message
+    });
+  });
+}
+
+if (process.env.NODE_ENV !== "production") {
+  var messageType = PropTypes.oneOfType([PropTypes.func, PropTypes.string]);
+  Prompt.propTypes = {
+    when: PropTypes.bool,
+    message: messageType.isRequired
+  };
+}
+
+var cache = {};
+var cacheLimit = 10000;
+var cacheCount = 0;
+
+function compilePath(path) {
+  if (cache[path]) return cache[path];
+  var generator = pathToRegexp_1.compile(path);
+
+  if (cacheCount < cacheLimit) {
+    cache[path] = generator;
+    cacheCount++;
+  }
+
+  return generator;
+}
+/**
+ * Public API for generating a URL pathname from a path and parameters.
+ */
+
+
+function generatePath(path, params) {
+  if (path === void 0) {
+    path = "/";
+  }
+
+  if (params === void 0) {
+    params = {};
+  }
+
+  return path === "/" ? path : compilePath(path)(params, {
+    pretty: true
+  });
+}
+
+/**
+ * The public API for navigating programmatically with a component.
+ */
+
+function Redirect(_ref) {
+  var computedMatch = _ref.computedMatch,
+      to = _ref.to,
+      _ref$push = _ref.push,
+      push = _ref$push === void 0 ? false : _ref$push;
+  return React__default.createElement(context.Consumer, null, function (context) {
+    !context ? process.env.NODE_ENV !== "production" ? invariant(false, "You should not use <Redirect> outside a <Router>") : invariant(false) : void 0;
+    var history = context.history,
+        staticContext = context.staticContext;
+    var method = push ? history.push : history.replace;
+    var location = createLocation(computedMatch ? typeof to === "string" ? generatePath(to, computedMatch.params) : _extends({}, to, {
+      pathname: generatePath(to.pathname, computedMatch.params)
+    }) : to); // When rendering in a static context,
+    // set the new location immediately.
+
+    if (staticContext) {
+      method(location);
+      return null;
+    }
+
+    return React__default.createElement(Lifecycle, {
+      onMount: function onMount() {
+        method(location);
+      },
+      onUpdate: function onUpdate(self, prevProps) {
+        var prevLocation = createLocation(prevProps.to);
+
+        if (!locationsAreEqual(prevLocation, _extends({}, location, {
+          key: prevLocation.key
+        }))) {
+          method(location);
+        }
+      },
+      to: to
+    });
+  });
+}
+
+if (process.env.NODE_ENV !== "production") {
+  Redirect.propTypes = {
+    push: PropTypes.bool,
+    from: PropTypes.string,
+    to: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired
+  };
+}
+
+var cache$1 = {};
+var cacheLimit$1 = 10000;
+var cacheCount$1 = 0;
+
+function compilePath$1(path, options) {
+  var cacheKey = "" + options.end + options.strict + options.sensitive;
+  var pathCache = cache$1[cacheKey] || (cache$1[cacheKey] = {});
+  if (pathCache[path]) return pathCache[path];
+  var keys = [];
+  var regexp = pathToRegexp_1(path, keys, options);
+  var result = {
+    regexp: regexp,
+    keys: keys
+  };
+
+  if (cacheCount$1 < cacheLimit$1) {
+    pathCache[path] = result;
+    cacheCount$1++;
+  }
+
+  return result;
+}
+/**
+ * Public API for matching a URL pathname to a path.
+ */
+
+
+function matchPath(pathname, options) {
+  if (options === void 0) {
+    options = {};
+  }
+
+  if (typeof options === "string" || Array.isArray(options)) {
+    options = {
+      path: options
+    };
+  }
+
+  var _options = options,
+      path = _options.path,
+      _options$exact = _options.exact,
+      exact = _options$exact === void 0 ? false : _options$exact,
+      _options$strict = _options.strict,
+      strict = _options$strict === void 0 ? false : _options$strict,
+      _options$sensitive = _options.sensitive,
+      sensitive = _options$sensitive === void 0 ? false : _options$sensitive;
+  var paths = [].concat(path);
+  return paths.reduce(function (matched, path) {
+    if (!path && path !== "") return null;
+    if (matched) return matched;
+
+    var _compilePath = compilePath$1(path, {
+      end: exact,
+      strict: strict,
+      sensitive: sensitive
+    }),
+        regexp = _compilePath.regexp,
+        keys = _compilePath.keys;
+
+    var match = regexp.exec(pathname);
+    if (!match) return null;
+    var url = match[0],
+        values = match.slice(1);
+    var isExact = pathname === url;
+    if (exact && !isExact) return null;
+    return {
+      path: path,
+      // the path used to match
+      url: path === "/" && url === "" ? "/" : url,
+      // the matched portion of the URL
+      isExact: isExact,
+      // whether or not we matched exactly
+      params: keys.reduce(function (memo, key, index$$1) {
+        memo[key.name] = values[index$$1];
+        return memo;
+      }, {})
+    };
+  }, null);
+}
+
+function isEmptyChildren(children) {
+  return React__default.Children.count(children) === 0;
+}
+
+function evalChildrenDev(children, props, path) {
+  var value = children(props);
+  process.env.NODE_ENV !== "production" ? warning(value !== undefined, "You returned `undefined` from the `children` function of " + ("<Route" + (path ? " path=\"" + path + "\"" : "") + ">, but you ") + "should have returned a React element or `null`") : void 0;
+  return value || null;
+}
+/**
+ * The public API for matching a single path and rendering.
+ */
+
+
+var Route =
+/*#__PURE__*/
+function (_React$Component) {
+  _inheritsLoose(Route, _React$Component);
+
+  function Route() {
+    return _React$Component.apply(this, arguments) || this;
+  }
+
+  var _proto = Route.prototype;
+
+  _proto.render = function render() {
+    var _this = this;
+
+    return React__default.createElement(context.Consumer, null, function (context$1) {
+      !context$1 ? process.env.NODE_ENV !== "production" ? invariant(false, "You should not use <Route> outside a <Router>") : invariant(false) : void 0;
+      var location = _this.props.location || context$1.location;
+      var match = _this.props.computedMatch ? _this.props.computedMatch // <Switch> already computed the match for us
+      : _this.props.path ? matchPath(location.pathname, _this.props) : context$1.match;
+
+      var props = _extends({}, context$1, {
+        location: location,
+        match: match
+      });
+
+      var _this$props = _this.props,
+          children = _this$props.children,
+          component = _this$props.component,
+          render = _this$props.render; // Preact uses an empty array as children by
+      // default, so use null if that's the case.
+
+      if (Array.isArray(children) && children.length === 0) {
+        children = null;
+      }
+
+      return React__default.createElement(context.Provider, {
+        value: props
+      }, props.match ? children ? typeof children === "function" ? process.env.NODE_ENV !== "production" ? evalChildrenDev(children, props, _this.props.path) : children(props) : children : component ? React__default.createElement(component, props) : render ? render(props) : null : typeof children === "function" ? process.env.NODE_ENV !== "production" ? evalChildrenDev(children, props, _this.props.path) : children(props) : null);
+    });
+  };
+
+  return Route;
+}(React__default.Component);
+
+if (process.env.NODE_ENV !== "production") {
+  Route.propTypes = {
+    children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
+    component: function component(props, propName) {
+      if (props[propName] && !reactIs_1(props[propName])) {
+        return new Error("Invalid prop 'component' supplied to 'Route': the prop is not a valid React component");
+      }
+    },
+    exact: PropTypes.bool,
+    location: PropTypes.object,
+    path: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    render: PropTypes.func,
+    sensitive: PropTypes.bool,
+    strict: PropTypes.bool
+  };
+
+  Route.prototype.componentDidMount = function () {
+    process.env.NODE_ENV !== "production" ? warning(!(this.props.children && !isEmptyChildren(this.props.children) && this.props.component), "You should not use <Route component> and <Route children> in the same route; <Route component> will be ignored") : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(this.props.children && !isEmptyChildren(this.props.children) && this.props.render), "You should not use <Route render> and <Route children> in the same route; <Route render> will be ignored") : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(this.props.component && this.props.render), "You should not use <Route component> and <Route render> in the same route; <Route render> will be ignored") : void 0;
+  };
+
+  Route.prototype.componentDidUpdate = function (prevProps) {
+    process.env.NODE_ENV !== "production" ? warning(!(this.props.location && !prevProps.location), '<Route> elements should not change from uncontrolled to controlled (or vice versa). You initially used no "location" prop and then provided one on a subsequent render.') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(!this.props.location && prevProps.location), '<Route> elements should not change from controlled to uncontrolled (or vice versa). You provided a "location" prop initially but omitted it on a subsequent render.') : void 0;
+  };
+}
+
+function addLeadingSlash$1(path) {
+  return path.charAt(0) === "/" ? path : "/" + path;
+}
+
+function addBasename(basename, location) {
+  if (!basename) return location;
+  return _extends({}, location, {
+    pathname: addLeadingSlash$1(basename) + location.pathname
+  });
+}
+
+function stripBasename$1(basename, location) {
+  if (!basename) return location;
+  var base = addLeadingSlash$1(basename);
+  if (location.pathname.indexOf(base) !== 0) return location;
+  return _extends({}, location, {
+    pathname: location.pathname.substr(base.length)
+  });
+}
+
+function createURL(location) {
+  return typeof location === "string" ? location : createPath(location);
+}
+
+function staticHandler(methodName) {
+  return function () {
+     process.env.NODE_ENV !== "production" ? invariant(false, "You cannot %s with <StaticRouter>", methodName) : invariant(false) ;
+  };
+}
+
+function noop() {}
+/**
+ * The public top-level API for a "static" <Router>, so-called because it
+ * can't actually change the current location. Instead, it just records
+ * location changes in a context object. Useful mainly in testing and
+ * server-rendering scenarios.
+ */
+
+
+var StaticRouter =
+/*#__PURE__*/
+function (_React$Component) {
+  _inheritsLoose(StaticRouter, _React$Component);
+
+  function StaticRouter() {
+    var _this;
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _React$Component.call.apply(_React$Component, [this].concat(args)) || this;
+
+    _this.handlePush = function (location) {
+      return _this.navigateTo(location, "PUSH");
+    };
+
+    _this.handleReplace = function (location) {
+      return _this.navigateTo(location, "REPLACE");
+    };
+
+    _this.handleListen = function () {
+      return noop;
+    };
+
+    _this.handleBlock = function () {
+      return noop;
+    };
+
+    return _this;
+  }
+
+  var _proto = StaticRouter.prototype;
+
+  _proto.navigateTo = function navigateTo(location, action) {
+    var _this$props = this.props,
+        _this$props$basename = _this$props.basename,
+        basename = _this$props$basename === void 0 ? "" : _this$props$basename,
+        _this$props$context = _this$props.context,
+        context = _this$props$context === void 0 ? {} : _this$props$context;
+    context.action = action;
+    context.location = addBasename(basename, createLocation(location));
+    context.url = createURL(context.location);
+  };
+
+  _proto.render = function render() {
+    var _this$props2 = this.props,
+        _this$props2$basename = _this$props2.basename,
+        basename = _this$props2$basename === void 0 ? "" : _this$props2$basename,
+        _this$props2$context = _this$props2.context,
+        context = _this$props2$context === void 0 ? {} : _this$props2$context,
+        _this$props2$location = _this$props2.location,
+        location = _this$props2$location === void 0 ? "/" : _this$props2$location,
+        rest = _objectWithoutPropertiesLoose(_this$props2, ["basename", "context", "location"]);
+
+    var history = {
+      createHref: function createHref(path) {
+        return addLeadingSlash$1(basename + createURL(path));
+      },
+      action: "POP",
+      location: stripBasename$1(basename, createLocation(location)),
+      push: this.handlePush,
+      replace: this.handleReplace,
+      go: staticHandler("go"),
+      goBack: staticHandler("goBack"),
+      goForward: staticHandler("goForward"),
+      listen: this.handleListen,
+      block: this.handleBlock
+    };
+    return React__default.createElement(Router, _extends({}, rest, {
+      history: history,
+      staticContext: context
+    }));
+  };
+
+  return StaticRouter;
+}(React__default.Component);
+
+if (process.env.NODE_ENV !== "production") {
+  StaticRouter.propTypes = {
+    basename: PropTypes.string,
+    context: PropTypes.object,
+    location: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+  };
+
+  StaticRouter.prototype.componentDidMount = function () {
+    process.env.NODE_ENV !== "production" ? warning(!this.props.history, "<StaticRouter> ignores the history prop. To use a custom history, " + "use `import { Router }` instead of `import { StaticRouter as Router }`.") : void 0;
+  };
+}
+
+/**
+ * The public API for rendering the first <Route> that matches.
+ */
+
+var Switch =
+/*#__PURE__*/
+function (_React$Component) {
+  _inheritsLoose(Switch, _React$Component);
+
+  function Switch() {
+    return _React$Component.apply(this, arguments) || this;
+  }
+
+  var _proto = Switch.prototype;
+
+  _proto.render = function render() {
+    var _this = this;
+
+    return React__default.createElement(context.Consumer, null, function (context) {
+      !context ? process.env.NODE_ENV !== "production" ? invariant(false, "You should not use <Switch> outside a <Router>") : invariant(false) : void 0;
+      var location = _this.props.location || context.location;
+      var element, match; // We use React.Children.forEach instead of React.Children.toArray().find()
+      // here because toArray adds keys to all child elements and we do not want
+      // to trigger an unmount/remount for two <Route>s that render the same
+      // component at different URLs.
+
+      React__default.Children.forEach(_this.props.children, function (child) {
+        if (match == null && React__default.isValidElement(child)) {
+          element = child;
+          var path = child.props.path || child.props.from;
+          match = path ? matchPath(location.pathname, _extends({}, child.props, {
+            path: path
+          })) : context.match;
+        }
+      });
+      return match ? React__default.cloneElement(element, {
+        location: location,
+        computedMatch: match
+      }) : null;
+    });
+  };
+
+  return Switch;
+}(React__default.Component);
+
+if (process.env.NODE_ENV !== "production") {
+  Switch.propTypes = {
+    children: PropTypes.node,
+    location: PropTypes.object
+  };
+
+  Switch.prototype.componentDidUpdate = function (prevProps) {
+    process.env.NODE_ENV !== "production" ? warning(!(this.props.location && !prevProps.location), '<Switch> elements should not change from uncontrolled to controlled (or vice versa). You initially used no "location" prop and then provided one on a subsequent render.') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(!this.props.location && prevProps.location), '<Switch> elements should not change from controlled to uncontrolled (or vice versa). You provided a "location" prop initially but omitted it on a subsequent render.') : void 0;
+  };
+}
+
+var useContext = React__default.useContext;
+
+if (process.env.NODE_ENV !== "production") {
+  if (typeof window !== "undefined") {
+    var global$1 = window;
+    var key = "__react_router_build__";
+    var buildNames = {
+      cjs: "CommonJS",
+      esm: "ES modules",
+      umd: "UMD"
+    };
+
+    if (global$1[key] && global$1[key] !== "esm") {
+      var initialBuildName = buildNames[global$1[key]];
+      var secondaryBuildName = buildNames["esm"]; // TODO: Add link to article that explains in detail how to avoid
+      // loading 2 different builds.
+
+      throw new Error("You are loading the " + secondaryBuildName + " build of React Router " + ("on a page that is already running the " + initialBuildName + " ") + "build, so things won't work right.");
+    }
+
+    global$1[key] = "esm";
+  }
+}
+
+/**
+ * The public API for a <Router> that uses HTML5 history.
+ */
+
+var BrowserRouter =
+/*#__PURE__*/
+function (_React$Component) {
+  _inheritsLoose(BrowserRouter, _React$Component);
+
+  function BrowserRouter() {
+    var _this;
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _React$Component.call.apply(_React$Component, [this].concat(args)) || this;
+    _this.history = createBrowserHistory(_this.props);
+    return _this;
+  }
+
+  var _proto = BrowserRouter.prototype;
+
+  _proto.render = function render() {
+    return React__default.createElement(Router, {
+      history: this.history,
+      children: this.props.children
+    });
+  };
+
+  return BrowserRouter;
+}(React__default.Component);
+
+if (process.env.NODE_ENV !== "production") {
+  BrowserRouter.propTypes = {
+    basename: PropTypes.string,
+    children: PropTypes.node,
+    forceRefresh: PropTypes.bool,
+    getUserConfirmation: PropTypes.func,
+    keyLength: PropTypes.number
+  };
+
+  BrowserRouter.prototype.componentDidMount = function () {
+    process.env.NODE_ENV !== "production" ? warning(!this.props.history, "<BrowserRouter> ignores the history prop. To use a custom history, " + "use `import { Router }` instead of `import { BrowserRouter as Router }`.") : void 0;
+  };
+}
+
+/**
+ * The public API for a <Router> that uses window.location.hash.
+ */
+
+var HashRouter =
+/*#__PURE__*/
+function (_React$Component) {
+  _inheritsLoose(HashRouter, _React$Component);
+
+  function HashRouter() {
+    var _this;
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _React$Component.call.apply(_React$Component, [this].concat(args)) || this;
+    _this.history = createHashHistory(_this.props);
+    return _this;
+  }
+
+  var _proto = HashRouter.prototype;
+
+  _proto.render = function render() {
+    return React__default.createElement(Router, {
+      history: this.history,
+      children: this.props.children
+    });
+  };
+
+  return HashRouter;
+}(React__default.Component);
+
+if (process.env.NODE_ENV !== "production") {
+  HashRouter.propTypes = {
+    basename: PropTypes.string,
+    children: PropTypes.node,
+    getUserConfirmation: PropTypes.func,
+    hashType: PropTypes.oneOf(["hashbang", "noslash", "slash"])
+  };
+
+  HashRouter.prototype.componentDidMount = function () {
+    process.env.NODE_ENV !== "production" ? warning(!this.props.history, "<HashRouter> ignores the history prop. To use a custom history, " + "use `import { Router }` instead of `import { HashRouter as Router }`.") : void 0;
+  };
+}
+
+var resolveToLocation = function resolveToLocation(to, currentLocation) {
+  return typeof to === "function" ? to(currentLocation) : to;
+};
+var normalizeToLocation = function normalizeToLocation(to, currentLocation) {
+  return typeof to === "string" ? createLocation(to, null, null, currentLocation) : to;
+};
+
+var forwardRefShim = function forwardRefShim(C) {
+  return C;
+};
+
+var forwardRef = React__default.forwardRef;
+
+if (typeof forwardRef === "undefined") {
+  forwardRef = forwardRefShim;
+}
+
+function isModifiedEvent(event) {
+  return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
+}
+
+var LinkAnchor = forwardRef(function (_ref, forwardedRef) {
+  var innerRef = _ref.innerRef,
+      navigate = _ref.navigate,
+      _onClick = _ref.onClick,
+      rest = _objectWithoutPropertiesLoose(_ref, ["innerRef", "navigate", "onClick"]);
+
+  var target = rest.target;
+
+  var props = _extends({}, rest, {
+    onClick: function onClick(event) {
+      try {
+        if (_onClick) _onClick(event);
+      } catch (ex) {
+        event.preventDefault();
+        throw ex;
+      }
+
+      if (!event.defaultPrevented && // onClick prevented default
+      event.button === 0 && ( // ignore everything but left clicks
+      !target || target === "_self") && // let browser handle "target=_blank" etc.
+      !isModifiedEvent(event) // ignore clicks with modifier keys
+      ) {
+          event.preventDefault();
+          navigate();
+        }
+    }
+  }); // React 15 compat
+
+
+  if (forwardRefShim !== forwardRef) {
+    props.ref = forwardedRef || innerRef;
+  } else {
+    props.ref = innerRef;
+  }
+  /* eslint-disable-next-line jsx-a11y/anchor-has-content */
+
+
+  return React__default.createElement("a", props);
+});
+
+if (process.env.NODE_ENV !== "production") {
+  LinkAnchor.displayName = "LinkAnchor";
+}
+/**
+ * The public API for rendering a history-aware <a>.
+ */
+
+
+var Link = forwardRef(function (_ref2, forwardedRef) {
+  var _ref2$component = _ref2.component,
+      component = _ref2$component === void 0 ? LinkAnchor : _ref2$component,
+      replace = _ref2.replace,
+      to = _ref2.to,
+      innerRef = _ref2.innerRef,
+      rest = _objectWithoutPropertiesLoose(_ref2, ["component", "replace", "to", "innerRef"]);
+
+  return React__default.createElement(context.Consumer, null, function (context$$1) {
+    !context$$1 ? process.env.NODE_ENV !== "production" ? invariant(false, "You should not use <Link> outside a <Router>") : invariant(false) : void 0;
+    var history = context$$1.history;
+    var location = normalizeToLocation(resolveToLocation(to, context$$1.location), context$$1.location);
+    var href = location ? history.createHref(location) : "";
+
+    var props = _extends({}, rest, {
+      href: href,
+      navigate: function navigate() {
+        var location = resolveToLocation(to, context$$1.location);
+        var method = replace ? history.replace : history.push;
+        method(location);
+      }
+    }); // React 15 compat
+
+
+    if (forwardRefShim !== forwardRef) {
+      props.ref = forwardedRef || innerRef;
+    } else {
+      props.innerRef = innerRef;
+    }
+
+    return React__default.createElement(component, props);
+  });
+});
+
+if (process.env.NODE_ENV !== "production") {
+  var toType = PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.func]);
+  var refType = PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.shape({
+    current: PropTypes.any
+  })]);
+  Link.displayName = "Link";
+  Link.propTypes = {
+    innerRef: refType,
+    onClick: PropTypes.func,
+    replace: PropTypes.bool,
+    target: PropTypes.string,
+    to: toType.isRequired
+  };
+}
+
+var forwardRefShim$1 = function forwardRefShim(C) {
+  return C;
+};
+
+var forwardRef$1 = React__default.forwardRef;
+
+if (typeof forwardRef$1 === "undefined") {
+  forwardRef$1 = forwardRefShim$1;
+}
+
+function joinClassnames() {
+  for (var _len = arguments.length, classnames = new Array(_len), _key = 0; _key < _len; _key++) {
+    classnames[_key] = arguments[_key];
+  }
+
+  return classnames.filter(function (i) {
+    return i;
+  }).join(" ");
+}
+/**
+ * A <Link> wrapper that knows if it's "active" or not.
+ */
+
+
+var NavLink = forwardRef$1(function (_ref, forwardedRef) {
+  var _ref$ariaCurrent = _ref["aria-current"],
+      ariaCurrent = _ref$ariaCurrent === void 0 ? "page" : _ref$ariaCurrent,
+      _ref$activeClassName = _ref.activeClassName,
+      activeClassName = _ref$activeClassName === void 0 ? "active" : _ref$activeClassName,
+      activeStyle = _ref.activeStyle,
+      classNameProp = _ref.className,
+      exact = _ref.exact,
+      isActiveProp = _ref.isActive,
+      locationProp = _ref.location,
+      sensitive = _ref.sensitive,
+      strict = _ref.strict,
+      styleProp = _ref.style,
+      to = _ref.to,
+      innerRef = _ref.innerRef,
+      rest = _objectWithoutPropertiesLoose(_ref, ["aria-current", "activeClassName", "activeStyle", "className", "exact", "isActive", "location", "sensitive", "strict", "style", "to", "innerRef"]);
+
+  return React__default.createElement(context.Consumer, null, function (context$$1) {
+    !context$$1 ? process.env.NODE_ENV !== "production" ? invariant(false, "You should not use <NavLink> outside a <Router>") : invariant(false) : void 0;
+    var currentLocation = locationProp || context$$1.location;
+    var toLocation = normalizeToLocation(resolveToLocation(to, currentLocation), currentLocation);
+    var path = toLocation.pathname; // Regex taken from: https://github.com/pillarjs/path-to-regexp/blob/master/index.js#L202
+
+    var escapedPath = path && path.replace(/([.+*?=^!:${}()[\]|/\\])/g, "\\$1");
+    var match = escapedPath ? matchPath(currentLocation.pathname, {
+      path: escapedPath,
+      exact: exact,
+      sensitive: sensitive,
+      strict: strict
+    }) : null;
+    var isActive = !!(isActiveProp ? isActiveProp(match, currentLocation) : match);
+    var className = isActive ? joinClassnames(classNameProp, activeClassName) : classNameProp;
+    var style = isActive ? _extends({}, styleProp, {}, activeStyle) : styleProp;
+
+    var props = _extends({
+      "aria-current": isActive && ariaCurrent || null,
+      className: className,
+      style: style,
+      to: toLocation
+    }, rest); // React 15 compat
+
+
+    if (forwardRefShim$1 !== forwardRef$1) {
+      props.ref = forwardedRef || innerRef;
+    } else {
+      props.innerRef = innerRef;
+    }
+
+    return React__default.createElement(Link, props);
+  });
+});
+
+if (process.env.NODE_ENV !== "production") {
+  NavLink.displayName = "NavLink";
+  var ariaCurrentType = PropTypes.oneOf(["page", "step", "location", "date", "time", "true"]);
+  NavLink.propTypes = _extends({}, Link.propTypes, {
+    "aria-current": ariaCurrentType,
+    activeClassName: PropTypes.string,
+    activeStyle: PropTypes.object,
+    className: PropTypes.string,
+    exact: PropTypes.bool,
+    isActive: PropTypes.func,
+    location: PropTypes.object,
+    sensitive: PropTypes.bool,
+    strict: PropTypes.bool,
+    style: PropTypes.object
+  });
 }
 
 var classnames = createCommonjsModule(function (module) {
@@ -3625,29 +3730,6 @@ var propTypes$7 = {
   cssModule: PropTypes.object
 };
 
-var setPrototypeOf = createCommonjsModule(function (module) {
-function _setPrototypeOf(o, p) {
-  module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
-    o.__proto__ = p;
-    return o;
-  };
-
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-  return _setPrototypeOf(o, p);
-}
-
-module.exports = _setPrototypeOf;
-module.exports["default"] = module.exports, module.exports.__esModule = true;
-});
-
-var setPrototypeOf$1 = unwrapExports(setPrototypeOf);
-
-function _inheritsLoose(subClass, superClass) {
-  subClass.prototype = Object.create(superClass.prototype);
-  subClass.prototype.constructor = subClass;
-  setPrototypeOf$1(subClass, superClass);
-}
-
 function _assertThisInitialized(self) {
   if (self === void 0) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -3658,33 +3740,33 @@ function _assertThisInitialized(self) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _objectWithoutProperties$4(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-function _classCallCheck$a(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn$a(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits$a(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Manager = function (_Component) {
-  _inherits$a(Manager, _Component);
+  _inherits(Manager, _Component);
 
   function Manager() {
     var _ref;
 
     var _temp, _this, _ret;
 
-    _classCallCheck$a(this, Manager);
+    _classCallCheck(this, Manager);
 
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn$a(this, (_ref = Manager.__proto__ || Object.getPrototypeOf(Manager)).call.apply(_ref, [this].concat(args))), _this), _this._setTargetNode = function (node) {
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Manager.__proto__ || Object.getPrototypeOf(Manager)).call.apply(_ref, [this].concat(args))), _this), _this._setTargetNode = function (node) {
       _this._targetNode = node;
     }, _this._getTargetNode = function () {
       return _this._targetNode;
-    }, _temp), _possibleConstructorReturn$a(_this, _ret);
+    }, _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(Manager, [{
@@ -3703,7 +3785,7 @@ var Manager = function (_Component) {
       var _props = this.props,
           tag = _props.tag,
           children = _props.children,
-          restProps = _objectWithoutProperties$4(_props, ['tag', 'children']);
+          restProps = _objectWithoutProperties(_props, ['tag', 'children']);
 
       if (tag !== false) {
         return React.createElement(tag, restProps, children);
@@ -3727,16 +3809,16 @@ Manager.defaultProps = {
   tag: 'div'
 };
 
-var _extends$8 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends$1 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-function _objectWithoutProperties$5(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+function _objectWithoutProperties$1(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 var Target = function Target(props, context) {
   var _props$component = props.component,
       component = _props$component === undefined ? 'div' : _props$component,
       innerRef = props.innerRef,
       children = props.children,
-      restProps = _objectWithoutProperties$5(props, ['component', 'innerRef', 'children']);
+      restProps = _objectWithoutProperties$1(props, ['component', 'innerRef', 'children']);
 
   var popperManager = context.popperManager;
 
@@ -3752,7 +3834,7 @@ var Target = function Target(props, context) {
     return children({ targetProps: targetProps, restProps: restProps });
   }
 
-  var componentProps = _extends$8({}, restProps);
+  var componentProps = _extends$1({}, restProps);
 
   if (typeof component === 'string') {
     componentProps.ref = targetRef;
@@ -4182,7 +4264,7 @@ var defineProperty$1 = function (obj, key, value) {
   return obj;
 };
 
-var _extends$9 = Object.assign || function (target) {
+var _extends$2 = Object.assign || function (target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i];
 
@@ -4204,7 +4286,7 @@ var _extends$9 = Object.assign || function (target) {
  * @returns {Object} ClientRect like output
  */
 function getClientRect(offsets) {
-  return _extends$9({}, offsets, {
+  return _extends$2({}, offsets, {
     right: offsets.left + offsets.width,
     bottom: offsets.top + offsets.height
   });
@@ -4492,7 +4574,7 @@ function computeAutoPlacement(placement, refRect, popper, reference, boundariesE
   };
 
   var sortedAreas = Object.keys(rects).map(function (key) {
-    return _extends$9({
+    return _extends$2({
       key: key
     }, rects[key], {
       area: getArea(rects[key])
@@ -5134,9 +5216,9 @@ function computeStyle(data, options) {
   };
 
   // Update `data` attributes, styles and arrowStyles
-  data.attributes = _extends$9({}, attributes, data.attributes);
-  data.styles = _extends$9({}, styles, data.styles);
-  data.arrowStyles = _extends$9({}, data.offsets.arrow, data.arrowStyles);
+  data.attributes = _extends$2({}, attributes, data.attributes);
+  data.styles = _extends$2({}, styles, data.styles);
+  data.arrowStyles = _extends$2({}, data.offsets.arrow, data.arrowStyles);
 
   return data;
 }
@@ -5416,7 +5498,7 @@ function flip(data, options) {
 
       // this object contains `position`, we want to preserve it along with
       // any additional property we may add in the future
-      data.offsets.popper = _extends$9({}, data.offsets.popper, getPopperOffsets(data.instance.popper, data.offsets.reference, data.placement));
+      data.offsets.popper = _extends$2({}, data.offsets.popper, getPopperOffsets(data.instance.popper, data.offsets.reference, data.placement));
 
       data = runModifiers(data.instance.modifiers, data, 'flip');
     }
@@ -5690,7 +5772,7 @@ function preventOverflow(data, options) {
 
   order.forEach(function (placement) {
     var side = ['left', 'top'].indexOf(placement) !== -1 ? 'primary' : 'secondary';
-    popper = _extends$9({}, popper, check[side](placement));
+    popper = _extends$2({}, popper, check[side](placement));
   });
 
   data.offsets.popper = popper;
@@ -5725,7 +5807,7 @@ function shift(data) {
       end: defineProperty$1({}, side, reference[side] + reference[measurement] - popper[measurement])
     };
 
-    data.offsets.popper = _extends$9({}, popper, shiftOffsets[shiftvariation]);
+    data.offsets.popper = _extends$2({}, popper, shiftOffsets[shiftvariation]);
   }
 
   return data;
@@ -6257,7 +6339,7 @@ var Popper = function () {
     this.update = debounce(this.update.bind(this));
 
     // with {} we create a new object with the options inside it
-    this.options = _extends$9({}, Popper.Defaults, options);
+    this.options = _extends$2({}, Popper.Defaults, options);
 
     // init state
     this.state = {
@@ -6272,13 +6354,13 @@ var Popper = function () {
 
     // Deep merge modifiers options
     this.options.modifiers = {};
-    Object.keys(_extends$9({}, Popper.Defaults.modifiers, options.modifiers)).forEach(function (name) {
-      _this.options.modifiers[name] = _extends$9({}, Popper.Defaults.modifiers[name] || {}, options.modifiers ? options.modifiers[name] : {});
+    Object.keys(_extends$2({}, Popper.Defaults.modifiers, options.modifiers)).forEach(function (name) {
+      _this.options.modifiers[name] = _extends$2({}, Popper.Defaults.modifiers[name] || {}, options.modifiers ? options.modifiers[name] : {});
     });
 
     // Refactoring modifiers' list (Object => Array)
     this.modifiers = Object.keys(this.options.modifiers).map(function (name) {
-      return _extends$9({
+      return _extends$2({
         name: name
       }, _this.options.modifiers[name]);
     })
@@ -6387,35 +6469,35 @@ Popper.Utils = (typeof window !== 'undefined' ? window : global).PopperUtils;
 Popper.placements = placements;
 Popper.Defaults = Defaults;
 
-var _extends$a = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends$3 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass$1 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _objectWithoutProperties$6(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+function _objectWithoutProperties$2(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-function _classCallCheck$b(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn$b(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _possibleConstructorReturn$1(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits$b(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits$1(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var placements$1 = Popper.placements;
 
 var Popper$1 = function (_Component) {
-  _inherits$b(Popper$$1, _Component);
+  _inherits$1(Popper$$1, _Component);
 
   function Popper$$1() {
     var _ref;
 
     var _temp, _this, _ret;
 
-    _classCallCheck$b(this, Popper$$1);
+    _classCallCheck$1(this, Popper$$1);
 
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn$b(this, (_ref = Popper$$1.__proto__ || Object.getPrototypeOf(Popper$$1)).call.apply(_ref, [this].concat(args))), _this), _this.state = {}, _this._setArrowNode = function (node) {
+    return _ret = (_temp = (_this = _possibleConstructorReturn$1(this, (_ref = Popper$$1.__proto__ || Object.getPrototypeOf(Popper$$1)).call.apply(_ref, [this].concat(args))), _this), _this.state = {}, _this._setArrowNode = function (node) {
       _this._arrowNode = node;
     }, _this._getTargetNode = function () {
       if (_this.props.target) {
@@ -6455,7 +6537,7 @@ var Popper$1 = function (_Component) {
         };
       }
 
-      return _extends$a({
+      return _extends$3({
         position: data.offsets.popper.position
       }, data.styles);
     }, _this._getPopperPlacement = function () {
@@ -6484,7 +6566,7 @@ var Popper$1 = function (_Component) {
       }
     }, _this._scheduleUpdate = function () {
       _this._popper && _this._popper.scheduleUpdate();
-    }, _temp), _possibleConstructorReturn$b(_this, _ret);
+    }, _temp), _possibleConstructorReturn$1(_this, _ret);
   }
 
   _createClass$1(Popper$$1, [{
@@ -6523,12 +6605,12 @@ var Popper$1 = function (_Component) {
           eventsEnabled = _props.eventsEnabled,
           positionFixed = _props.positionFixed;
 
-      var modifiers = _extends$a({}, this.props.modifiers, {
+      var modifiers = _extends$3({}, this.props.modifiers, {
         applyStyle: { enabled: false },
         updateState: this._updateStateModifier
       });
       if (this._arrowNode) {
-        modifiers.arrow = _extends$a({}, this.props.modifiers.arrow || {}, {
+        modifiers.arrow = _extends$3({}, this.props.modifiers.arrow || {}, {
           element: this._arrowNode
         });
       }
@@ -6562,7 +6644,7 @@ var Popper$1 = function (_Component) {
           positionFixed = _props2.positionFixed,
           modifiers = _props2.modifiers,
           children = _props2.children,
-          restProps = _objectWithoutProperties$6(_props2, ['component', 'innerRef', 'placement', 'eventsEnabled', 'positionFixed', 'modifiers', 'children']);
+          restProps = _objectWithoutProperties$2(_props2, ['component', 'innerRef', 'placement', 'eventsEnabled', 'positionFixed', 'modifiers', 'children']);
 
       var popperStyle = this._getPopperStyle();
       var popperPlacement = this._getPopperPlacement();
@@ -6582,8 +6664,8 @@ var Popper$1 = function (_Component) {
         });
       }
 
-      var componentProps = _extends$a({}, restProps, {
-        style: _extends$a({}, restProps.style, popperStyle),
+      var componentProps = _extends$3({}, restProps, {
+        style: _extends$3({}, restProps.style, popperStyle),
         'data-placement': popperPlacement,
         'data-x-out-of-boundaries': popperHide
       });
@@ -6631,16 +6713,16 @@ Popper$1.defaultProps = {
   modifiers: {}
 };
 
-var _extends$b = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends$4 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-function _objectWithoutProperties$7(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+function _objectWithoutProperties$3(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 var Arrow = function Arrow(props, context) {
   var _props$component = props.component,
       component = _props$component === undefined ? 'span' : _props$component,
       innerRef = props.innerRef,
       children = props.children,
-      restProps = _objectWithoutProperties$7(props, ['component', 'innerRef', 'children']);
+      restProps = _objectWithoutProperties$3(props, ['component', 'innerRef', 'children']);
 
   var popper = context.popper;
 
@@ -6660,8 +6742,8 @@ var Arrow = function Arrow(props, context) {
     return children({ arrowProps: arrowProps, restProps: restProps });
   }
 
-  var componentProps = _extends$b({}, restProps, {
-    style: _extends$b({}, arrowStyle, restProps.style)
+  var componentProps = _extends$4({}, restProps, {
+    style: _extends$4({}, arrowStyle, restProps.style)
   });
 
   if (typeof component === 'string') {
@@ -7677,7 +7759,7 @@ function polyfill(Component) {
 }
 
 var reactLifecyclesCompat_es = /*#__PURE__*/Object.freeze({
-  polyfill: polyfill
+	polyfill: polyfill
 });
 
 var PropTypes$1 = createCommonjsModule(function (module, exports) {
@@ -11984,7 +12066,7 @@ var propTypes$19 = {
   children: PropTypes.string
 };
 
-var _typeof$1 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
 } : function (obj) {
   return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
@@ -12029,7 +12111,7 @@ var defineProperty$4 = function (obj, key, value) {
   return obj;
 };
 
-var _extends$c = Object.assign || function (target) {
+var _extends$5 = Object.assign || function (target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i];
 
@@ -12098,10 +12180,10 @@ var Icon = function Icon(_ref) {
     if (type !== 'svg') {
         var fa = type === 'solid' ? 'fas' : 'fab';
         var faClass = [className, fa, 'fa-' + icon].join(' ');
-        return React__default.createElement('i', _extends$c({ className: faClass }, otros));
+        return React__default.createElement('i', _extends$5({ className: faClass }, otros));
     } else {
         var svgClass = [className, 'svg-icon'].join(' ');
-        return React__default.createElement('img', _extends$c({}, otros, { className: svgClass, src: icon, alt: 'svg icon' }));
+        return React__default.createElement('img', _extends$5({}, otros, { className: svgClass, src: icon, alt: 'svg icon' }));
     }
 };
 
@@ -12318,7 +12400,7 @@ var Header = function Header(_ref) {
                         size: notification.size ? notification.size : notification.list ? notification.list.length : 0
                     },
                     notification.list && notification.list.slice(0, 10).map(function (notification_item, index) {
-                        var ops = _extends$c({
+                        var ops = _extends$5({
                             key: "notification_" + index
                         }, notification_item, {
                             generalClick: notification.onClick,
@@ -12388,7 +12470,7 @@ var ButtonX = function ButtonX(_ref) {
         children = _ref.children,
         args = objectWithoutProperties(_ref, ['icon', 'iconType', 'className', 'children']);
 
-    var btn_op = _extends$c({
+    var btn_op = _extends$5({
         className: ['btn', 'zina-btn', className].join(' ')
     }, args);
     return React__default.createElement(
@@ -12422,7 +12504,7 @@ var input_component = (function (_ref) {
             null,
             title
         ),
-        React__default.createElement('input', _extends$c({}, args, { className: 'form-control' }))
+        React__default.createElement('input', _extends$5({}, args, { className: 'form-control' }))
     );
 });
 
@@ -12594,14 +12676,14 @@ var PrivateRoute = function PrivateRoute(props) {
         }).filter(function (obj) {
             return obj;
         }).reduce(function (obj, item) {
-            return _extends$c({}, obj, item);
+            return _extends$5({}, obj, item);
         }, {});
-        var newProps = _extends$c({}, props, { extraProps: op });
+        var newProps = _extends$5({}, props, { extraProps: op });
         return localStorage.getItem('user') ? React__default.createElement(Component, newProps) : React__default.createElement(Redirect, {
             to: { pathname: '/login', state: { from: props.location } }
         });
     };
-    return React__default.createElement(Route, _extends$c({}, routerProps, { render: render }));
+    return React__default.createElement(Route, _extends$5({}, routerProps, { render: render }));
 };
 
 // import './menu.scss';
@@ -12633,7 +12715,7 @@ var Menu = function (_Component) {
         _this._getIcon = function (icon) {
             if (typeof icon === 'string') {
                 return React__default.createElement(Icon, { icon: icon });
-            } else if ((typeof icon === 'undefined' ? 'undefined' : _typeof$1(icon)) === 'object') {
+            } else if ((typeof icon === 'undefined' ? 'undefined' : _typeof(icon)) === 'object') {
                 return React__default.createElement(Icon, icon);
             }
         };
@@ -13338,29 +13420,29 @@ function __classPrivateFieldSet(receiver, privateMap, value) {
 }
 
 var tslib_1 = /*#__PURE__*/Object.freeze({
-  __extends: __extends,
-  get __assign () { return __assign; },
-  __rest: __rest,
-  __decorate: __decorate,
-  __param: __param,
-  __metadata: __metadata,
-  __awaiter: __awaiter,
-  __generator: __generator,
-  __createBinding: __createBinding,
-  __exportStar: __exportStar,
-  __values: __values,
-  __read: __read,
-  __spread: __spread,
-  __spreadArrays: __spreadArrays,
-  __await: __await,
-  __asyncGenerator: __asyncGenerator,
-  __asyncDelegator: __asyncDelegator,
-  __asyncValues: __asyncValues,
-  __makeTemplateObject: __makeTemplateObject,
-  __importStar: __importStar,
-  __importDefault: __importDefault,
-  __classPrivateFieldGet: __classPrivateFieldGet,
-  __classPrivateFieldSet: __classPrivateFieldSet
+	__extends: __extends,
+	get __assign () { return __assign; },
+	__rest: __rest,
+	__decorate: __decorate,
+	__param: __param,
+	__metadata: __metadata,
+	__awaiter: __awaiter,
+	__generator: __generator,
+	__createBinding: __createBinding,
+	__exportStar: __exportStar,
+	__values: __values,
+	__read: __read,
+	__spread: __spread,
+	__spreadArrays: __spreadArrays,
+	__await: __await,
+	__asyncGenerator: __asyncGenerator,
+	__asyncDelegator: __asyncDelegator,
+	__asyncValues: __asyncValues,
+	__makeTemplateObject: __makeTemplateObject,
+	__importStar: __importStar,
+	__importDefault: __importDefault,
+	__classPrivateFieldGet: __classPrivateFieldGet,
+	__classPrivateFieldSet: __classPrivateFieldSet
 });
 
 var is = createCommonjsModule(function (module, exports) {
@@ -22016,7 +22098,7 @@ var createClass$2 = function () {
 
 
 
-var _extends$g = Object.assign || function (target) {
+var _extends$9 = Object.assign || function (target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i];
 
@@ -22133,7 +22215,7 @@ var DrawerOverlay = function DrawerOverlay(_ref3) {
     onTouchStart: handleTouchStart,
     onTouchMove: handleTouchMove(100),
     onTouchEnd: handleTouchEnd,
-    style: _extends$g({
+    style: _extends$9({
       position: "fixed",
       zIndex: 1,
       backgroundColor: "rgba(0,0,0," + 0.6 * translation / 100 + ")",
@@ -22213,7 +22295,7 @@ var DrawerContentContainer = function DrawerContentContainer(_ref2) {
       onTouchStart: handleTouchStart,
       onTouchMove: handleTouchMove(size),
       onTouchEnd: handleTouchEnd,
-      style: _extends$g({
+      style: _extends$9({
         position: "fixed",
         zIndex: 1,
         transition: swiping ? "" : "transform .2s ease-in-out"
@@ -22249,7 +22331,7 @@ var MainContentContainer = function MainContentContainer(_ref) {
 
   return React__default.createElement(
     "div",
-    { className: "MainContentContainer", style: _extends$g({}, mainContentOpenStyle) },
+    { className: "MainContentContainer", style: _extends$9({}, mainContentOpenStyle) },
     children
   );
 };
@@ -24377,15 +24459,15 @@ var ClassNames = withEmotionCache(function (props, context) {
 });
 
 var core_esm = /*#__PURE__*/Object.freeze({
-  ClassNames: ClassNames,
-  Global: Global,
-  createElement: jsx$1,
-  jsx: jsx$1,
-  keyframes: keyframes,
-  CacheProvider: CacheProvider,
-  ThemeContext: ThemeContext,
-  get withEmotionCache () { return withEmotionCache; },
-  css: css$1
+	ClassNames: ClassNames,
+	Global: Global,
+	createElement: jsx$1,
+	jsx: jsx$1,
+	keyframes: keyframes,
+	CacheProvider: CacheProvider,
+	ThemeContext: ThemeContext,
+	get withEmotionCache () { return withEmotionCache; },
+	css: css$1
 });
 
 var inheritsLoose = createCommonjsModule(function (module) {
@@ -25113,7 +25195,7 @@ var ZinaCard = function (_Component) {
                 var header = children.type.header;
 
                 if (header) {
-                    switch (typeof header === "undefined" ? "undefined" : _typeof$1(header)) {
+                    switch (typeof header === "undefined" ? "undefined" : _typeof(header)) {
                         case 'function':
                             return header({
                                 togglecollapse: _this._toggle,
@@ -25253,7 +25335,7 @@ var Base = function (_Component) {
                             )
                         );
                     } else {
-                        var op2 = _extends$c({}, op, {
+                        var op2 = _extends$5({}, op, {
                             className: op.className + ' active',
                             'aria-current': 'page'
                         });
@@ -25321,6 +25403,7 @@ var Base = function (_Component) {
                 config = _props$extraProps.config,
                 extraMenu = _props$extraProps.extraMenu,
                 notification = _props$extraProps.notification,
+                userMenuItems = _props$extraProps.userMenuItems,
                 copyright = _props$extraProps.copyright;
 
             var childrens = children ? children : null;
@@ -25407,7 +25490,7 @@ var Base = function (_Component) {
                                         translation: translation,
                                         mainContentScroll: mainContentScroll
                                     },
-                                    _this2.renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens, copyright)
+                                    _this2.renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens, copyright, userMenuItems)
                                 )
                             );
                         }
@@ -25417,7 +25500,7 @@ var Base = function (_Component) {
         }
     }, {
         key: 'renderContent',
-        value: function renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens, copyright) {
+        value: function renderContent(toggleDrawer, user, logo, extraMenu, notification, config, title, childrens, copyright, userMenuItems) {
             return React__default.createElement(
                 'div',
                 { className: 'content' },
@@ -25429,7 +25512,8 @@ var Base = function (_Component) {
                     user: user,
                     logo: logo,
                     extraMenu: extraMenu,
-                    notification: notification
+                    notification: notification,
+                    userMenuItems: userMenuItems
                 }),
                 React__default.createElement(
                     'div',
@@ -25514,6 +25598,7 @@ Base.propTypes = {
             list: PropTypes.array.isRequired,
             size: PropTypes.number
         }),
+        userMenuItems: PropTypes.func,
         logout: PropTypes.func.isRequired,
         copyright: PropTypes.any
     }).isRequired
@@ -25900,10 +25985,10 @@ deepmerge.all = function deepmergeAll(array, options) {
 
 var deepmerge_1 = deepmerge;
 
-var key = '__global_unique_id__';
+var key$1 = '__global_unique_id__';
 
 var gud = function() {
-  return commonjsGlobal[key] = (commonjsGlobal[key] || 0) + 1;
+  return commonjsGlobal[key$1] = (commonjsGlobal[key$1] || 0) + 1;
 };
 
 /**
@@ -25948,7 +26033,7 @@ var emptyFunction_1 = emptyFunction;
  * same logic and follow the same code paths.
  */
 
-var warning$2 = emptyFunction_1;
+var warning$1 = emptyFunction_1;
 
 if (process.env.NODE_ENV !== 'production') {
   var printWarning = function printWarning(format) {
@@ -25971,7 +26056,7 @@ if (process.env.NODE_ENV !== 'production') {
     } catch (x) {}
   };
 
-  warning$2 = function warning$$1(condition, format) {
+  warning$1 = function warning(condition, format) {
     if (format === undefined) {
       throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
     }
@@ -25990,7 +26075,7 @@ if (process.env.NODE_ENV !== 'production') {
   };
 }
 
-var warning_1 = warning$2;
+var warning_1 = warning$1;
 
 var implementation = createCommonjsModule(function (module, exports) {
 
@@ -29160,7 +29245,7 @@ function (_super) {
         var activeElement = getActiveElement();
 
         if (activeElement !== null && activeElement instanceof HTMLButtonElement) {
-          process.env.NODE_ENV !== "production" ? warning$1(!!(activeElement.attributes && activeElement.attributes.getNamedItem('type')), 'You submitted a Formik form using a button with an unspecified `type` attribute.  Most browsers default button elements to `type="submit"`. If this is not a submit button, please add `type="button"`.') : void 0;
+          process.env.NODE_ENV !== "production" ? warning(!!(activeElement.attributes && activeElement.attributes.getNamedItem('type')), 'You submitted a Formik form using a button with an unspecified `type` attribute.  Most browsers default button elements to `type="submit"`. If this is not a submit button, please add `type="button"`.') : void 0;
         }
       }
 
@@ -29393,9 +29478,9 @@ function (_super) {
     _this.didMount = false;
     _this.fields = {};
     _this.initialValues = props.initialValues || {};
-    process.env.NODE_ENV !== "production" ? warning$1(!(props.component && props.render), 'You should not use <Formik component> and <Formik render> in the same <Formik> component; <Formik render> will be ignored') : void 0;
-    process.env.NODE_ENV !== "production" ? warning$1(!(props.component && props.children && !isEmptyChildren$1(props.children)), 'You should not use <Formik component> and <Formik children> in the same <Formik> component; <Formik children> will be ignored') : void 0;
-    process.env.NODE_ENV !== "production" ? warning$1(!(props.render && props.children && !isEmptyChildren$1(props.children)), 'You should not use <Formik render> and <Formik children> in the same <Formik> component; <Formik children> will be ignored') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(props.component && props.render), 'You should not use <Formik component> and <Formik render> in the same <Formik> component; <Formik render> will be ignored') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(props.component && props.children && !isEmptyChildren$1(props.children)), 'You should not use <Formik component> and <Formik children> in the same <Formik> component; <Formik children> will be ignored') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(props.render && props.children && !isEmptyChildren$1(props.children)), 'You should not use <Formik render> and <Formik children> in the same <Formik> component; <Formik children> will be ignored') : void 0;
     return _this;
   }
 
@@ -29558,9 +29643,9 @@ function (_super) {
     var render = props.render,
         children = props.children,
         component = props.component;
-    process.env.NODE_ENV !== "production" ? warning$1(!(component && render), 'You should not use <Field component> and <Field render> in the same <Field> component; <Field component> will be ignored') : void 0;
-    process.env.NODE_ENV !== "production" ? warning$1(!(component && children && isFunction$3(children)), 'You should not use <Field component> and <Field children> as a function in the same <Field> component; <Field component> will be ignored.') : void 0;
-    process.env.NODE_ENV !== "production" ? warning$1(!(render && children && !isEmptyChildren$1(children)), 'You should not use <Field render> and <Field children> in the same <Field> component; <Field children> will be ignored') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(component && render), 'You should not use <Field component> and <Field render> in the same <Field> component; <Field component> will be ignored') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(component && children && isFunction$3(children)), 'You should not use <Field component> and <Field children> as a function in the same <Field> component; <Field component> will be ignored.') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(render && children && !isEmptyChildren$1(children)), 'You should not use <Field render> and <Field children> in the same <Field> component; <Field children> will be ignored') : void 0;
     return _this;
   }
 
@@ -29912,9 +29997,9 @@ function (_super) {
     var render = props.render,
         children = props.children,
         component = props.component;
-    process.env.NODE_ENV !== "production" ? warning$1(!(component && render), 'You should not use <FastField component> and <FastField render> in the same <FastField> component; <FastField component> will be ignored') : void 0;
-    process.env.NODE_ENV !== "production" ? warning$1(!(component && children && isFunction$3(children)), 'You should not use <FastField component> and <FastField children> as a function in the same <FastField> component; <FastField component> will be ignored.') : void 0;
-    process.env.NODE_ENV !== "production" ? warning$1(!(render && children && !isEmptyChildren$1(children)), 'You should not use <FastField render> and <FastField children> in the same <FastField> component; <FastField children> will be ignored') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(component && render), 'You should not use <FastField component> and <FastField render> in the same <FastField> component; <FastField component> will be ignored') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(component && children && isFunction$3(children)), 'You should not use <FastField component> and <FastField children> as a function in the same <FastField> component; <FastField component> will be ignored.') : void 0;
+    process.env.NODE_ENV !== "production" ? warning(!(render && children && !isEmptyChildren$1(children)), 'You should not use <FastField render> and <FastField children> in the same <FastField> component; <FastField children> will be ignored') : void 0;
     return _this;
   }
 
@@ -31464,9 +31549,9 @@ function createEmotion(context, options) {
   return emotion;
 }
 
-var context = typeof global !== 'undefined' ? global : {};
+var context$1 = typeof global !== 'undefined' ? global : {};
 
-var _createEmotion = createEmotion(context),
+var _createEmotion = createEmotion(context$1),
     flush = _createEmotion.flush,
     hydrate = _createEmotion.hydrate,
     cx = _createEmotion.cx,
@@ -31866,21 +31951,21 @@ exports.default = AutosizeInput;
 
 var AutosizeInput = unwrapExports(AutosizeInput_1);
 
-function _typeof$2(obj) {
+function _typeof$1(obj) {
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-    _typeof$2 = function (obj) {
+    _typeof$1 = function (obj) {
       return typeof obj;
     };
   } else {
-    _typeof$2 = function (obj) {
+    _typeof$1 = function (obj) {
       return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
     };
   }
 
-  return _typeof$2(obj);
+  return _typeof$1(obj);
 }
 
-function _classCallCheck$c(instance, Constructor) {
+function _classCallCheck$2(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
   }
@@ -31917,8 +32002,8 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
-function _extends$h() {
-  _extends$h = Object.assign || function (target) {
+function _extends$a() {
+  _extends$a = Object.assign || function (target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
 
@@ -31932,7 +32017,7 @@ function _extends$h() {
     return target;
   };
 
-  return _extends$h.apply(this, arguments);
+  return _extends$a.apply(this, arguments);
 }
 
 function _objectSpread$1(target) {
@@ -31954,7 +32039,7 @@ function _objectSpread$1(target) {
   return target;
 }
 
-function _inherits$c(subClass, superClass) {
+function _inherits$2(subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
     throw new TypeError("Super expression must either be null or a function");
   }
@@ -32000,7 +32085,7 @@ function _objectWithoutPropertiesLoose$1(source, excluded) {
   return target;
 }
 
-function _objectWithoutProperties$8(source, excluded) {
+function _objectWithoutProperties$4(source, excluded) {
   if (source == null) return {};
 
   var target = _objectWithoutPropertiesLoose$1(source, excluded);
@@ -32029,7 +32114,7 @@ function _assertThisInitialized$1(self) {
   return self;
 }
 
-function _possibleConstructorReturn$c(self, call) {
+function _possibleConstructorReturn$2(self, call) {
   if (call && (typeof call === "object" || typeof call === "function")) {
     return call;
   }
@@ -32106,7 +32191,7 @@ function classNames(prefix, cssKey, state, className) {
 
 var cleanValue = function cleanValue(value) {
   if (Array.isArray(value)) return value.filter(Boolean);
-  if (_typeof$2(value) === 'object' && value !== null) return [value];
+  if (_typeof$1(value) === 'object' && value !== null) return [value];
   return [];
 }; // ==============================
 // Handle Input Change
@@ -32445,20 +32530,20 @@ var menuCSS = function menuCSS(_ref2) {
 var MenuPlacer =
 /*#__PURE__*/
 function (_Component) {
-  _inherits$c(MenuPlacer, _Component);
+  _inherits$2(MenuPlacer, _Component);
 
   function MenuPlacer() {
     var _getPrototypeOf2;
 
     var _this;
 
-    _classCallCheck$c(this, MenuPlacer);
+    _classCallCheck$2(this, MenuPlacer);
 
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    _this = _possibleConstructorReturn$c(this, (_getPrototypeOf2 = _getPrototypeOf(MenuPlacer)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _this = _possibleConstructorReturn$2(this, (_getPrototypeOf2 = _getPrototypeOf(MenuPlacer)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "state", {
       maxHeight: _this.props.maxMenuHeight,
@@ -32534,7 +32619,7 @@ var Menu$1 = function Menu(props) {
   css$2(getStyles('menu', props)), {
     menu: true
   }, className);
-  return React__default.createElement("div", _extends$h({
+  return React__default.createElement("div", _extends$a({
     className: cn
   }, innerProps, {
     ref: innerRef
@@ -32595,7 +32680,7 @@ var NoOptionsMessage = function NoOptionsMessage(props) {
       cx$$1 = props.cx,
       getStyles = props.getStyles,
       innerProps = props.innerProps;
-  return React__default.createElement("div", _extends$h({
+  return React__default.createElement("div", _extends$a({
     className: cx$$1(
     /*#__PURE__*/
     css$2(getStyles('noOptionsMessage', props)), {
@@ -32613,7 +32698,7 @@ var LoadingMessage = function LoadingMessage(props) {
       cx$$1 = props.cx,
       getStyles = props.getStyles,
       innerProps = props.innerProps;
-  return React__default.createElement("div", _extends$h({
+  return React__default.createElement("div", _extends$a({
     className: cx$$1(
     /*#__PURE__*/
     css$2(getStyles('loadingMessage', props)), {
@@ -32643,20 +32728,20 @@ var menuPortalCSS = function menuPortalCSS(_ref6) {
 var MenuPortal =
 /*#__PURE__*/
 function (_Component2) {
-  _inherits$c(MenuPortal, _Component2);
+  _inherits$2(MenuPortal, _Component2);
 
   function MenuPortal() {
     var _getPrototypeOf3;
 
     var _this2;
 
-    _classCallCheck$c(this, MenuPortal);
+    _classCallCheck$2(this, MenuPortal);
 
     for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
       args[_key2] = arguments[_key2];
     }
 
-    _this2 = _possibleConstructorReturn$c(this, (_getPrototypeOf3 = _getPrototypeOf(MenuPortal)).call.apply(_getPrototypeOf3, [this].concat(args)));
+    _this2 = _possibleConstructorReturn$2(this, (_getPrototypeOf3 = _getPrototypeOf(MenuPortal)).call.apply(_getPrototypeOf3, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this2)), "state", {
       placement: null
@@ -32736,7 +32821,7 @@ function equal$1(a, b) {
   // fast-deep-equal index.js 2.0.1
   if (a === b) return true;
 
-  if (a && b && _typeof$2(a) == 'object' && _typeof$2(b) == 'object') {
+  if (a && b && _typeof$1(a) == 'object' && _typeof$1(b) == 'object') {
     var arrA = isArray$2(a),
         arrB = isArray$2(b),
         i,
@@ -33120,7 +33205,7 @@ var createFilter = function createFilter(config) {
 };
 
 var A11yText = function A11yText(props) {
-  return React__default.createElement("span", _extends$h({
+  return React__default.createElement("span", _extends$a({
     className:
     /*#__PURE__*/
 
@@ -33145,12 +33230,12 @@ var A11yText = function A11yText(props) {
 var DummyInput =
 /*#__PURE__*/
 function (_Component) {
-  _inherits$c(DummyInput, _Component);
+  _inherits$2(DummyInput, _Component);
 
   function DummyInput() {
-    _classCallCheck$c(this, DummyInput);
+    _classCallCheck$2(this, DummyInput);
 
-    return _possibleConstructorReturn$c(this, _getPrototypeOf(DummyInput).apply(this, arguments));
+    return _possibleConstructorReturn$2(this, _getPrototypeOf(DummyInput).apply(this, arguments));
   }
 
   _createClass$2(DummyInput, [{
@@ -33165,9 +33250,9 @@ function (_Component) {
           exit = _this$props.exit,
           innerRef = _this$props.innerRef,
           emotion = _this$props.emotion,
-          props = _objectWithoutProperties$8(_this$props, ["in", "out", "onExited", "appear", "enter", "exit", "innerRef", "emotion"]);
+          props = _objectWithoutProperties$4(_this$props, ["in", "out", "onExited", "appear", "enter", "exit", "innerRef", "emotion"]);
 
-      return React__default.createElement("input", _extends$h({
+      return React__default.createElement("input", _extends$a({
         ref: innerRef
       }, props, {
         className:
@@ -33202,12 +33287,12 @@ function (_Component) {
 var NodeResolver =
 /*#__PURE__*/
 function (_Component) {
-  _inherits$c(NodeResolver, _Component);
+  _inherits$2(NodeResolver, _Component);
 
   function NodeResolver() {
-    _classCallCheck$c(this, NodeResolver);
+    _classCallCheck$2(this, NodeResolver);
 
-    return _possibleConstructorReturn$c(this, _getPrototypeOf(NodeResolver).apply(this, arguments));
+    return _possibleConstructorReturn$2(this, _getPrototypeOf(NodeResolver).apply(this, arguments));
   }
 
   _createClass$2(NodeResolver, [{
@@ -33268,20 +33353,20 @@ var activeScrollLocks = 0;
 var ScrollLock =
 /*#__PURE__*/
 function (_Component) {
-  _inherits$c(ScrollLock, _Component);
+  _inherits$2(ScrollLock, _Component);
 
   function ScrollLock() {
     var _getPrototypeOf2;
 
     var _this;
 
-    _classCallCheck$c(this, ScrollLock);
+    _classCallCheck$2(this, ScrollLock);
 
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    _this = _possibleConstructorReturn$c(this, (_getPrototypeOf2 = _getPrototypeOf(ScrollLock)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _this = _possibleConstructorReturn$2(this, (_getPrototypeOf2 = _getPrototypeOf(ScrollLock)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "originalStyles", {});
 
@@ -33400,20 +33485,20 @@ _defineProperty(ScrollLock, "defaultProps", {
 var ScrollBlock =
 /*#__PURE__*/
 function (_PureComponent) {
-  _inherits$c(ScrollBlock, _PureComponent);
+  _inherits$2(ScrollBlock, _PureComponent);
 
   function ScrollBlock() {
     var _getPrototypeOf2;
 
     var _this;
 
-    _classCallCheck$c(this, ScrollBlock);
+    _classCallCheck$2(this, ScrollBlock);
 
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    _this = _possibleConstructorReturn$c(this, (_getPrototypeOf2 = _getPrototypeOf(ScrollBlock)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _this = _possibleConstructorReturn$2(this, (_getPrototypeOf2 = _getPrototypeOf(ScrollBlock)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "state", {
       touchScrollTarget: null
@@ -33485,20 +33570,20 @@ function (_PureComponent) {
 var ScrollCaptor =
 /*#__PURE__*/
 function (_Component) {
-  _inherits$c(ScrollCaptor, _Component);
+  _inherits$2(ScrollCaptor, _Component);
 
   function ScrollCaptor() {
     var _getPrototypeOf2;
 
     var _this;
 
-    _classCallCheck$c(this, ScrollCaptor);
+    _classCallCheck$2(this, ScrollCaptor);
 
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    _this = _possibleConstructorReturn$c(this, (_getPrototypeOf2 = _getPrototypeOf(ScrollCaptor)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _this = _possibleConstructorReturn$2(this, (_getPrototypeOf2 = _getPrototypeOf(ScrollCaptor)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "isBottom", false);
 
@@ -33647,12 +33732,12 @@ function (_Component) {
 var ScrollCaptorSwitch =
 /*#__PURE__*/
 function (_Component2) {
-  _inherits$c(ScrollCaptorSwitch, _Component2);
+  _inherits$2(ScrollCaptorSwitch, _Component2);
 
   function ScrollCaptorSwitch() {
-    _classCallCheck$c(this, ScrollCaptorSwitch);
+    _classCallCheck$2(this, ScrollCaptorSwitch);
 
-    return _possibleConstructorReturn$c(this, _getPrototypeOf(ScrollCaptorSwitch).apply(this, arguments));
+    return _possibleConstructorReturn$2(this, _getPrototypeOf(ScrollCaptorSwitch).apply(this, arguments));
   }
 
   _createClass$2(ScrollCaptorSwitch, [{
@@ -33660,7 +33745,7 @@ function (_Component2) {
     value: function render() {
       var _this$props2 = this.props,
           isEnabled = _this$props2.isEnabled,
-          props = _objectWithoutProperties$8(_this$props2, ["isEnabled"]);
+          props = _objectWithoutProperties$4(_this$props2, ["isEnabled"]);
 
       return isEnabled ? React__default.createElement(ScrollCaptor, props) : this.props.children;
     }
@@ -33756,7 +33841,7 @@ var SelectContainer = function SelectContainer(props) {
       innerProps = props.innerProps,
       isDisabled = props.isDisabled,
       isRtl = props.isRtl;
-  return React__default.createElement("div", _extends$h({
+  return React__default.createElement("div", _extends$a({
     className: cx$$1(
     /*#__PURE__*/
     css$2(getStyles('container', props)), {
@@ -33784,12 +33869,12 @@ var valueContainerCSS = function valueContainerCSS(_ref2) {
 var ValueContainer =
 /*#__PURE__*/
 function (_Component) {
-  _inherits$c(ValueContainer, _Component);
+  _inherits$2(ValueContainer, _Component);
 
   function ValueContainer() {
-    _classCallCheck$c(this, ValueContainer);
+    _classCallCheck$2(this, ValueContainer);
 
-    return _possibleConstructorReturn$c(this, _getPrototypeOf(ValueContainer).apply(this, arguments));
+    return _possibleConstructorReturn$2(this, _getPrototypeOf(ValueContainer).apply(this, arguments));
   }
 
   _createClass$2(ValueContainer, [{
@@ -33846,9 +33931,9 @@ var IndicatorsContainer = function IndicatorsContainer(props) {
 // ==============================
 var Svg = function Svg(_ref) {
   var size = _ref.size,
-      props = _objectWithoutProperties$8(_ref, ["size"]);
+      props = _objectWithoutProperties$4(_ref, ["size"]);
 
-  return React__default.createElement("svg", _extends$h({
+  return React__default.createElement("svg", _extends$a({
     height: size,
     width: size,
     viewBox: "0 0 20 20",
@@ -33869,14 +33954,14 @@ var Svg = function Svg(_ref) {
 };
 
 var CrossIcon = function CrossIcon(props) {
-  return React__default.createElement(Svg, _extends$h({
+  return React__default.createElement(Svg, _extends$a({
     size: 20
   }, props), React__default.createElement("path", {
     d: "M14.348 14.849c-0.469 0.469-1.229 0.469-1.697 0l-2.651-3.030-2.651 3.029c-0.469 0.469-1.229 0.469-1.697 0-0.469-0.469-0.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-0.469-0.469-0.469-1.228 0-1.697s1.228-0.469 1.697 0l2.652 3.031 2.651-3.031c0.469-0.469 1.228-0.469 1.697 0s0.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c0.469 0.469 0.469 1.229 0 1.698z"
   }));
 };
 var DownChevron = function DownChevron(props) {
-  return React__default.createElement(Svg, _extends$h({
+  return React__default.createElement(Svg, _extends$a({
     size: 20
   }, props), React__default.createElement("path", {
     d: "M4.516 7.548c0.436-0.446 1.043-0.481 1.576 0l3.908 3.747 3.908-3.747c0.533-0.481 1.141-0.446 1.574 0 0.436 0.445 0.408 1.197 0 1.615-0.406 0.418-4.695 4.502-4.695 4.502-0.217 0.223-0.502 0.335-0.787 0.335s-0.57-0.112-0.789-0.335c0 0-4.287-4.084-4.695-4.502s-0.436-1.17 0-1.615z"
@@ -33909,7 +33994,7 @@ var DropdownIndicator = function DropdownIndicator(props) {
       cx$$1 = props.cx,
       getStyles = props.getStyles,
       innerProps = props.innerProps;
-  return React__default.createElement("div", _extends$h({}, innerProps, {
+  return React__default.createElement("div", _extends$a({}, innerProps, {
     className: cx$$1(
     /*#__PURE__*/
     css$2(getStyles('dropdownIndicator', props)), {
@@ -33925,7 +34010,7 @@ var ClearIndicator = function ClearIndicator(props) {
       cx$$1 = props.cx,
       getStyles = props.getStyles,
       innerProps = props.innerProps;
-  return React__default.createElement("div", _extends$h({}, innerProps, {
+  return React__default.createElement("div", _extends$a({}, innerProps, {
     className: cx$$1(
     /*#__PURE__*/
     css$2(getStyles('clearIndicator', props)), {
@@ -33956,7 +34041,7 @@ var IndicatorSeparator = function IndicatorSeparator(props) {
       cx$$1 = props.cx,
       getStyles = props.getStyles,
       innerProps = props.innerProps;
-  return React__default.createElement("span", _extends$h({}, innerProps, {
+  return React__default.createElement("span", _extends$a({}, innerProps, {
     className: cx$$1(
     /*#__PURE__*/
     css$2(getStyles('indicatorSeparator', props)), {
@@ -34032,7 +34117,7 @@ var LoadingIndicator = function LoadingIndicator(props) {
     keyframesInjected = true;
   }
 
-  return React__default.createElement("div", _extends$h({}, innerProps, {
+  return React__default.createElement("div", _extends$a({}, innerProps, {
     className: cx$$1(
     /*#__PURE__*/
     css$2(getStyles('loadingIndicator', props)), {
@@ -34097,7 +34182,7 @@ var Control = function Control(props) {
       innerRef = props.innerRef,
       innerProps = props.innerProps,
       menuIsOpen = props.menuIsOpen;
-  return React__default.createElement("div", _extends$h({
+  return React__default.createElement("div", _extends$a({
     ref: innerRef,
     className: cx$$1(
     /*#__PURE__*/
@@ -34134,7 +34219,7 @@ var Group = function Group(props) {
     css$2(getStyles('group', props)), {
       'group': true
     }, className)
-  }, React__default.createElement(Heading, _extends$h({}, headingProps, {
+  }, React__default.createElement(Heading, _extends$a({}, headingProps, {
     selectProps: selectProps,
     theme: theme,
     getStyles: getStyles,
@@ -34163,9 +34248,9 @@ var GroupHeading = function GroupHeading(props) {
       getStyles = props.getStyles,
       theme = props.theme,
       selectProps = props.selectProps,
-      cleanProps = _objectWithoutProperties$8(props, ["className", "cx", "getStyles", "theme", "selectProps"]);
+      cleanProps = _objectWithoutProperties$4(props, ["className", "cx", "getStyles", "theme", "selectProps"]);
 
-  return React__default.createElement("div", _extends$h({
+  return React__default.createElement("div", _extends$a({
     className: cx$$1(
     /*#__PURE__*/
     css$2(getStyles('groupHeading', _objectSpread$1({
@@ -34212,7 +34297,7 @@ var Input$1 = function Input(_ref2) {
       isDisabled = _ref2.isDisabled,
       theme = _ref2.theme,
       selectProps = _ref2.selectProps,
-      props = _objectWithoutProperties$8(_ref2, ["className", "cx", "getStyles", "innerRef", "isHidden", "isDisabled", "theme", "selectProps"]);
+      props = _objectWithoutProperties$4(_ref2, ["className", "cx", "getStyles", "innerRef", "isHidden", "isDisabled", "theme", "selectProps"]);
 
   return React__default.createElement("div", {
     className:
@@ -34222,7 +34307,7 @@ var Input$1 = function Input(_ref2) {
     css$2(getStyles('input', _objectSpread$1({
       theme: theme
     }, props)))
-  }, React__default.createElement(AutosizeInput, _extends$h({
+  }, React__default.createElement(AutosizeInput, _extends$a({
     className: cx$$1(null, {
       'input': true
     }, className),
@@ -34292,12 +34377,12 @@ var MultiValueLabel = MultiValueGeneric;
 var MultiValueRemove =
 /*#__PURE__*/
 function (_Component) {
-  _inherits$c(MultiValueRemove, _Component);
+  _inherits$2(MultiValueRemove, _Component);
 
   function MultiValueRemove() {
-    _classCallCheck$c(this, MultiValueRemove);
+    _classCallCheck$2(this, MultiValueRemove);
 
-    return _possibleConstructorReturn$c(this, _getPrototypeOf(MultiValueRemove).apply(this, arguments));
+    return _possibleConstructorReturn$2(this, _getPrototypeOf(MultiValueRemove).apply(this, arguments));
   }
 
   _createClass$2(MultiValueRemove, [{
@@ -34318,12 +34403,12 @@ function (_Component) {
 var MultiValue =
 /*#__PURE__*/
 function (_Component2) {
-  _inherits$c(MultiValue, _Component2);
+  _inherits$2(MultiValue, _Component2);
 
   function MultiValue() {
-    _classCallCheck$c(this, MultiValue);
+    _classCallCheck$2(this, MultiValue);
 
-    return _possibleConstructorReturn$c(this, _getPrototypeOf(MultiValue).apply(this, arguments));
+    return _possibleConstructorReturn$2(this, _getPrototypeOf(MultiValue).apply(this, arguments));
   }
 
   _createClass$2(MultiValue, [{
@@ -34427,7 +34512,7 @@ var Option = function Option(props) {
       isSelected = props.isSelected,
       innerRef = props.innerRef,
       innerProps = props.innerProps;
-  return React__default.createElement("div", _extends$h({
+  return React__default.createElement("div", _extends$a({
     ref: innerRef,
     className: cx$$1(
     /*#__PURE__*/
@@ -34461,7 +34546,7 @@ var Placeholder = function Placeholder(props) {
       cx$$1 = props.cx,
       getStyles = props.getStyles,
       innerProps = props.innerProps;
-  return React__default.createElement("div", _extends$h({
+  return React__default.createElement("div", _extends$a({
     className: cx$$1(
     /*#__PURE__*/
     css$2(getStyles('placeholder', props)), {
@@ -34497,7 +34582,7 @@ var SingleValue = function SingleValue(props) {
       getStyles = props.getStyles,
       isDisabled = props.isDisabled,
       innerProps = props.innerProps;
-  return React__default.createElement("div", _extends$h({
+  return React__default.createElement("div", _extends$a({
     className: cx$$1(
     /*#__PURE__*/
     css$2(getStyles('singleValue', props)), {
@@ -34653,7 +34738,7 @@ var instanceId = 1;
 var Select =
 /*#__PURE__*/
 function (_Component) {
-  _inherits$c(Select, _Component);
+  _inherits$2(Select, _Component);
 
   // Misc. Instance Properties
   // ------------------------------
@@ -34665,9 +34750,9 @@ function (_Component) {
   function Select(_props) {
     var _this;
 
-    _classCallCheck$c(this, Select);
+    _classCallCheck$2(this, Select);
 
-    _this = _possibleConstructorReturn$c(this, _getPrototypeOf(Select).call(this, _props));
+    _this = _possibleConstructorReturn$2(this, _getPrototypeOf(Select).call(this, _props));
 
     _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "state", {
       ariaLiveSelection: '',
@@ -36013,7 +36098,7 @@ function (_Component) {
           cx$$1 = _this$commonProps.cx,
           theme = _this$commonProps.theme,
           selectProps = _this$commonProps.selectProps;
-      return React__default.createElement(Input, _extends$h({
+      return React__default.createElement(Input, _extends$a({
         autoCapitalize: "none",
         autoComplete: "off",
         autoCorrect: "off",
@@ -36059,7 +36144,7 @@ function (_Component) {
           isFocused = _this$state8.isFocused;
 
       if (!this.hasValue() || !controlShouldRenderValue) {
-        return inputValue ? null : React__default.createElement(Placeholder, _extends$h({}, commonProps, {
+        return inputValue ? null : React__default.createElement(Placeholder, _extends$a({}, commonProps, {
           key: "placeholder",
           isDisabled: isDisabled,
           isFocused: isFocused
@@ -36069,7 +36154,7 @@ function (_Component) {
       if (isMulti) {
         var selectValues = selectValue.map(function (opt) {
           var isOptionFocused = opt === focusedValue;
-          return React__default.createElement(MultiValue, _extends$h({}, commonProps, {
+          return React__default.createElement(MultiValue, _extends$a({}, commonProps, {
             components: {
               Container: MultiValueContainer,
               Label: MultiValueLabel,
@@ -36101,7 +36186,7 @@ function (_Component) {
       }
 
       var singleValue = selectValue[0];
-      return React__default.createElement(SingleValue, _extends$h({}, commonProps, {
+      return React__default.createElement(SingleValue, _extends$a({}, commonProps, {
         data: singleValue,
         isDisabled: isDisabled
       }), this.formatOptionLabel(singleValue, 'value'));
@@ -36125,7 +36210,7 @@ function (_Component) {
         onTouchEnd: this.onClearIndicatorTouchEnd,
         'aria-hidden': 'true'
       };
-      return React__default.createElement(ClearIndicator, _extends$h({}, commonProps, {
+      return React__default.createElement(ClearIndicator, _extends$a({}, commonProps, {
         innerProps: innerProps,
         isFocused: isFocused
       }));
@@ -36143,7 +36228,7 @@ function (_Component) {
       var innerProps = {
         'aria-hidden': 'true'
       };
-      return React__default.createElement(LoadingIndicator, _extends$h({}, commonProps, {
+      return React__default.createElement(LoadingIndicator, _extends$a({}, commonProps, {
         innerProps: innerProps,
         isDisabled: isDisabled,
         isFocused: isFocused
@@ -36160,7 +36245,7 @@ function (_Component) {
       var commonProps = this.commonProps;
       var isDisabled = this.props.isDisabled;
       var isFocused = this.state.isFocused;
-      return React__default.createElement(IndicatorSeparator, _extends$h({}, commonProps, {
+      return React__default.createElement(IndicatorSeparator, _extends$a({}, commonProps, {
         isDisabled: isDisabled,
         isFocused: isFocused
       }));
@@ -36178,7 +36263,7 @@ function (_Component) {
         onTouchEnd: this.onDropdownIndicatorTouchEnd,
         'aria-hidden': 'true'
       };
-      return React__default.createElement(DropdownIndicator, _extends$h({}, commonProps, {
+      return React__default.createElement(DropdownIndicator, _extends$a({}, commonProps, {
         innerProps: innerProps,
         isDisabled: isDisabled,
         isFocused: isFocused
@@ -36225,7 +36310,7 @@ function (_Component) {
         // focused option changes so we calculate additional props based on that
         var isFocused = focusedOption === props.data;
         props.innerRef = isFocused ? _this5.getFocusedOptionRef : undefined;
-        return React__default.createElement(Option, _extends$h({}, commonProps, props, {
+        return React__default.createElement(Option, _extends$a({}, commonProps, props, {
           isFocused: isFocused
         }), _this5.formatOptionLabel(props.data, 'menu'));
       };
@@ -36236,10 +36321,10 @@ function (_Component) {
         menuUI = menuOptions.render.map(function (item) {
           if (item.type === 'group') {
             var type = item.type,
-                group = _objectWithoutProperties$8(item, ["type"]);
+                group = _objectWithoutProperties$4(item, ["type"]);
 
             var headingId = "".concat(item.key, "-heading");
-            return React__default.createElement(Group, _extends$h({}, commonProps, group, {
+            return React__default.createElement(Group, _extends$a({}, commonProps, group, {
               Heading: GroupHeading,
               headingProps: {
                 id: headingId
@@ -36274,12 +36359,12 @@ function (_Component) {
         menuPosition: menuPosition,
         menuShouldScrollIntoView: menuShouldScrollIntoView
       };
-      var menuElement = React__default.createElement(MenuPlacer, _extends$h({}, commonProps, menuPlacementProps), function (_ref6) {
+      var menuElement = React__default.createElement(MenuPlacer, _extends$a({}, commonProps, menuPlacementProps), function (_ref6) {
         var ref = _ref6.ref,
             _ref6$placerProps = _ref6.placerProps,
             placement = _ref6$placerProps.placement,
             maxHeight = _ref6$placerProps.maxHeight;
-        return React__default.createElement(Menu$$1, _extends$h({}, commonProps, menuPlacementProps, {
+        return React__default.createElement(Menu$$1, _extends$a({}, commonProps, menuPlacementProps, {
           innerRef: ref,
           innerProps: {
             onMouseDown: _this5.onMenuMouseDown,
@@ -36293,7 +36378,7 @@ function (_Component) {
           onBottomArrive: onMenuScrollToBottom
         }, React__default.createElement(ScrollBlock, {
           isEnabled: menuShouldBlockScroll
-        }, React__default.createElement(MenuList$$1, _extends$h({}, commonProps, {
+        }, React__default.createElement(MenuList$$1, _extends$a({}, commonProps, {
           innerRef: _this5.getMenuListRef,
           isLoading: isLoading,
           maxHeight: maxHeight
@@ -36302,7 +36387,7 @@ function (_Component) {
       // so we use the same component. the actual portalling logic is forked
       // within the component based on `menuPosition`
 
-      return menuPortalTarget || menuPosition === 'fixed' ? React__default.createElement(MenuPortal$$1, _extends$h({}, commonProps, {
+      return menuPortalTarget || menuPosition === 'fixed' ? React__default.createElement(MenuPortal$$1, _extends$a({}, commonProps, {
         appendTo: menuPortalTarget,
         controlElement: this.controlRef,
         menuPlacement: menuPlacement,
@@ -36383,7 +36468,7 @@ function (_Component) {
           menuIsOpen = _this$props20.menuIsOpen;
       var isFocused = this.state.isFocused;
       var commonProps = this.commonProps = this.getCommonProps();
-      return React__default.createElement(SelectContainer, _extends$h({}, commonProps, {
+      return React__default.createElement(SelectContainer, _extends$a({}, commonProps, {
         className: className,
         innerProps: {
           id: id,
@@ -36391,7 +36476,7 @@ function (_Component) {
         },
         isDisabled: isDisabled,
         isFocused: isFocused
-      }), this.renderLiveRegion(), React__default.createElement(Control, _extends$h({}, commonProps, {
+      }), this.renderLiveRegion(), React__default.createElement(Control, _extends$a({}, commonProps, {
         innerRef: this.getControlRef,
         innerProps: {
           onMouseDown: this.onControlMouseDown,
@@ -36400,9 +36485,9 @@ function (_Component) {
         isDisabled: isDisabled,
         isFocused: isFocused,
         menuIsOpen: menuIsOpen
-      }), React__default.createElement(ValueContainer, _extends$h({}, commonProps, {
+      }), React__default.createElement(ValueContainer, _extends$a({}, commonProps, {
         isDisabled: isDisabled
-      }), this.renderPlaceholderOrValue(), this.renderInput()), React__default.createElement(IndicatorsContainer, _extends$h({}, commonProps, {
+      }), this.renderPlaceholderOrValue(), this.renderInput()), React__default.createElement(IndicatorsContainer, _extends$a({}, commonProps, {
         isDisabled: isDisabled
       }), this.renderClearIndicator(), this.renderLoadingIndicator(), this.renderIndicatorSeparator(), this.renderDropdownIndicator())), this.renderMenu(), this.renderFormField());
     }
@@ -36425,20 +36510,20 @@ var manageState = function manageState(SelectComponent) {
   return _temp = _class =
   /*#__PURE__*/
   function (_Component) {
-    _inherits$c(StateManager, _Component);
+    _inherits$2(StateManager, _Component);
 
     function StateManager() {
       var _getPrototypeOf2;
 
       var _this;
 
-      _classCallCheck$c(this, StateManager);
+      _classCallCheck$2(this, StateManager);
 
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
 
-      _this = _possibleConstructorReturn$c(this, (_getPrototypeOf2 = _getPrototypeOf(StateManager)).call.apply(_getPrototypeOf2, [this].concat(args)));
+      _this = _possibleConstructorReturn$2(this, (_getPrototypeOf2 = _getPrototypeOf(StateManager)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
       _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "select", void 0);
 
@@ -36524,9 +36609,9 @@ var manageState = function manageState(SelectComponent) {
             defaultInputValue = _this$props2.defaultInputValue,
             defaultMenuIsOpen = _this$props2.defaultMenuIsOpen,
             defaultValue = _this$props2.defaultValue,
-            props = _objectWithoutProperties$8(_this$props2, ["defaultInputValue", "defaultMenuIsOpen", "defaultValue"]);
+            props = _objectWithoutProperties$4(_this$props2, ["defaultInputValue", "defaultMenuIsOpen", "defaultValue"]);
 
-        return React__default.createElement(SelectComponent, _extends$h({}, props, {
+        return React__default.createElement(SelectComponent, _extends$a({}, props, {
           ref: function ref(_ref) {
             _this2.select = _ref;
           },
@@ -36556,14 +36641,14 @@ var makeAsyncSelect = function makeAsyncSelect(SelectComponent) {
   return _temp = _class =
   /*#__PURE__*/
   function (_Component) {
-    _inherits$c(Async, _Component);
+    _inherits$2(Async, _Component);
 
     function Async(props) {
       var _this;
 
-      _classCallCheck$c(this, Async);
+      _classCallCheck$2(this, Async);
 
-      _this = _possibleConstructorReturn$c(this, _getPrototypeOf(Async).call(this));
+      _this = _possibleConstructorReturn$2(this, _getPrototypeOf(Async).call(this));
 
       _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "select", void 0);
 
@@ -36713,7 +36798,7 @@ var makeAsyncSelect = function makeAsyncSelect(SelectComponent) {
 
         var _this$props2 = this.props,
             loadOptions = _this$props2.loadOptions,
-            props = _objectWithoutProperties$8(_this$props2, ["loadOptions"]);
+            props = _objectWithoutProperties$4(_this$props2, ["loadOptions"]);
 
         var _this$state = this.state,
             defaultOptions = _this$state.defaultOptions,
@@ -36723,7 +36808,7 @@ var makeAsyncSelect = function makeAsyncSelect(SelectComponent) {
             loadedOptions = _this$state.loadedOptions,
             passEmptyOptions = _this$state.passEmptyOptions;
         var options = passEmptyOptions ? [] : inputValue && loadedInputValue ? loadedOptions : defaultOptions || [];
-        return React__default.createElement(SelectComponent, _extends$h({}, props, {
+        return React__default.createElement(SelectComponent, _extends$a({}, props, {
           ref: function ref(_ref) {
             _this3.select = _ref;
           },
@@ -36778,14 +36863,14 @@ var makeCreatableSelect = function makeCreatableSelect(SelectComponent) {
   return _temp = _class =
   /*#__PURE__*/
   function (_Component) {
-    _inherits$c(Creatable, _Component);
+    _inherits$2(Creatable, _Component);
 
     function Creatable(props) {
       var _this;
 
-      _classCallCheck$c(this, Creatable);
+      _classCallCheck$2(this, Creatable);
 
-      _this = _possibleConstructorReturn$c(this, _getPrototypeOf(Creatable).call(this, props));
+      _this = _possibleConstructorReturn$2(this, _getPrototypeOf(Creatable).call(this, props));
 
       _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "select", void 0);
 
@@ -36872,10 +36957,10 @@ var makeCreatableSelect = function makeCreatableSelect(SelectComponent) {
       value: function render() {
         var _this2 = this;
 
-        var props = _extends$h({}, this.props);
+        var props = _extends$a({}, this.props);
 
         var options = this.state.options;
-        return React__default.createElement(SelectComponent, _extends$h({}, props, {
+        return React__default.createElement(SelectComponent, _extends$a({}, props, {
           ref: function ref(_ref) {
             _this2.select = _ref;
           },
@@ -36905,7 +36990,7 @@ var AnimatedInput = function AnimatedInput(WrappedComponent) {
         appear = _ref.appear,
         enter = _ref.enter,
         exit = _ref.exit,
-        props = _objectWithoutProperties$8(_ref, ["in", "onExited", "appear", "enter", "exit"]);
+        props = _objectWithoutProperties$4(_ref, ["in", "onExited", "appear", "enter", "exit"]);
 
     return React__default.createElement(WrappedComponent, props);
   };
@@ -36917,7 +37002,7 @@ var Fade$1 = function Fade(_ref) {
       duration = _ref$duration === void 0 ? 1 : _ref$duration,
       inProp = _ref.in,
       onExited = _ref.onExited,
-      props = _objectWithoutProperties$8(_ref, ["component", "duration", "in", "onExited"]);
+      props = _objectWithoutProperties$4(_ref, ["component", "duration", "in", "onExited"]);
 
   var transition = {
     entering: {
@@ -36943,7 +37028,7 @@ var Fade$1 = function Fade(_ref) {
     var innerProps = {
       style: _objectSpread$1({}, transition[state])
     };
-    return React__default.createElement(Tag, _extends$h({
+    return React__default.createElement(Tag, _extends$a({
       innerProps: innerProps
     }, props));
   });
@@ -36957,20 +37042,20 @@ var collapseDuration = 260;
 var Collapse$1 =
 /*#__PURE__*/
 function (_Component) {
-  _inherits$c(Collapse, _Component);
+  _inherits$2(Collapse, _Component);
 
   function Collapse() {
     var _getPrototypeOf2;
 
     var _this;
 
-    _classCallCheck$c(this, Collapse);
+    _classCallCheck$2(this, Collapse);
 
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    _this = _possibleConstructorReturn$c(this, (_getPrototypeOf2 = _getPrototypeOf(Collapse)).call.apply(_getPrototypeOf2, [this].concat(args)));
+    _this = _possibleConstructorReturn$2(this, (_getPrototypeOf2 = _getPrototypeOf(Collapse)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized$1(_assertThisInitialized$1(_this)), "duration", collapseDuration);
 
@@ -37067,12 +37152,12 @@ var AnimatedMultiValue = function AnimatedMultiValue(WrappedComponent) {
   return function (_ref) {
     var inProp = _ref.in,
         onExited = _ref.onExited,
-        props = _objectWithoutProperties$8(_ref, ["in", "onExited"]);
+        props = _objectWithoutProperties$4(_ref, ["in", "onExited"]);
 
     return React__default.createElement(Collapse$1, {
       in: inProp,
       onExited: onExited
-    }, React__default.createElement(WrappedComponent, _extends$h({
+    }, React__default.createElement(WrappedComponent, _extends$a({
       cropWithEllipsis: inProp
     }, props)));
   };
@@ -37080,7 +37165,7 @@ var AnimatedMultiValue = function AnimatedMultiValue(WrappedComponent) {
 
 var AnimatedPlaceholder = function AnimatedPlaceholder(WrappedComponent) {
   return function (props) {
-    return React__default.createElement(Fade$1, _extends$h({
+    return React__default.createElement(Fade$1, _extends$a({
       component: WrappedComponent,
       duration: props.isMulti ? collapseDuration : 1
     }, props));
@@ -37089,7 +37174,7 @@ var AnimatedPlaceholder = function AnimatedPlaceholder(WrappedComponent) {
 
 var AnimatedSingleValue = function AnimatedSingleValue(WrappedComponent) {
   return function (props) {
-    return React__default.createElement(Fade$1, _extends$h({
+    return React__default.createElement(Fade$1, _extends$a({
       component: WrappedComponent
     }, props));
   };
@@ -37098,7 +37183,7 @@ var AnimatedSingleValue = function AnimatedSingleValue(WrappedComponent) {
 // make ValueContainer a transition group
 var AnimatedValueContainer = function AnimatedValueContainer(WrappedComponent) {
   return function (props) {
-    return React__default.createElement(reactTransitionGroup_2, _extends$h({
+    return React__default.createElement(reactTransitionGroup_2, _extends$a({
       component: WrappedComponent
     }, props));
   };
@@ -37115,7 +37200,7 @@ var makeAnimated = function makeAnimated() {
       Placeholder = components$$1.Placeholder,
       SingleValue = components$$1.SingleValue,
       ValueContainer = components$$1.ValueContainer,
-      rest = _objectWithoutProperties$8(components$$1, ["Input", "MultiValue", "Placeholder", "SingleValue", "ValueContainer"]);
+      rest = _objectWithoutProperties$4(components$$1, ["Input", "MultiValue", "Placeholder", "SingleValue", "ValueContainer"]);
 
   return _objectSpread$1({
     Input: AnimatedInput(Input),
@@ -37132,7 +37217,7 @@ var MultiValue$1 = AnimatedComponents.MultiValue;
 var Placeholder$1 = AnimatedComponents.Placeholder;
 var SingleValue$1 = AnimatedComponents.SingleValue;
 var ValueContainer$1 = AnimatedComponents.ValueContainer;
-var index$a = memoizeOne(makeAnimated, exportedEqual);
+var index$b = memoizeOne(makeAnimated, exportedEqual);
 
 var index$1$1 = manageState(Select);
 
