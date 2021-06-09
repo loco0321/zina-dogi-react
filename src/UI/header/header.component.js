@@ -91,7 +91,7 @@ const Header = ({
                         setActiveFromChild
                         className="custom-carets"
                     >
-                        <DropdownToggle tag="a" caret>
+                        <DropdownToggle tag="a" className="nav-link" caret>
                             <span className="user-name">{fullName}</span>
                         </DropdownToggle>
                         <DropdownMenu right>
